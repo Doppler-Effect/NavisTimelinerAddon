@@ -65,6 +65,7 @@ namespace NavisTimelinerPlugin
                 return false;
             }
         }
+        
         #endregion
 
         #region Механизм ручного назначения выборок таскам.
@@ -83,13 +84,12 @@ namespace NavisTimelinerPlugin
                 {
                     tasks.Add(task);
                 }
+                
+                AcceptCurrentSelectionButton.Enabled = true;
+                SkipCurrentTaskButton.Enabled = true;
+                SaveAssocNowButton.Enabled = true;
                 //заполнение окошка первым таском. 
-                if (nextTaskToAssociate())
-                {
-                    AcceptCurrentSelectionButton.Enabled = true;
-                    SkipCurrentTaskButton.Enabled = true;
-                    SaveAssocNowButton.Enabled = true;
-                }
+                nextTaskToAssociate();
             }
         }
 
@@ -97,13 +97,12 @@ namespace NavisTimelinerPlugin
         /// Берёт нулевой элемент локальной копии коллекции тасков, помещает в окошко и удаляет его из коллекции.
         /// </summary>
         /// <returns>False if task collection is empty.</returns>
-        bool nextTaskToAssociate()
+        void nextTaskToAssociate()
         {
             if (tasks.Count != 0)
             {
                 currentTask.update(tasks.First(), CurrentAssocTaskBox);
                 tasks.RemoveAt(0);
-                return true;
             }
             else                
             {
@@ -115,7 +114,6 @@ namespace NavisTimelinerPlugin
 
                 //сохраняем набор ассоциаций в файл
                 Serializer.serialize(DataHolder);
-                return false;
             }
         }
 
@@ -244,7 +242,7 @@ namespace NavisTimelinerPlugin
                 }
 
                 buttonNext.Enabled = true;
-
+                ButtonAcceptCompletionProgress.Enabled = true;
                 nextTaskToDataInput();
             }
         }
@@ -258,12 +256,14 @@ namespace NavisTimelinerPlugin
             {
                 currentTask.update(tasks.First(), CurrentViewTaskBox);
                 tasks.RemoveAt(0);
-
                 hideAllExceptTaskSelection(currentTask.Task);
+                CompletionTextBox.Text = currentTask.Task.User1;
+                UnitsComboBox.Text = currentTask.Task.User2;
             }
             else
             {
                 buttonNext.Enabled = false;
+                ButtonAcceptCompletionProgress.Enabled = false;
             }
 
         }
@@ -301,8 +301,18 @@ namespace NavisTimelinerPlugin
         {
             nextTaskToDataInput();
         }
-
-        #endregion
         
+        private void ButtonAcceptCompletionProgress_Click(object sender, EventArgs e)
+        {
+            string value = CompletionTextBox.Text;
+            string units = UnitsComboBox.Text;
+            currentTask.Task.SetUserFieldByIndex(0, value);
+            currentTask.Task.SetUserFieldByIndex(1, units);
+
+            nextTaskToDataInput();
+        }
+        
+        #endregion
+
     }
 }

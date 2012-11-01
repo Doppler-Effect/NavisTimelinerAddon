@@ -40,6 +40,10 @@
             this.buttonNext = new System.Windows.Forms.Button();
             this.CurrentViewTaskBox = new System.Windows.Forms.TextBox();
             this.StartDataInputButton = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.CompletionTextBox = new System.Windows.Forms.TextBox();
+            this.UnitsComboBox = new System.Windows.Forms.ComboBox();
+            this.ButtonAcceptCompletionProgress = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -136,12 +140,16 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.ButtonAcceptCompletionProgress);
+            this.groupBox2.Controls.Add(this.UnitsComboBox);
+            this.groupBox2.Controls.Add(this.CompletionTextBox);
+            this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.buttonNext);
             this.groupBox2.Controls.Add(this.CurrentViewTaskBox);
             this.groupBox2.Controls.Add(this.StartDataInputButton);
             this.groupBox2.Location = new System.Drawing.Point(12, 215);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(231, 200);
+            this.groupBox2.Size = new System.Drawing.Size(231, 150);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Назначение %% выполнения";
@@ -176,6 +184,48 @@
             this.StartDataInputButton.Text = "Начать!";
             this.StartDataInputButton.UseVisualStyleBackColor = true;
             this.StartDataInputButton.Click += new System.EventHandler(this.StartDataInputButton_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 75);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(124, 13);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Прогресс выполнения:";
+            // 
+            // CompletionTextBox
+            // 
+            this.CompletionTextBox.Location = new System.Drawing.Point(6, 92);
+            this.CompletionTextBox.Name = "CompletionTextBox";
+            this.CompletionTextBox.Size = new System.Drawing.Size(124, 20);
+            this.CompletionTextBox.TabIndex = 10;
+            // 
+            // UnitsComboBox
+            // 
+            this.UnitsComboBox.FormattingEnabled = true;
+            this.UnitsComboBox.Items.AddRange(new object[] {
+            "КГ",
+            "кгс",
+            "М",
+            "мм",
+            "шт."});
+            this.UnitsComboBox.Location = new System.Drawing.Point(136, 92);
+            this.UnitsComboBox.Name = "UnitsComboBox";
+            this.UnitsComboBox.Size = new System.Drawing.Size(89, 21);
+            this.UnitsComboBox.Sorted = true;
+            this.UnitsComboBox.TabIndex = 11;
+            // 
+            // ButtonAcceptCompletionProgress
+            // 
+            this.ButtonAcceptCompletionProgress.Enabled = false;
+            this.ButtonAcceptCompletionProgress.Location = new System.Drawing.Point(6, 118);
+            this.ButtonAcceptCompletionProgress.Name = "ButtonAcceptCompletionProgress";
+            this.ButtonAcceptCompletionProgress.Size = new System.Drawing.Size(124, 23);
+            this.ButtonAcceptCompletionProgress.TabIndex = 12;
+            this.ButtonAcceptCompletionProgress.Text = "Назначить";
+            this.ButtonAcceptCompletionProgress.UseVisualStyleBackColor = true;
+            this.ButtonAcceptCompletionProgress.Click += new System.EventHandler(this.ButtonAcceptCompletionProgress_Click);
             // 
             // UIform
             // 
@@ -212,5 +262,9 @@
         private System.Windows.Forms.TextBox CurrentViewTaskBox;
         private System.Windows.Forms.Button buttonNext;
         private System.Windows.Forms.Button SaveAssocNowButton;
+        private System.Windows.Forms.ComboBox UnitsComboBox;
+        private System.Windows.Forms.TextBox CompletionTextBox;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button ButtonAcceptCompletionProgress;
     }
 }
