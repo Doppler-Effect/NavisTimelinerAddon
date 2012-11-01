@@ -1,0 +1,3 @@
+#BIN and OBJ folders will be ignored by git
+bin
+obj
