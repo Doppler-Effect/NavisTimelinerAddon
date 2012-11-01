@@ -86,8 +86,9 @@ namespace NavisTimelinerPlugin
                 //заполнение окошка первым таском. 
                 if (nextTaskToAssociate())
                 {
-                    bAcceptCurrent.Enabled = true;
-                    bSkipCurrentTask.Enabled = true;
+                    AcceptCurrentSelectionButton.Enabled = true;
+                    SkipCurrentTaskButton.Enabled = true;
+                    SaveAssocNowButton.Enabled = true;
                 }
             }
         }
@@ -100,30 +101,32 @@ namespace NavisTimelinerPlugin
         {
             if (tasks.Count != 0)
             {
-                currentTask.update(tasks.First(), CurrentTaskBox);
+                currentTask.update(tasks.First(), CurrentAssocTaskBox);
                 tasks.RemoveAt(0);
                 return true;
             }
             else                
             {
                 //таски закончились
-                bAcceptCurrent.Enabled = false;
-                bSkipCurrentTask.Enabled = false;
-                CurrentTaskBox.Text = "Done.";
+                AcceptCurrentSelectionButton.Enabled = false;
+                SkipCurrentTaskButton.Enabled = false;
+                SaveAssocNowButton.Enabled = false;
+                CurrentAssocTaskBox.Text = "Done.";
 
                 //сохраняем набор ассоциаций в файл
                 Serializer.serialize(DataHolder);
                 return false;
             }
-        }        
-       
-        private void bAcceptCurrent_Click(object sender, EventArgs e)
+        }
+
+        private void AcceptCurrentSelectionButton_Click(object sender, EventArgs e)
         {
             if (RootTaskAccessible())
             {
                 addSelectionToTask();
             }
         }
+
         /// <summary>
         ////Добавляет к таску, находящемуся в окошке, текущий селекшн.
         /// </summary>
@@ -154,11 +157,19 @@ namespace NavisTimelinerPlugin
             return sSet.DisplayName;
         }
 
-        private void bSkipCurrentTask_Click(object sender, EventArgs e)
+        private void SkipCurrentTaskButton_Click(object sender, EventArgs e)
         {
             if (RootTaskAccessible())
             {
                 nextTaskToAssociate();
+            }
+        }
+        
+        private void SaveAssocNowButton_Click(object sender, EventArgs e)
+        {
+            if (DataHolder.Data.Count != 0)
+            {
+                Serializer.serialize(DataHolder);
             }
         }
 
@@ -219,6 +230,9 @@ namespace NavisTimelinerPlugin
                 
         #region Просмотр тасков и отображение только тех элементов модели, которые с ними ассоциированы
 
+        /// <summary>
+        /// Обработчик клика по кнопке "начать". Заполняет коллекции и инициализирует счётчики, загружает первый таск.
+        /// </summary>
         private void StartDataInputButton_Click(object sender, EventArgs e)
         {
             if (RootTaskAccessible())
@@ -228,10 +242,16 @@ namespace NavisTimelinerPlugin
                 {
                     tasks.Add(task);
                 }
+
+                buttonNext.Enabled = true;
+
                 nextTaskToDataInput();
             }
         }
 
+        /// <summary>
+        /// Отображает на модели следующий по порядку таск.
+        /// </summary>
         void nextTaskToDataInput()
         {
             if (tasks.Count != 0)
@@ -239,10 +259,19 @@ namespace NavisTimelinerPlugin
                 currentTask.update(tasks.First(), CurrentViewTaskBox);
                 tasks.RemoveAt(0);
 
-                hideAllExceptTaskSelection(currentTask.Task);                
+                hideAllExceptTaskSelection(currentTask.Task);
             }
+            else
+            {
+                buttonNext.Enabled = false;
+            }
+
         }
 
+        /// <summary>
+        /// Показывает на модели только выборку элементов, остальное делает прозрачным.
+        /// </summary>
+        /// <param name="task">Таск, выборка которого отображается на модели.</param>
         void hideAllExceptTaskSelection(TimelinerTask task)
         {
             try
@@ -251,14 +280,20 @@ namespace NavisTimelinerPlugin
                 {
                     ModelItemCollection collection = task.Selection.GetSelectedItems(nDoc);
                     nDoc.CurrentSelection.SelectAll();
-                    nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0.98);
+                    nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0.99);
                     nDoc.CurrentSelection.Clear();
                     nDoc.Models.OverridePermanentTransparency(collection, 0);
                 }
+                else
+                {
+                    nDoc.CurrentSelection.SelectAll();
+                    nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0);
+                    CurrentViewTaskBox.Text += " /не назначена выбрка/";
+                }
             }
-            catch (Exception ex)
+            catch (Exception Ex)
             {
-
+                MessageBox.Show(Ex.Message);
             }
         }
 
