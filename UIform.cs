@@ -288,7 +288,7 @@ namespace NavisTimelinerPlugin
                 {
                     nDoc.CurrentSelection.SelectAll();
                     nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0);
-                    CurrentViewTaskBox.Text += " /не назначена выбрка/";
+                    CurrentViewTaskBox.Text += " /не назначена выбрка/"; 
                 }
             }
             catch (Exception Ex)
