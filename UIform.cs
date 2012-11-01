@@ -236,28 +236,25 @@ namespace NavisTimelinerPlugin
         {
             if (tasks.Count != 0)
             {
-                currentTask.update(tasks.First(), CurrentTaskBox);
+                currentTask.update(tasks.First(), CurrentViewTaskBox);
                 tasks.RemoveAt(0);
 
-                hideAllExceptTaskSelection(currentTask.Task);
-                //highlightTaskSelection(currentTask.Task);
-                
+                hideAllExceptTaskSelection(currentTask.Task);                
             }
-        }
-
-        void highlightTaskSelection(TimelinerTask task)
-        {
-            nDoc.CurrentSelection.Clear();
-            nDoc.CurrentSelection.CopyFrom(task.Selection.ExplicitSelection);
         }
 
         void hideAllExceptTaskSelection(TimelinerTask task)
         {
             try
             {
-                //
-                nDoc.CurrentSelection.SelectAll();
-                nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0.5);
+                if (!task.Selection.IsClear)
+                {
+                    ModelItemCollection collection = task.Selection.GetSelectedItems(nDoc);
+                    nDoc.CurrentSelection.SelectAll();
+                    nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0.98);
+                    nDoc.CurrentSelection.Clear();
+                    nDoc.Models.OverridePermanentTransparency(collection, 0);
+                }
             }
             catch (Exception ex)
             {
