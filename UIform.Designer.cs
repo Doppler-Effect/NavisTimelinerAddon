@@ -32,8 +32,8 @@
             this.SkipCurrentTaskButton = new System.Windows.Forms.Button();
             this.AcceptCurrentSelectionButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.SaveAssocNowButton = new System.Windows.Forms.Button();
             this.CurrentAssocTaskBox = new System.Windows.Forms.TextBox();
+            this.SaveAssocNowButton = new System.Windows.Forms.Button();
             this.buttonLoad = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.ButtonAcceptCompletionProgress = new System.Windows.Forms.Button();
@@ -49,7 +49,7 @@
             // 
             // startAssocButton
             // 
-            this.startAssocButton.Location = new System.Drawing.Point(12, 41);
+            this.startAssocButton.Location = new System.Drawing.Point(12, 12);
             this.startAssocButton.Name = "startAssocButton";
             this.startAssocButton.Size = new System.Drawing.Size(171, 23);
             this.startAssocButton.TabIndex = 0;
@@ -60,9 +60,9 @@
             // SkipCurrentTaskButton
             // 
             this.SkipCurrentTaskButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.SkipCurrentTaskButton.Location = new System.Drawing.Point(136, 45);
+            this.SkipCurrentTaskButton.Location = new System.Drawing.Point(231, 45);
             this.SkipCurrentTaskButton.Name = "SkipCurrentTaskButton";
-            this.SkipCurrentTaskButton.Size = new System.Drawing.Size(89, 40);
+            this.SkipCurrentTaskButton.Size = new System.Drawing.Size(120, 23);
             this.SkipCurrentTaskButton.TabIndex = 3;
             this.SkipCurrentTaskButton.Text = "Пропустить";
             this.SkipCurrentTaskButton.UseVisualStyleBackColor = false;
@@ -73,7 +73,7 @@
             this.AcceptCurrentSelectionButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.AcceptCurrentSelectionButton.Location = new System.Drawing.Point(6, 45);
             this.AcceptCurrentSelectionButton.Name = "AcceptCurrentSelectionButton";
-            this.AcceptCurrentSelectionButton.Size = new System.Drawing.Size(124, 40);
+            this.AcceptCurrentSelectionButton.Size = new System.Drawing.Size(219, 23);
             this.AcceptCurrentSelectionButton.TabIndex = 2;
             this.AcceptCurrentSelectionButton.Text = "Присоединить текущее выделение";
             this.AcceptCurrentSelectionButton.UseVisualStyleBackColor = false;
@@ -81,27 +81,16 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.SaveAssocNowButton);
             this.groupBox1.Controls.Add(this.CurrentAssocTaskBox);
             this.groupBox1.Controls.Add(this.SkipCurrentTaskButton);
             this.groupBox1.Controls.Add(this.AcceptCurrentSelectionButton);
             this.groupBox1.Enabled = false;
             this.groupBox1.Location = new System.Drawing.Point(189, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(231, 134);
+            this.groupBox1.Size = new System.Drawing.Size(357, 76);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Назначение заданиям выборок:";
-            // 
-            // SaveAssocNowButton
-            // 
-            this.SaveAssocNowButton.Location = new System.Drawing.Point(6, 91);
-            this.SaveAssocNowButton.Name = "SaveAssocNowButton";
-            this.SaveAssocNowButton.Size = new System.Drawing.Size(219, 23);
-            this.SaveAssocNowButton.TabIndex = 7;
-            this.SaveAssocNowButton.Text = "Сохранить...";
-            this.SaveAssocNowButton.UseVisualStyleBackColor = true;
-            this.SaveAssocNowButton.Click += new System.EventHandler(this.SaveAssocNowButton_Click);
             // 
             // CurrentAssocTaskBox
             // 
@@ -109,17 +98,27 @@
             this.CurrentAssocTaskBox.Location = new System.Drawing.Point(6, 19);
             this.CurrentAssocTaskBox.Name = "CurrentAssocTaskBox";
             this.CurrentAssocTaskBox.ReadOnly = true;
-            this.CurrentAssocTaskBox.Size = new System.Drawing.Size(219, 20);
+            this.CurrentAssocTaskBox.Size = new System.Drawing.Size(345, 20);
             this.CurrentAssocTaskBox.TabIndex = 4;
             this.CurrentAssocTaskBox.TabStop = false;
             // 
+            // SaveAssocNowButton
+            // 
+            this.SaveAssocNowButton.Location = new System.Drawing.Point(99, 41);
+            this.SaveAssocNowButton.Name = "SaveAssocNowButton";
+            this.SaveAssocNowButton.Size = new System.Drawing.Size(84, 23);
+            this.SaveAssocNowButton.TabIndex = 7;
+            this.SaveAssocNowButton.Text = "Сохранить";
+            this.SaveAssocNowButton.UseVisualStyleBackColor = true;
+            this.SaveAssocNowButton.Click += new System.EventHandler(this.SaveAssocNowButton_Click);
+            // 
             // buttonLoad
             // 
-            this.buttonLoad.Location = new System.Drawing.Point(12, 12);
+            this.buttonLoad.Location = new System.Drawing.Point(12, 41);
             this.buttonLoad.Name = "buttonLoad";
-            this.buttonLoad.Size = new System.Drawing.Size(171, 23);
+            this.buttonLoad.Size = new System.Drawing.Size(84, 23);
             this.buttonLoad.TabIndex = 5;
-            this.buttonLoad.Text = "Загрузить данные о связях";
+            this.buttonLoad.Text = "Загрузить";
             this.buttonLoad.UseVisualStyleBackColor = true;
             this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
             // 
@@ -132,9 +131,9 @@
             this.groupBox2.Controls.Add(this.buttonNext);
             this.groupBox2.Controls.Add(this.CurrentViewTaskBox);
             this.groupBox2.Enabled = false;
-            this.groupBox2.Location = new System.Drawing.Point(189, 152);
+            this.groupBox2.Location = new System.Drawing.Point(189, 94);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(231, 150);
+            this.groupBox2.Size = new System.Drawing.Size(357, 121);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Назначение %% выполнения";
@@ -142,9 +141,9 @@
             // 
             // ButtonAcceptCompletionProgress
             // 
-            this.ButtonAcceptCompletionProgress.Location = new System.Drawing.Point(6, 88);
+            this.ButtonAcceptCompletionProgress.Location = new System.Drawing.Point(231, 60);
             this.ButtonAcceptCompletionProgress.Name = "ButtonAcceptCompletionProgress";
-            this.ButtonAcceptCompletionProgress.Size = new System.Drawing.Size(124, 23);
+            this.ButtonAcceptCompletionProgress.Size = new System.Drawing.Size(120, 23);
             this.ButtonAcceptCompletionProgress.TabIndex = 12;
             this.ButtonAcceptCompletionProgress.Text = "Назначить";
             this.ButtonAcceptCompletionProgress.UseVisualStyleBackColor = true;
@@ -183,9 +182,9 @@
             // 
             // buttonNext
             // 
-            this.buttonNext.Location = new System.Drawing.Point(136, 89);
+            this.buttonNext.Location = new System.Drawing.Point(231, 89);
             this.buttonNext.Name = "buttonNext";
-            this.buttonNext.Size = new System.Drawing.Size(89, 23);
+            this.buttonNext.Size = new System.Drawing.Size(120, 23);
             this.buttonNext.TabIndex = 8;
             this.buttonNext.Text = "Пропустить";
             this.buttonNext.UseVisualStyleBackColor = true;
@@ -197,13 +196,13 @@
             this.CurrentViewTaskBox.Location = new System.Drawing.Point(6, 23);
             this.CurrentViewTaskBox.Name = "CurrentViewTaskBox";
             this.CurrentViewTaskBox.ReadOnly = true;
-            this.CurrentViewTaskBox.Size = new System.Drawing.Size(219, 20);
+            this.CurrentViewTaskBox.Size = new System.Drawing.Size(345, 20);
             this.CurrentViewTaskBox.TabIndex = 7;
             this.CurrentViewTaskBox.TabStop = false;
             // 
             // StartDataInputButton
             // 
-            this.StartDataInputButton.Location = new System.Drawing.Point(12, 152);
+            this.StartDataInputButton.Location = new System.Drawing.Point(12, 94);
             this.StartDataInputButton.Name = "StartDataInputButton";
             this.StartDataInputButton.Size = new System.Drawing.Size(171, 23);
             this.StartDataInputButton.TabIndex = 0;
@@ -215,8 +214,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(433, 309);
+            this.ClientSize = new System.Drawing.Size(558, 222);
             this.ControlBox = false;
+            this.Controls.Add(this.SaveAssocNowButton);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonLoad);

@@ -51,7 +51,7 @@ namespace NavisTimelinerPlugin
         #region счётчики, контейнеры для данных итд.
         List<TimelinerTask> tasks = new List<TimelinerTask>(); //массив тасков проекта. Используется в ручном назначении тасков.
         CurrentTask currentTask = new CurrentTask();//Контейнер для хранения обрабатываемого в данный момент таска.
-        SerializableDataHolder DataHolder = new SerializableDataHolder();//массив для сохранения обработанных тасков в файл.
+        SerializableDataHolder DataHolder;//массив для сохранения обработанных тасков в файл.
         bool RootTaskIsAccessible()
         {
             if (timeliner.Tasks.Count != 0)
@@ -85,7 +85,7 @@ namespace NavisTimelinerPlugin
                 //убираем текущие селекшны у тасков.
                 ClearSelections();
 
-                DataHolder.Clear();
+                DataHolder = new SerializableDataHolder();
                 tasks.Clear();
                 foreach (TimelinerTask task in RootTask.Children)
                 {
@@ -154,9 +154,13 @@ namespace NavisTimelinerPlugin
         /// <returns>Имя списка выбора, который выбирает указанный селекшн</returns>
         string findSelectionSetName(Selection sel)
         {
-            SelectionSource sSource = sel.SelectionSources[0];
-            SavedItem sSet = nDoc.SelectionSets.ResolveSelectionSource(sSource);
-            return sSet.DisplayName;
+            if (sel.HasSelectionSources == true)
+            {
+                SelectionSource sSource = sel.SelectionSources[0];
+                SavedItem sSet = nDoc.SelectionSets.ResolveSelectionSource(sSource);
+                return sSet.DisplayName;
+            }
+            return null;
         }
 
         private void SkipCurrentTaskButton_Click(object sender, EventArgs e)
@@ -169,10 +173,12 @@ namespace NavisTimelinerPlugin
         
         private void SaveAssocNowButton_Click(object sender, EventArgs e)
         {
-            if (DataHolder.Data.Count != 0)
+            if (DataHolder != null)
             {
-                Serializer.serialize(DataHolder);
-                groupBox1.Enabled = false;
+                if (DataHolder.Data.Count != 0)
+                {
+                    Serializer.serialize(DataHolder);
+                }
             }
         }
 
@@ -217,13 +223,16 @@ namespace NavisTimelinerPlugin
             {
                 foreach (KeyValuePair<string, string> pair in DataHolder.Data)
                 {
-                    SelectionSourceCollection selectionSource = this.getSelectionSourceByName(pair.Value);
-                    int taskIndex = RootTask.Children.IndexOfDisplayName(pair.Key);
-                    if (taskIndex != -1)
+                    if (pair.Value != null)
                     {
-                        TimelinerTask task = ((TimelinerTask)RootTask.Children[taskIndex]).CreateCopy();
-                        task.Selection.CopyFrom(selectionSource);
-                        timeliner.TaskEdit(RootTask, taskIndex, task);
+                        SelectionSourceCollection selectionSource = this.getSelectionSourceByName(pair.Value);
+                        int taskIndex = RootTask.Children.IndexOfDisplayName(pair.Key);
+                        if (taskIndex != -1)
+                        {
+                            TimelinerTask task = ((TimelinerTask)RootTask.Children[taskIndex]).CreateCopy();
+                            task.Selection.CopyFrom(selectionSource);
+                            timeliner.TaskEdit(RootTask, taskIndex, task);
+                        }
                     }
                 }
             }
@@ -326,10 +335,21 @@ namespace NavisTimelinerPlugin
         
         private void ButtonAcceptCompletionProgress_Click(object sender, EventArgs e)
         {
+            WriteCompletionToTask();
+        }
+
+        private void WriteCompletionToTask()
+        {
             string value = CompletionTextBox.Text;
             string units = UnitsComboBox.Text;
-            currentTask.Task.SetUserFieldByIndex(0, value);
-            currentTask.Task.SetUserFieldByIndex(1, units);
+
+            TimelinerTask task = currentTask.Task.CreateCopy();
+            int index = RootTask.Children.IndexOfDisplayName(task.DisplayName);
+
+            task.SetUserFieldByIndex(0, value);
+            task.SetUserFieldByIndex(1, units);
+
+            timeliner.TaskEdit(RootTask, index, task);
 
             nextTaskToDataInput();
         }
