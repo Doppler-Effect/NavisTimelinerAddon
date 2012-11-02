@@ -52,7 +52,7 @@ namespace NavisTimelinerPlugin
         List<TimelinerTask> tasks = new List<TimelinerTask>(); //массив тасков проекта. Используется в ручном назначении тасков.
         CurrentTask currentTask = new CurrentTask();//Контейнер для хранения обрабатываемого в данный момент таска.
         SerializableDataHolder DataHolder = new SerializableDataHolder();//массив для сохранения обработанных тасков в файл.
-        bool RootTaskAccessible()
+        bool RootTaskIsAccessible()
         {
             if (timeliner.Tasks.Count != 0)
             {
@@ -65,7 +65,11 @@ namespace NavisTimelinerPlugin
                 return false;
             }
         }
-        
+        private void groupBox2_EnabledChanged(object sender, EventArgs e)
+        {
+            MakeAllModelItemsVisible();
+        }
+
         #endregion
 
         #region Механизм ручного назначения выборок таскам.
@@ -76,18 +80,20 @@ namespace NavisTimelinerPlugin
         /// <param name="e"></param>
         private void startAssocButton_Click(object sender, EventArgs e)
         {
-            if (RootTaskAccessible())
+            if (RootTaskIsAccessible())
             {
+                //убираем текущие селекшны у тасков.
+                ClearSelections();
+
                 DataHolder.Clear();
                 tasks.Clear();
                 foreach (TimelinerTask task in RootTask.Children)
                 {
                     tasks.Add(task);
                 }
-                
-                AcceptCurrentSelectionButton.Enabled = true;
-                SkipCurrentTaskButton.Enabled = true;
-                SaveAssocNowButton.Enabled = true;
+
+                groupBox1.Enabled = true;
+                groupBox2.Enabled = false;
                 //заполнение окошка первым таском. 
                 nextTaskToAssociate();
             }
@@ -107,9 +113,7 @@ namespace NavisTimelinerPlugin
             else                
             {
                 //таски закончились
-                AcceptCurrentSelectionButton.Enabled = false;
-                SkipCurrentTaskButton.Enabled = false;
-                SaveAssocNowButton.Enabled = false;
+                groupBox1.Enabled = false;
                 CurrentAssocTaskBox.Text = "Done.";
 
                 //сохраняем набор ассоциаций в файл
@@ -119,7 +123,7 @@ namespace NavisTimelinerPlugin
 
         private void AcceptCurrentSelectionButton_Click(object sender, EventArgs e)
         {
-            if (RootTaskAccessible())
+            if (RootTaskIsAccessible())
             {
                 addSelectionToTask();
             }
@@ -157,7 +161,7 @@ namespace NavisTimelinerPlugin
 
         private void SkipCurrentTaskButton_Click(object sender, EventArgs e)
         {
-            if (RootTaskAccessible())
+            if (RootTaskIsAccessible())
             {
                 nextTaskToAssociate();
             }
@@ -168,6 +172,24 @@ namespace NavisTimelinerPlugin
             if (DataHolder.Data.Count != 0)
             {
                 Serializer.serialize(DataHolder);
+                groupBox1.Enabled = false;
+            }
+        }
+
+        /// <summary>
+        /// Убирает селекшны у всех тасков в таймлайнере.
+        /// </summary>
+        void ClearSelections()
+        {
+            for(int i = 0; i < RootTask.Children.Count; i++)
+            {
+                TimelinerTask task = RootTask.Children[i] as TimelinerTask;
+                if (!task.Selection.IsClear)
+                {
+                    TimelinerTask tmpTask = task.CreateCopy();
+                    tmpTask.Selection.Clear();
+                    timeliner.TaskEdit(RootTask, i, tmpTask);
+                }
             }
         }
 
@@ -177,7 +199,9 @@ namespace NavisTimelinerPlugin
 
         private void buttonLoad_Click(object sender, EventArgs e)
         {
-            if (RootTaskAccessible())
+            groupBox1.Enabled = false;
+            groupBox2.Enabled = false;
+            if (RootTaskIsAccessible())
             {
                 LoadTasksAssocFromFile();
             }
@@ -233,7 +257,7 @@ namespace NavisTimelinerPlugin
         /// </summary>
         private void StartDataInputButton_Click(object sender, EventArgs e)
         {
-            if (RootTaskAccessible())
+            if (RootTaskIsAccessible())
             {
                 tasks.Clear();
                 foreach (TimelinerTask task in RootTask.Children)
@@ -241,8 +265,8 @@ namespace NavisTimelinerPlugin
                     tasks.Add(task);
                 }
 
-                buttonNext.Enabled = true;
-                ButtonAcceptCompletionProgress.Enabled = true;
+                groupBox1.Enabled = false;
+                groupBox2.Enabled = true;
                 nextTaskToDataInput();
             }
         }
@@ -262,8 +286,7 @@ namespace NavisTimelinerPlugin
             }
             else
             {
-                buttonNext.Enabled = false;
-                ButtonAcceptCompletionProgress.Enabled = false;
+                groupBox2.Enabled = false;
             }
 
         }
@@ -286,8 +309,7 @@ namespace NavisTimelinerPlugin
                 }
                 else
                 {
-                    nDoc.CurrentSelection.SelectAll();
-                    nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0);
+                    MakeAllModelItemsVisible();
                     CurrentViewTaskBox.Text += " /не назначена выбрка/"; 
                 }
             }
@@ -311,8 +333,16 @@ namespace NavisTimelinerPlugin
 
             nextTaskToDataInput();
         }
+
+        void MakeAllModelItemsVisible()
+        {
+            nDoc.CurrentSelection.SelectAll();
+            nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0);
+            nDoc.CurrentSelection.Clear();
+        }
         
         #endregion
 
+        
     }
 }
