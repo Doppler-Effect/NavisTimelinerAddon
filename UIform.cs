@@ -30,18 +30,19 @@ namespace NavisTimelinerPlugin
         {
             get
             {
-                if (timeliner.Tasks.Count != 0)
+                if (!nDoc.IsClear)
                 {
                     if (instance == null)
                     {
                         instance = new UIform();
-                        RootTask = timeliner.Tasks[0] as TimelinerTask;
+                        addCustomDataSource();
+                        //RootTask = timeliner.Tasks[0] as TimelinerTask;
                     }
                     return instance;
                 }
                 else
                 {
-                    MessageBox.Show("Для работы с программой загрузите данные в Timeliner", "Нет данных", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show("Для работы с программой откройте проект", "Нет данных для работы", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return null;
                 }
             }
@@ -69,7 +70,10 @@ namespace NavisTimelinerPlugin
         {
             MakeAllModelItemsVisible();
         }
-
+        private void buttonExit_Click(object sender, EventArgs e)
+        {
+            this.Visible = false;
+        }
         #endregion
 
         #region Механизм ручного назначения выборок таскам.
@@ -363,6 +367,22 @@ namespace NavisTimelinerPlugin
         
         #endregion
 
+        #region Добавление в Таймлайнер данных из .csv MS Project
         
+        private void button1_Click(object sender, EventArgs e)
+        {
+            addCustomDataSource();
+        }
+
+        static void addCustomDataSource()
+        {
+            TimelinerDataSource source = new TimelinerDataSource("Custom 1");
+
+            timeliner.DataSourceAddCopy(source);            
+        }
+
+        #endregion
+
+
     }
 }

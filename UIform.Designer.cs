@@ -36,13 +36,15 @@
             this.SaveAssocNowButton = new System.Windows.Forms.Button();
             this.buttonLoad = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.StartDataInputButton = new System.Windows.Forms.Button();
             this.ButtonAcceptCompletionProgress = new System.Windows.Forms.Button();
             this.UnitsComboBox = new System.Windows.Forms.ComboBox();
             this.CompletionTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonNext = new System.Windows.Forms.Button();
             this.CurrentViewTaskBox = new System.Windows.Forms.TextBox();
-            this.StartDataInputButton = new System.Windows.Forms.Button();
+            this.buttonExit = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -107,7 +109,7 @@
             this.SaveAssocNowButton.Location = new System.Drawing.Point(99, 41);
             this.SaveAssocNowButton.Name = "SaveAssocNowButton";
             this.SaveAssocNowButton.Size = new System.Drawing.Size(84, 23);
-            this.SaveAssocNowButton.TabIndex = 7;
+            this.SaveAssocNowButton.TabIndex = 4;
             this.SaveAssocNowButton.Text = "Сохранить";
             this.SaveAssocNowButton.UseVisualStyleBackColor = true;
             this.SaveAssocNowButton.Click += new System.EventHandler(this.SaveAssocNowButton_Click);
@@ -117,7 +119,8 @@
             this.buttonLoad.Location = new System.Drawing.Point(12, 41);
             this.buttonLoad.Name = "buttonLoad";
             this.buttonLoad.Size = new System.Drawing.Size(84, 23);
-            this.buttonLoad.TabIndex = 5;
+            this.buttonLoad.TabIndex = 1;
+            this.buttonLoad.TabStop = false;
             this.buttonLoad.Text = "Загрузить";
             this.buttonLoad.UseVisualStyleBackColor = true;
             this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
@@ -139,12 +142,22 @@
             this.groupBox2.Text = "Назначение %% выполнения";
             this.groupBox2.EnabledChanged += new System.EventHandler(this.groupBox2_EnabledChanged);
             // 
+            // StartDataInputButton
+            // 
+            this.StartDataInputButton.Location = new System.Drawing.Point(12, 94);
+            this.StartDataInputButton.Name = "StartDataInputButton";
+            this.StartDataInputButton.Size = new System.Drawing.Size(171, 23);
+            this.StartDataInputButton.TabIndex = 5;
+            this.StartDataInputButton.Text = "Начать!";
+            this.StartDataInputButton.UseVisualStyleBackColor = true;
+            this.StartDataInputButton.Click += new System.EventHandler(this.StartDataInputButton_Click);
+            // 
             // ButtonAcceptCompletionProgress
             // 
             this.ButtonAcceptCompletionProgress.Location = new System.Drawing.Point(231, 60);
             this.ButtonAcceptCompletionProgress.Name = "ButtonAcceptCompletionProgress";
             this.ButtonAcceptCompletionProgress.Size = new System.Drawing.Size(120, 23);
-            this.ButtonAcceptCompletionProgress.TabIndex = 12;
+            this.ButtonAcceptCompletionProgress.TabIndex = 6;
             this.ButtonAcceptCompletionProgress.Text = "Назначить";
             this.ButtonAcceptCompletionProgress.UseVisualStyleBackColor = true;
             this.ButtonAcceptCompletionProgress.Click += new System.EventHandler(this.ButtonAcceptCompletionProgress_Click);
@@ -174,7 +187,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(0, 46);
+            this.label2.Location = new System.Drawing.Point(6, 46);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(124, 13);
             this.label2.TabIndex = 9;
@@ -185,7 +198,7 @@
             this.buttonNext.Location = new System.Drawing.Point(231, 89);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(120, 23);
-            this.buttonNext.TabIndex = 8;
+            this.buttonNext.TabIndex = 7;
             this.buttonNext.Text = "Пропустить";
             this.buttonNext.UseVisualStyleBackColor = true;
             this.buttonNext.Click += new System.EventHandler(this.buttonNext_Click);
@@ -200,28 +213,41 @@
             this.CurrentViewTaskBox.TabIndex = 7;
             this.CurrentViewTaskBox.TabStop = false;
             // 
-            // StartDataInputButton
+            // buttonExit
             // 
-            this.StartDataInputButton.Location = new System.Drawing.Point(12, 94);
-            this.StartDataInputButton.Name = "StartDataInputButton";
-            this.StartDataInputButton.Size = new System.Drawing.Size(171, 23);
-            this.StartDataInputButton.TabIndex = 0;
-            this.StartDataInputButton.Text = "Начать!";
-            this.StartDataInputButton.UseVisualStyleBackColor = true;
-            this.StartDataInputButton.Click += new System.EventHandler(this.StartDataInputButton_Click);
+            this.buttonExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonExit.Location = new System.Drawing.Point(471, 224);
+            this.buttonExit.Name = "buttonExit";
+            this.buttonExit.Size = new System.Drawing.Size(75, 23);
+            this.buttonExit.TabIndex = 8;
+            this.buttonExit.Text = "Выход";
+            this.buttonExit.UseVisualStyleBackColor = true;
+            this.buttonExit.Click += new System.EventHandler(this.buttonExit_Click);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(12, 223);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "MSProject";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // UIform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(558, 222);
+            this.ClientSize = new System.Drawing.Size(558, 258);
             this.ControlBox = false;
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.StartDataInputButton);
+            this.Controls.Add(this.buttonExit);
             this.Controls.Add(this.SaveAssocNowButton);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonLoad);
             this.Controls.Add(this.startAssocButton);
-            this.Controls.Add(this.StartDataInputButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "UIform";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -252,5 +278,7 @@
         private System.Windows.Forms.TextBox CompletionTextBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button ButtonAcceptCompletionProgress;
+        private System.Windows.Forms.Button buttonExit;
+        private System.Windows.Forms.Button button1;
     }
 }
