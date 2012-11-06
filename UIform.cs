@@ -86,7 +86,7 @@ namespace NavisTimelinerPlugin
             if (RootTaskIsAccessible())
             {
                 //убираем текущие селекшны у тасков.
-                ClearSelections();
+                //ClearSelections(); --  больше  не нужно, реальзована фича добавления селекшнов к уже подгруженным из файла.
 
                 DataHolder = new SerializableDataHolder();
                 tasks.Clear();
@@ -145,26 +145,10 @@ namespace NavisTimelinerPlugin
                 int index = RootTask.Children.IndexOfDisplayName(task.DisplayName); 
                 timeliner.TaskEdit(RootTask, index, task);   
 
-                DataHolder.Add(task.DisplayName, this.findSelectionSetName(selection));                
+                //DataHolder.Add(task.DisplayName, this.findSelectionSetName(selection));                
                 nextTaskToAssociate();                
             }
-        }
-
-        /// <summary>
-        /// Поиск имени списка выбора по имеющемуся селекшну
-        /// </summary>
-        /// <param name="sel">Выбранные в Navisworks элементы</param>
-        /// <returns>Имя списка выбора, который выбирает указанный селекшн</returns>
-        string findSelectionSetName(Selection sel)
-        {
-            if (sel.HasSelectionSources == true)
-            {
-                SelectionSource sSource = sel.SelectionSources[0];
-                SavedItem sSet = nDoc.SelectionSets.ResolveSelectionSource(sSource);
-                return sSet.DisplayName;
-            }
-            return null;
-        }
+        }        
 
         private void SkipCurrentTaskButton_Click(object sender, EventArgs e)
         {
@@ -174,39 +158,56 @@ namespace NavisTimelinerPlugin
             }
         }
         
-        private void SaveAssocNowButton_Click(object sender, EventArgs e)
+        private void SaveTaskButton_Click(object sender, EventArgs e)
         {
-            if (DataHolder != null)
+            DataHolder.Clear();
+            foreach (TimelinerTask task in RootTask.Children)
             {
-                if (DataHolder.Data.Count != 0)
-                {
-                    Serializer.serialize(DataHolder);
-                }
+                string name = task.DisplayName;
+                string sel = findSelectionSetName(task);
+                DataHolder.Add(name, sel);
             }
+            Serializer.serialize(DataHolder);
         }
 
         /// <summary>
         /// Убирает селекшны у всех тасков в таймлайнере.
         /// </summary>
-        void ClearSelections()
+        //void ClearSelections()
+        //{
+        //    for(int i = 0; i < RootTask.Children.Count; i++)
+        //    {
+        //        TimelinerTask task = RootTask.Children[i] as TimelinerTask;
+        //        if (!task.Selection.IsClear)
+        //        {
+        //            TimelinerTask tmpTask = task.CreateCopy();
+        //            tmpTask.Selection.Clear();
+        //            timeliner.TaskEdit(RootTask, i, tmpTask);
+        //        }
+        //    }
+        //}
+
+        /// <summary>
+        /// Поиск имени списка выбора по имеющемуся селекшну
+        /// </summary>
+        /// <param name="sel">Таск, к которому привязан селекшн, имя которого надо найти</param>
+        /// <returns>Имя списка выбора, который выбирает указанный селекшн</returns>
+        string findSelectionSetName(TimelinerTask task)
         {
-            for(int i = 0; i < RootTask.Children.Count; i++)
+            if (task.Selection.HasSelectionSources == true)
             {
-                TimelinerTask task = RootTask.Children[i] as TimelinerTask;
-                if (!task.Selection.IsClear)
-                {
-                    TimelinerTask tmpTask = task.CreateCopy();
-                    tmpTask.Selection.Clear();
-                    timeliner.TaskEdit(RootTask, i, tmpTask);
-                }
+                SelectionSource sSource = task.Selection.SelectionSources[0];
+                SavedItem sSet = nDoc.SelectionSets.ResolveSelectionSource(sSource);
+                return sSet.DisplayName;
             }
+            return null;
         }
 
         #endregion
 
         #region Загрузка данных об ассоциированных тасках из файла
 
-        private void buttonLoad_Click(object sender, EventArgs e)
+        private void LoadButton_Click(object sender, EventArgs e)
         {
             groupBox1.Enabled = false;
             groupBox2.Enabled = false;

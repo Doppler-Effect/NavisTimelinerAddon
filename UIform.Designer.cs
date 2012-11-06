@@ -33,16 +33,16 @@
             this.AcceptCurrentSelectionButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.CurrentAssocTaskBox = new System.Windows.Forms.TextBox();
-            this.SaveAssocNowButton = new System.Windows.Forms.Button();
-            this.buttonLoad = new System.Windows.Forms.Button();
+            this.SaveTaskButton = new System.Windows.Forms.Button();
+            this.LoadButton = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.StartDataInputButton = new System.Windows.Forms.Button();
             this.ButtonAcceptCompletionProgress = new System.Windows.Forms.Button();
             this.UnitsComboBox = new System.Windows.Forms.ComboBox();
             this.CompletionTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonNext = new System.Windows.Forms.Button();
             this.CurrentViewTaskBox = new System.Windows.Forms.TextBox();
+            this.StartDataInputButton = new System.Windows.Forms.Button();
             this.buttonExit = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
@@ -104,26 +104,26 @@
             this.CurrentAssocTaskBox.TabIndex = 4;
             this.CurrentAssocTaskBox.TabStop = false;
             // 
-            // SaveAssocNowButton
+            // SaveTaskButton
             // 
-            this.SaveAssocNowButton.Location = new System.Drawing.Point(99, 41);
-            this.SaveAssocNowButton.Name = "SaveAssocNowButton";
-            this.SaveAssocNowButton.Size = new System.Drawing.Size(84, 23);
-            this.SaveAssocNowButton.TabIndex = 4;
-            this.SaveAssocNowButton.Text = "Сохранить";
-            this.SaveAssocNowButton.UseVisualStyleBackColor = true;
-            this.SaveAssocNowButton.Click += new System.EventHandler(this.SaveAssocNowButton_Click);
+            this.SaveTaskButton.Location = new System.Drawing.Point(99, 41);
+            this.SaveTaskButton.Name = "SaveTaskButton";
+            this.SaveTaskButton.Size = new System.Drawing.Size(84, 23);
+            this.SaveTaskButton.TabIndex = 4;
+            this.SaveTaskButton.Text = "Сохранить";
+            this.SaveTaskButton.UseVisualStyleBackColor = true;
+            this.SaveTaskButton.Click += new System.EventHandler(this.SaveTaskButton_Click);
             // 
-            // buttonLoad
+            // LoadButton
             // 
-            this.buttonLoad.Location = new System.Drawing.Point(12, 41);
-            this.buttonLoad.Name = "buttonLoad";
-            this.buttonLoad.Size = new System.Drawing.Size(84, 23);
-            this.buttonLoad.TabIndex = 1;
-            this.buttonLoad.TabStop = false;
-            this.buttonLoad.Text = "Загрузить";
-            this.buttonLoad.UseVisualStyleBackColor = true;
-            this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
+            this.LoadButton.Location = new System.Drawing.Point(12, 41);
+            this.LoadButton.Name = "LoadButton";
+            this.LoadButton.Size = new System.Drawing.Size(84, 23);
+            this.LoadButton.TabIndex = 1;
+            this.LoadButton.TabStop = false;
+            this.LoadButton.Text = "Загрузить";
+            this.LoadButton.UseVisualStyleBackColor = true;
+            this.LoadButton.Click += new System.EventHandler(this.LoadButton_Click);
             // 
             // groupBox2
             // 
@@ -141,16 +141,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Назначение %% выполнения";
             this.groupBox2.EnabledChanged += new System.EventHandler(this.groupBox2_EnabledChanged);
-            // 
-            // StartDataInputButton
-            // 
-            this.StartDataInputButton.Location = new System.Drawing.Point(12, 94);
-            this.StartDataInputButton.Name = "StartDataInputButton";
-            this.StartDataInputButton.Size = new System.Drawing.Size(171, 23);
-            this.StartDataInputButton.TabIndex = 5;
-            this.StartDataInputButton.Text = "Начать!";
-            this.StartDataInputButton.UseVisualStyleBackColor = true;
-            this.StartDataInputButton.Click += new System.EventHandler(this.StartDataInputButton_Click);
             // 
             // ButtonAcceptCompletionProgress
             // 
@@ -213,10 +203,20 @@
             this.CurrentViewTaskBox.TabIndex = 7;
             this.CurrentViewTaskBox.TabStop = false;
             // 
+            // StartDataInputButton
+            // 
+            this.StartDataInputButton.Location = new System.Drawing.Point(12, 94);
+            this.StartDataInputButton.Name = "StartDataInputButton";
+            this.StartDataInputButton.Size = new System.Drawing.Size(171, 23);
+            this.StartDataInputButton.TabIndex = 5;
+            this.StartDataInputButton.Text = "Начать";
+            this.StartDataInputButton.UseVisualStyleBackColor = true;
+            this.StartDataInputButton.Click += new System.EventHandler(this.StartDataInputButton_Click);
+            // 
             // buttonExit
             // 
             this.buttonExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonExit.Location = new System.Drawing.Point(471, 224);
+            this.buttonExit.Location = new System.Drawing.Point(108, 190);
             this.buttonExit.Name = "buttonExit";
             this.buttonExit.Size = new System.Drawing.Size(75, 23);
             this.buttonExit.TabIndex = 8;
@@ -226,7 +226,8 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 223);
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.button1.Location = new System.Drawing.Point(12, 190);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 9;
@@ -238,15 +239,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(558, 258);
+            this.ClientSize = new System.Drawing.Size(558, 222);
             this.ControlBox = false;
             this.Controls.Add(this.button1);
             this.Controls.Add(this.StartDataInputButton);
             this.Controls.Add(this.buttonExit);
-            this.Controls.Add(this.SaveAssocNowButton);
+            this.Controls.Add(this.SaveTaskButton);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.buttonLoad);
+            this.Controls.Add(this.LoadButton);
             this.Controls.Add(this.startAssocButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "UIform";
@@ -268,12 +269,12 @@
         private System.Windows.Forms.Button SkipCurrentTaskButton;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox CurrentAssocTaskBox;
-        private System.Windows.Forms.Button buttonLoad;
+        private System.Windows.Forms.Button LoadButton;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button StartDataInputButton;
         private System.Windows.Forms.TextBox CurrentViewTaskBox;
         private System.Windows.Forms.Button buttonNext;
-        private System.Windows.Forms.Button SaveAssocNowButton;
+        private System.Windows.Forms.Button SaveTaskButton;
         private System.Windows.Forms.ComboBox UnitsComboBox;
         private System.Windows.Forms.TextBox CompletionTextBox;
         private System.Windows.Forms.Label label2;
