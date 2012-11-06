@@ -36,7 +36,6 @@ namespace NavisTimelinerPlugin
                     {
                         instance = new UIform();
                         //addCustomDataSource();
-                        //RootTask = timeliner.Tasks[0] as TimelinerTask;
                     }
                     return instance;
                 }

@@ -150,95 +150,104 @@ namespace Autodesk.Navisworks.Timeliner
             string strLine = fileStream.ReadLine();
             string[] fieldNames = strLine.Split(',');
 
-            while (!fileStream.EndOfStream)
+            for (int i = 0; i < 20; i++)
             {
-                // Read a row & split on the comma character.
-                strLine = fileStream.ReadLine();
-                string[] fields = strLine.Split(',');
-
-                // Create sub task.
                 TimelinerTask task = new TimelinerTask();
-
-                // Some of the Timeliner Task fields below are populated directly from the external csv data, for example SynchronizationId is hardcoded to be 
-                // mapped to the first field in a csv row. However there are some fields which the user can select how the csv data will map to Timeliner Task data. 
-                // When the user is presented with the Field Mapping dialog they can select which csv fields map to which Timeliner Task fields. 
-                // If the user has set any of these mappings we map the data accordingly.
-
-                // SynchronizationId
-                task.SynchronizationId = fields[0];
-
-                // Task name
-                task.DisplayName = fields[1];
-
-                String strField;
-
-                // IsActualEnabled
-                task.IsActualEnabled = fields[2] == "1" ? true : false;
-                // ActualStartDate
-                strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskActualStartField);
-                if (!String.IsNullOrEmpty(strField))
-                {
-                    task.ActualStartDate = DateTime.Parse(strField, cultureInfo);
-                }
-                // ActualEndDate
-                strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskActualEndField);
-                if (!String.IsNullOrEmpty(strField))
-                {
-                    task.ActualEndDate = DateTime.Parse(strField, cultureInfo);
-                }
-
-                // IsPlannedEnabled
-                task.IsPlannedEnabled = fields[5] == "1" ? true : false;
-                // PlannedStartDate
-                strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskPlannedStartField);
-                if (!String.IsNullOrEmpty(strField))
-                {
-                    task.PlannedStartDate = DateTime.Parse(strField, cultureInfo);
-                }
-                // PlannedEndDate
-                strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskPlannedEndField);
-                if (!String.IsNullOrEmpty(strField))
-                {
-                    task.PlannedEndDate = DateTime.Parse(strField, cultureInfo);
-                }
-
-                // SimulationTaskTypeName
-                task.SimulationTaskTypeName = fields[8];
-                if (String.IsNullOrEmpty(task.SimulationTaskTypeName) == false)
-                {
-                    // Update the import result if SimulationTaskTypeName is set
-                    importResult.TaskTypeWasSet = true;
-                }
-
-                // Material cost
-                strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskMaterialCostField);
-                if (!String.IsNullOrEmpty(strField))
-                {
-                    task.MaterialCost = Double.Parse(strField, cultureInfo);
-                }
-                // Labor cost
-                strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskLaborCostField);
-                if (!String.IsNullOrEmpty(strField))
-                {
-                    task.LaborCost = Double.Parse(strField, cultureInfo);
-                }
-                // Equip Cost
-                strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskEquipmentCostField);
-                if (!String.IsNullOrEmpty(strField))
-                {
-                    task.EquipmentCost = Double.Parse(strField, cultureInfo);
-                }
-                // SubContact cost
-                strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskSubcontractorCostField);
-                if (!String.IsNullOrEmpty(strField))
-                {
-                    task.SubcontractorCost = Double.Parse(strField, cultureInfo);
-                }
-
-                // Every task has a Children member which can be populated to create hierarchy. In this example every task we 
-                // import is a child of the root task.
+                task.DisplayName = "Foo" + i;
+                task.ActualStartDate = DateTime.Now;
+                task.ActualEndDate = DateTime.Now;
                 rootTask.Children.Add(task);
             }
+
+            //while (!fileStream.EndOfStream)
+            //{
+            //    // Read a row & split on the comma character.
+            //    strLine = fileStream.ReadLine();
+            //    string[] fields = strLine.Split(',');
+
+            //    // Create sub task.
+            //    TimelinerTask task = new TimelinerTask();
+
+            //    // Some of the Timeliner Task fields below are populated directly from the external csv data, for example SynchronizationId is hardcoded to be 
+            //    // mapped to the first field in a csv row. However there are some fields which the user can select how the csv data will map to Timeliner Task data. 
+            //    // When the user is presented with the Field Mapping dialog they can select which csv fields map to which Timeliner Task fields. 
+            //    // If the user has set any of these mappings we map the data accordingly.
+
+            //    // SynchronizationId
+            //    task.SynchronizationId = fields[0];
+
+            //    // Task name
+            //    task.DisplayName = fields[1];
+
+            //    String strField;
+
+            //    // IsActualEnabled
+            //    task.IsActualEnabled = fields[2] == "1" ? true : false;
+            //    // ActualStartDate
+            //    strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskActualStartField);
+            //    if (!String.IsNullOrEmpty(strField))
+            //    {
+            //        task.ActualStartDate = DateTime.Parse(strField, cultureInfo);
+            //    }
+            //    // ActualEndDate
+            //    strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskActualEndField);
+            //    if (!String.IsNullOrEmpty(strField))
+            //    {
+            //        task.ActualEndDate = DateTime.Parse(strField, cultureInfo);
+            //    }
+
+            //    // IsPlannedEnabled
+            //    task.IsPlannedEnabled = fields[5] == "1" ? true : false;
+            //    // PlannedStartDate
+            //    strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskPlannedStartField);
+            //    if (!String.IsNullOrEmpty(strField))
+            //    {
+            //        task.PlannedStartDate = DateTime.Parse(strField, cultureInfo);
+            //    }
+            //    // PlannedEndDate
+            //    strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskPlannedEndField);
+            //    if (!String.IsNullOrEmpty(strField))
+            //    {
+            //        task.PlannedEndDate = DateTime.Parse(strField, cultureInfo);
+            //    }
+
+            //    // SimulationTaskTypeName
+            //    task.SimulationTaskTypeName = fields[8];
+            //    if (String.IsNullOrEmpty(task.SimulationTaskTypeName) == false)
+            //    {
+            //        // Update the import result if SimulationTaskTypeName is set
+            //        importResult.TaskTypeWasSet = true;
+            //    }
+
+            //    // Material cost
+            //    strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskMaterialCostField);
+            //    if (!String.IsNullOrEmpty(strField))
+            //    {
+            //        task.MaterialCost = Double.Parse(strField, cultureInfo);
+            //    }
+            //    // Labor cost
+            //    strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskLaborCostField);
+            //    if (!String.IsNullOrEmpty(strField))
+            //    {
+            //        task.LaborCost = Double.Parse(strField, cultureInfo);
+            //    }
+            //    // Equip Cost
+            //    strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskEquipmentCostField);
+            //    if (!String.IsNullOrEmpty(strField))
+            //    {
+            //        task.EquipmentCost = Double.Parse(strField, cultureInfo);
+            //    }
+            //    // SubContact cost
+            //    strField = StringValueOfCsvField(fieldNames, fields, dataSource.TaskSubcontractorCostField);
+            //    if (!String.IsNullOrEmpty(strField))
+            //    {
+            //        task.SubcontractorCost = Double.Parse(strField, cultureInfo);
+            //    }
+
+            //    // Every task has a Children member which can be populated to create hierarchy. In this example every task we 
+            //    // import is a child of the root task.
+            //    rootTask.Children.Add(task);
+            //}
 
             // Close the file stream.
             fileStream.Close();
@@ -285,7 +294,7 @@ namespace Autodesk.Navisworks.Timeliner
             get
             {
                 // If the datasource cannot be queried at all, return false here.
-                return true;
+                return true; 
             }
         }
     }
