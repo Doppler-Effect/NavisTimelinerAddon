@@ -42,14 +42,14 @@ using Autodesk.Navisworks.Api.Timeliner;
 namespace Autodesk.Navisworks.Timeliner
 {
 
-    [PluginAttribute("TimelinerDataSource_SampleDatasource_NET.DumpTimelinerTasks",  // Plugin name
-                     "ADSK",                                                         // Developer ID or GUID
-                     DisplayName = "Sample Datasource")]                             // Display name for the Plugin in the Ribbon
+    [PluginAttribute("CustomDataSource",                                             // Plugin name
+                     "TKACH",                                                        // Developer ID or GUID
+                     DisplayName = "CSV automated datasource")]                      // Display name for the Plugin in the Ribbon
     [AddInPlugin(AddInLocation.None)]                                                // Plugin icon location 
-    [Interface("TimelinerDataSourceProvider", "Navisworks", DisplayName = "Sample Datasource")]
-    public sealed class SampleDataSource : TimelinerDataSourceProvider
+    [Interface("TimelinerDataSourceProvider", "Navisworks", DisplayName = ".CSV automated")]
+    public sealed class DataSource : TimelinerDataSourceProvider
     {
-        public SampleDataSource()
+        public DataSource()
         {
         }
 
@@ -71,20 +71,21 @@ namespace Autodesk.Navisworks.Timeliner
             if (result == DialogResult.OK)
             {
                 dataSource.ProjectIdentifier = dlg.FileName;
+                // Build the list of external fields we will allow the user to map to Timeliner Task data
+                //BuildAvailableFields(dataSource);
+
+                // DataSourceProviderId should be set to Plugin.Id which should (a property of TimelinerDataSourceProvider)
+                // If not set then the framework cannot find the plugin it should use for Synchronize & Rebuild. 
+                dataSource.DataSourceProviderId = base.Id;
+                // Version, whatever you like
+                dataSource.DataSourceProviderVersion = 1.0;
+                // Some user friendly name, ideally matching the name of the plugin itself  
+                dataSource.DataSourceProviderName = "SampleDataSource";
+
+                return dataSource;
             }
-
-            // Build the list of external fields we will allow the user to map to Timeliner Task data
-            BuildAvailableFields(dataSource);
-
-            // DataSourceProviderId should be set to Plugin.Id which should (a property of TimelinerDataSourceProvider)
-            // If not set then the framework cannot find the plugin it should use for Synchronize & Rebuild. 
-            dataSource.DataSourceProviderId = base.Id;
-            // Version, whatever you like
-            dataSource.DataSourceProviderVersion = 1.0;
-            // Some user friendly name, ideally matching the name of the plugin itself  
-            dataSource.DataSourceProviderName = "SampleDataSource";
-
-            return dataSource;
+            else
+                return null;
         }
 
 
@@ -101,10 +102,10 @@ namespace Autodesk.Navisworks.Timeliner
 
 
             // Upgraded 2011 Navisworks Projects do not have available fields built, ensure we have a list of fields.
-            if (dataSource.AvailableFields.Count == 0)
-            {
-                BuildAvailableFields(dataSource);
-            }
+            //if (dataSource.AvailableFields.Count == 0)
+            //{
+            //    BuildAvailableFields(dataSource);
+            //}
         }
 
 
@@ -143,7 +144,7 @@ namespace Autodesk.Navisworks.Timeliner
             StreamReader fileStream = new StreamReader(dataSource.ProjectIdentifier);
 
             // The numeric and datetime values string representation depends on the locale, here we use US.
-            CultureInfo cultureInfo = new CultureInfo("en-US");
+            CultureInfo cultureInfo = new CultureInfo("ru-RU");
 
             // Store the field names
             string strLine = fileStream.ReadLine();

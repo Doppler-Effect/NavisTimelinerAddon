@@ -371,50 +371,10 @@ namespace NavisTimelinerPlugin
         
         private void button1_Click(object sender, EventArgs e)
         {
-            //addCustomDataSource();
-            buildTasks();
-        }
 
-        static void addCustomDataSource()
-        {
-            TimelinerDataSource dataSource = new TimelinerDataSource("Custom 1");
-
-            dataSource.TaskSynchronizationIdField = new TimelinerDataSourceField("UniqueId", "Unique Id");
-            dataSource.TaskTypeField = new TimelinerDataSourceField("Name", "Name");
-            dataSource.TaskActualStartField = new TimelinerDataSourceField("ActualStartDate", "Actual Start Date");
-            dataSource.TaskActualEndField = new TimelinerDataSourceField("ActualEndDate", "Actual End Date");
-            dataSource.TaskPlannedStartField = new TimelinerDataSourceField("PlannedStartDate", "Planned Start Date");
-            dataSource.TaskPlannedEndField = new TimelinerDataSourceField("PlannedEndDate", "Planned End Date");
-            dataSource.TaskMaterialCostField = new TimelinerDataSourceField("MaterialCost", "Material Cost");
-            dataSource.TaskLaborCostField = new TimelinerDataSourceField("LaborCost", "Labor Cost");
-            dataSource.TaskEquipmentCostField = new TimelinerDataSourceField("EquipmentCost", "Equipment Cost");
-            dataSource.TaskSubcontractorCostField = new TimelinerDataSourceField("SubcontractorCost", "Subcontractor Cost");
-            
-            timeliner.DataSourceAddCopy(dataSource);
-        }
-
-        static void buildTasks()
-        {
-            try
-            {
-                TimelinerTask task;
-                TimelinerTask root = new TimelinerTask();
-                root.DisplayName = "root";
-                for (int i = 0; i < 20; i++)
-                {
-                    task = new TimelinerTask();
-                    task.DisplayName = "foo " + i;
-                    task.ActualEndDate = DateTime.Now;
-                    task.ActualStartDate = DateTime.Now;
-                    timeliner.TaskAddCopy(root, task);
-                }
-            }
-            catch (Exception ex)
-            { };
         }
 
         #endregion
-
 
     }
 }
