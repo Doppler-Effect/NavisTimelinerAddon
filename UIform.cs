@@ -72,6 +72,7 @@ namespace NavisTimelinerPlugin
         private void buttonExit_Click(object sender, EventArgs e)
         {
             this.Visible = false;
+            this.MakeAllModelItemsVisible();
         }
         #endregion
 
