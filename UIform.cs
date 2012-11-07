@@ -67,7 +67,7 @@ namespace NavisTimelinerPlugin
         }
         private void groupBox2_EnabledChanged(object sender, EventArgs e)
         {
-            MakeAllModelItemsVisible();
+            this.MakeAllModelItemsVisible();
         }
         private void buttonExit_Click(object sender, EventArgs e)
         {
@@ -143,9 +143,7 @@ namespace NavisTimelinerPlugin
                 Selection selection = nDoc.CurrentSelection.Value;
                 task.Selection.CopyFrom(selection);
                 int index = RootTask.Children.IndexOfDisplayName(task.DisplayName); 
-                timeliner.TaskEdit(RootTask, index, task);   
-
-                //DataHolder.Add(task.DisplayName, this.findSelectionSetName(selection));                
+                timeliner.TaskEdit(RootTask, index, task);                  
                 nextTaskToAssociate();                
             }
         }        
@@ -344,18 +342,24 @@ namespace NavisTimelinerPlugin
 
         private void WriteCompletionToTask()
         {
-            string value = CompletionTextBox.Text;
+            string value = removeLetters(CompletionTextBox.Text);
             string units = UnitsComboBox.Text;
+            CompletionTextBox.Text = value;
 
-            TimelinerTask task = currentTask.Task.CreateCopy();
-            int index = RootTask.Children.IndexOfDisplayName(task.DisplayName);
+            if (!string.IsNullOrEmpty(value))
+            {
+                TimelinerTask task = currentTask.Task.CreateCopy();
+                int index = RootTask.Children.IndexOfDisplayName(task.DisplayName);
 
-            task.SetUserFieldByIndex(0, value);
-            task.SetUserFieldByIndex(1, units);
+                task.SetUserFieldByIndex(0, value);
+                task.SetUserFieldByIndex(1, units);
 
-            timeliner.TaskEdit(RootTask, index, task);
+                timeliner.TaskEdit(RootTask, index, task);
 
-            nextTaskToDataInput();
+                nextTaskToDataInput();
+            }
+            else
+                MessageBox.Show("Введите значение");
         }
 
         void MakeAllModelItemsVisible()
@@ -363,6 +367,17 @@ namespace NavisTimelinerPlugin
             nDoc.CurrentSelection.SelectAll();
             nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0);
             nDoc.CurrentSelection.Clear();
+        }
+
+        string removeLetters(string str)
+        {
+            string result = null;
+            foreach (char c in str)
+            {
+                if (char.IsDigit(c) || char.IsPunctuation(c))
+                    result += c;
+            }
+            return result;
         }
         
         #endregion

@@ -53,7 +53,7 @@
             // 
             this.startAssocButton.Location = new System.Drawing.Point(12, 12);
             this.startAssocButton.Name = "startAssocButton";
-            this.startAssocButton.Size = new System.Drawing.Size(171, 23);
+            this.startAssocButton.Size = new System.Drawing.Size(171, 39);
             this.startAssocButton.TabIndex = 0;
             this.startAssocButton.Text = "Переназначить";
             this.startAssocButton.UseVisualStyleBackColor = true;
@@ -106,7 +106,7 @@
             // 
             // SaveTaskButton
             // 
-            this.SaveTaskButton.Location = new System.Drawing.Point(99, 41);
+            this.SaveTaskButton.Location = new System.Drawing.Point(99, 57);
             this.SaveTaskButton.Name = "SaveTaskButton";
             this.SaveTaskButton.Size = new System.Drawing.Size(84, 23);
             this.SaveTaskButton.TabIndex = 4;
@@ -116,7 +116,7 @@
             // 
             // LoadButton
             // 
-            this.LoadButton.Location = new System.Drawing.Point(12, 41);
+            this.LoadButton.Location = new System.Drawing.Point(12, 57);
             this.LoadButton.Name = "LoadButton";
             this.LoadButton.Size = new System.Drawing.Size(84, 23);
             this.LoadButton.TabIndex = 1;
@@ -207,7 +207,7 @@
             // 
             this.StartDataInputButton.Location = new System.Drawing.Point(12, 94);
             this.StartDataInputButton.Name = "StartDataInputButton";
-            this.StartDataInputButton.Size = new System.Drawing.Size(171, 23);
+            this.StartDataInputButton.Size = new System.Drawing.Size(171, 82);
             this.StartDataInputButton.TabIndex = 5;
             this.StartDataInputButton.Text = "Начать";
             this.StartDataInputButton.UseVisualStyleBackColor = true;
@@ -215,8 +215,7 @@
             // 
             // buttonExit
             // 
-            this.buttonExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonExit.Location = new System.Drawing.Point(108, 190);
+            this.buttonExit.Location = new System.Drawing.Point(108, 182);
             this.buttonExit.Name = "buttonExit";
             this.buttonExit.Size = new System.Drawing.Size(75, 23);
             this.buttonExit.TabIndex = 8;
@@ -226,8 +225,7 @@
             // 
             // button1
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(12, 190);
+            this.button1.Location = new System.Drawing.Point(12, 182);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 9;
@@ -239,7 +237,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(558, 222);
+            this.ClientSize = new System.Drawing.Size(558, 220);
             this.ControlBox = false;
             this.Controls.Add(this.button1);
             this.Controls.Add(this.StartDataInputButton);
