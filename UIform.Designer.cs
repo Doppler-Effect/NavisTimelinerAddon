@@ -156,10 +156,11 @@
             // 
             this.UnitsComboBox.FormattingEnabled = true;
             this.UnitsComboBox.Items.AddRange(new object[] {
-            "КГ",
-            "кгс",
-            "М",
-            "мм",
+            "%",
+            "м.п.",
+            "м2",
+            "м3",
+            "тн.",
             "шт."});
             this.UnitsComboBox.Location = new System.Drawing.Point(136, 62);
             this.UnitsComboBox.Name = "UnitsComboBox";

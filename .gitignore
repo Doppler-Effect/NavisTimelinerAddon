@@ -1,3 +1,7 @@
 #BIN and OBJ folders will be ignored by git
 bin
 obj
+*.suo
+*.csproj
+*.csproj.user
+*.sln
