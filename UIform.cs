@@ -191,7 +191,7 @@ namespace NavisTimelinerPlugin
         /// </summary>
         /// <param name="sel">Таск, к которому привязан селекшн, имя которого надо найти</param>
         /// <returns>Имя списка выбора, который выбирает указанный селекшн</returns>
-        string findSelectionSetName(TimelinerTask task)
+        public string findSelectionSetName(TimelinerTask task)
         {
             if (task.Selection.HasSelectionSources == true)
             {
@@ -245,7 +245,7 @@ namespace NavisTimelinerPlugin
         /// Возвращает выборку элементов модели по имени списка выбора.
         /// </summary>
         /// <param name="Name">Имя списка выбора (Selextion Set), для которого нужно получить выборку.</param>
-        SelectionSourceCollection getSelectionSourceByName(string Name)
+        public SelectionSourceCollection getSelectionSourceByName(string Name)
         {
             SelectionSourceCollection result = new SelectionSourceCollection();
             foreach (SavedItem item in nDoc.SelectionSets.Value)
@@ -391,6 +391,15 @@ namespace NavisTimelinerPlugin
         }
 
         #endregion
+
+        private void ManualAssocButton_Click(object sender, EventArgs e)
+        {
+            if (RootTaskIsAccessible())
+            {
+                DetailedForm form = new DetailedForm(timeliner, nDoc, RootTask);
+                form.Show();
+            }
+        }
 
     }
 }

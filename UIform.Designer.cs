@@ -45,6 +45,7 @@
             this.StartDataInputButton = new System.Windows.Forms.Button();
             this.buttonExit = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.ManualAssocButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -53,9 +54,9 @@
             // 
             this.startAssocButton.Location = new System.Drawing.Point(12, 12);
             this.startAssocButton.Name = "startAssocButton";
-            this.startAssocButton.Size = new System.Drawing.Size(171, 39);
+            this.startAssocButton.Size = new System.Drawing.Size(84, 39);
             this.startAssocButton.TabIndex = 0;
-            this.startAssocButton.Text = "Переназначить";
+            this.startAssocButton.Text = "Перебор тасков";
             this.startAssocButton.UseVisualStyleBackColor = true;
             this.startAssocButton.Click += new System.EventHandler(this.startAssocButton_Click);
             // 
@@ -206,9 +207,9 @@
             // 
             // StartDataInputButton
             // 
-            this.StartDataInputButton.Location = new System.Drawing.Point(12, 94);
+            this.StartDataInputButton.Location = new System.Drawing.Point(12, 104);
             this.StartDataInputButton.Name = "StartDataInputButton";
-            this.StartDataInputButton.Size = new System.Drawing.Size(171, 82);
+            this.StartDataInputButton.Size = new System.Drawing.Size(171, 43);
             this.StartDataInputButton.TabIndex = 5;
             this.StartDataInputButton.Text = "Начать";
             this.StartDataInputButton.UseVisualStyleBackColor = true;
@@ -216,7 +217,7 @@
             // 
             // buttonExit
             // 
-            this.buttonExit.Location = new System.Drawing.Point(108, 182);
+            this.buttonExit.Location = new System.Drawing.Point(108, 183);
             this.buttonExit.Name = "buttonExit";
             this.buttonExit.Size = new System.Drawing.Size(75, 23);
             this.buttonExit.TabIndex = 8;
@@ -226,7 +227,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 182);
+            this.button1.Location = new System.Drawing.Point(12, 183);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 9;
@@ -234,12 +235,23 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // ManualAssocButton
+            // 
+            this.ManualAssocButton.Location = new System.Drawing.Point(99, 12);
+            this.ManualAssocButton.Name = "ManualAssocButton";
+            this.ManualAssocButton.Size = new System.Drawing.Size(84, 39);
+            this.ManualAssocButton.TabIndex = 10;
+            this.ManualAssocButton.Text = "Ручное назначение";
+            this.ManualAssocButton.UseVisualStyleBackColor = true;
+            this.ManualAssocButton.Click += new System.EventHandler(this.ManualAssocButton_Click);
+            // 
             // UIform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(558, 220);
             this.ControlBox = false;
+            this.Controls.Add(this.ManualAssocButton);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.StartDataInputButton);
             this.Controls.Add(this.buttonExit);
@@ -250,6 +262,8 @@
             this.Controls.Add(this.startAssocButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "UIform";
+            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "TimelinerPlugin";
             this.TopMost = true;
@@ -280,5 +294,6 @@
         private System.Windows.Forms.Button ButtonAcceptCompletionProgress;
         private System.Windows.Forms.Button buttonExit;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button ManualAssocButton;
     }
 }

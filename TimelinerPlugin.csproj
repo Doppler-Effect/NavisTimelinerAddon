@@ -51,6 +51,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CurrentTask.cs" />
+    <Compile Include="DetailedForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DetailedForm.Designer.cs">
+      <DependentUpon>DetailedForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SerializableDataHolder.cs" />
     <Compile Include="TimelinerPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,6 +68,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DetailedForm.resx">
+      <DependentUpon>DetailedForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UIform.resx">
       <DependentUpon>UIform.cs</DependentUpon>
     </EmbeddedResource>
