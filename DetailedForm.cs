@@ -27,11 +27,16 @@ namespace NavisTimelinerPlugin
             this.RootTask = RootTask;
             FillGridSelections();
             FillTasks();
+            FillSelections();
         }
 
+        /// <summary>
+        /// Заполняет комбобоксы второй колонки значениями (названиями селекшн сетов документа).
+        /// </summary>
         void FillGridSelections()
         {
             List<string> dataSource = new List<string>();
+            dataSource.Add("");
             foreach (SavedItem item in nDoc.SelectionSets.Value)
             {
                 dataSource.Add(item.DisplayName);
@@ -39,34 +44,59 @@ namespace NavisTimelinerPlugin
             this.SET.DataSource = dataSource;
         }
 
+        /// <summary>
+        /// Заполняет первую колонку именами тасков.
+        /// </summary>
         void FillTasks()
         {
-            List<string> dataSource = new List<string>();
             if (RootTask != null)
             {
                 foreach (SavedItem item in RootTask.Children)
                 {
-                    dataSource.Add(item.DisplayName);
-                }
-                foreach (string str in dataSource)
-                {
-                    this.dataGridView1.Rows.Add(str);
+                    this.dataGridView1.Rows.Add(item.DisplayName);
                 }
             }
         }
 
+        /// <summary>
+        /// Выбирает во второй колонке уже назначенные селекшны, если у соответствующих тасков они есть.
+        /// </summary>
+        void FillSelections()
+        {
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                string taskName = row.Cells[0].Value.ToString();
+                int taskNo = RootTask.Children.IndexOfDisplayName(taskName);
+                if (taskNo != -1)
+                {
+                    string selection = UIform.Instance.findSelectionSetName(RootTask.Children[taskNo] as TimelinerTask);
+                    if (selection != null)
+                    {
+                        List<string> list = SET.DataSource as List<string>;
+                        if (list.Contains(selection))
+                        {
+                            row.Cells[1].Value = selection;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Заносит выбранные (или обнулённые) селекшны к таскам в таймлайнер.
+        /// </summary>
         private void OKButton_Click(object sender, EventArgs e)
         {
             foreach(DataGridViewRow row in dataGridView1.Rows)
             {
-                if (row.Cells[1].Value != null)
-                {
-                    string taskName = row.Cells[0].Value.ToString();
-                    string setName = row.Cells[1].Value.ToString();
+                string taskName = row.Cells[0].Value.ToString();
+                int taskindex = RootTask.Children.IndexOfDisplayName(taskName);
 
-                    int taskindex = RootTask.Children.IndexOfDisplayName(taskName);
-                    if (taskindex != -1)
+                if (taskindex != -1)
+                {
+                    if (row.Cells[1].Value != null)
                     {
+                        string setName = row.Cells[1].Value.ToString();
                         SelectionSourceCollection collection = UIform.Instance.getSelectionSourceByName(setName);
                         if (collection.Count != 0)
                         {
@@ -75,8 +105,15 @@ namespace NavisTimelinerPlugin
                             timeliner.TaskEdit(RootTask, taskindex, task);
                         }
                     }
+                    else
+                    {
+                        TimelinerTask task = RootTask.Children[taskindex].CreateCopy() as TimelinerTask;
+                        task.Selection.Clear();
+                        timeliner.TaskEdit(RootTask, taskindex, task);
+                    }
                 }
             }
+            this.Close();
         }
     }
 }

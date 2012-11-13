@@ -76,6 +76,62 @@ namespace NavisTimelinerPlugin
         }
         #endregion
 
+        #region Общие методы и св-ва
+
+        /// <summary>
+        /// Убирает селекшны у всех тасков в таймлайнере.
+        /// </summary>
+        public void ClearSelections()
+        {
+            for (int i = 0; i < RootTask.Children.Count; i++)
+            {
+                TimelinerTask task = RootTask.Children[i] as TimelinerTask;
+                if (!task.Selection.IsClear)
+                {
+                    TimelinerTask tmpTask = task.CreateCopy();
+                    tmpTask.Selection.Clear();
+                    timeliner.TaskEdit(RootTask, i, tmpTask);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Поиск имени списка выбора по имеющемуся таску
+        /// </summary>
+        /// <param name="task">Таск, к которому привязан селекшн, имя которого надо найти</param>
+        /// <returns>Имя списка выбора, который выбирает указанный селекшн</returns>
+        public string findSelectionSetName(TimelinerTask task)
+        {
+            if (task.Selection.HasSelectionSources == true)
+            {
+                SelectionSource sSource = task.Selection.SelectionSources[0];
+                SavedItem sSet = nDoc.SelectionSets.ResolveSelectionSource(sSource);
+                return sSet.DisplayName;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Возвращает выборку элементов модели по имени списка выбора.
+        /// </summary>
+        /// <param name="Name">Имя списка выбора (Selextion Set), для которого нужно получить выборку.</param>
+        public SelectionSourceCollection getSelectionSourceByName(string Name)
+        {
+            SelectionSourceCollection result = new SelectionSourceCollection();
+            foreach (SavedItem item in nDoc.SelectionSets.Value)
+            {
+                if (item.DisplayName == Name)
+                {
+                    SelectionSource source = nDoc.SelectionSets.CreateSelectionSource(item);
+                    result.Add(source);
+                    return result;
+                }
+            }
+            return result;
+        }
+
+        #endregion
+
         #region Механизм ручного назначения выборок таскам.
         /// <summary>
         /// Запускает механизм назначения селекшнов таскам.
@@ -168,40 +224,7 @@ namespace NavisTimelinerPlugin
             }
             Serializer.serialize(DataHolder);
         }
-
-        /// <summary>
-        /// Убирает селекшны у всех тасков в таймлайнере.
-        /// </summary>
-        //void ClearSelections()
-        //{
-        //    for(int i = 0; i < RootTask.Children.Count; i++)
-        //    {
-        //        TimelinerTask task = RootTask.Children[i] as TimelinerTask;
-        //        if (!task.Selection.IsClear)
-        //        {
-        //            TimelinerTask tmpTask = task.CreateCopy();
-        //            tmpTask.Selection.Clear();
-        //            timeliner.TaskEdit(RootTask, i, tmpTask);
-        //        }
-        //    }
-        //}
-
-        /// <summary>
-        /// Поиск имени списка выбора по имеющемуся селекшну
-        /// </summary>
-        /// <param name="sel">Таск, к которому привязан селекшн, имя которого надо найти</param>
-        /// <returns>Имя списка выбора, который выбирает указанный селекшн</returns>
-        public string findSelectionSetName(TimelinerTask task)
-        {
-            if (task.Selection.HasSelectionSources == true)
-            {
-                SelectionSource sSource = task.Selection.SelectionSources[0];
-                SavedItem sSet = nDoc.SelectionSets.ResolveSelectionSource(sSource);
-                return sSet.DisplayName;
-            }
-            return null;
-        }
-
+        
         #endregion
 
         #region Загрузка данных об ассоциированных тасках из файла
@@ -224,6 +247,7 @@ namespace NavisTimelinerPlugin
 
             if (DataHolder != null)
             {
+                ClearSelections();
                 foreach (KeyValuePair<string, string> pair in DataHolder.Data)
                 {
                     if (pair.Value != null)
@@ -239,25 +263,6 @@ namespace NavisTimelinerPlugin
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Возвращает выборку элементов модели по имени списка выбора.
-        /// </summary>
-        /// <param name="Name">Имя списка выбора (Selextion Set), для которого нужно получить выборку.</param>
-        public SelectionSourceCollection getSelectionSourceByName(string Name)
-        {
-            SelectionSourceCollection result = new SelectionSourceCollection();
-            foreach (SavedItem item in nDoc.SelectionSets.Value)
-            {
-                if (item.DisplayName == Name)
-                {
-                    SelectionSource source = nDoc.SelectionSets.CreateSelectionSource(item);
-                    result.Add(source);
-                    return result;
-                }
-            }
-            return result;
         }
 
         #endregion
