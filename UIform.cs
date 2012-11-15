@@ -392,7 +392,20 @@ namespace NavisTimelinerPlugin
         
         private void button1_Click(object sender, EventArgs e)
         {
+            TimelinerTask root = new TimelinerTask();
+            root.DisplayName = "Foo ROOT";
 
+            for (int i = 0; i < 20; i++)
+            {
+                TimelinerTask task = new TimelinerTask();
+                task.DisplayName = "Foo" + i;
+                task.ActualStartDate = DateTime.Now;
+                task.ActualEndDate = DateTime.Now;
+                root.Children.Add(task);
+            }
+
+            timeliner.TaskAddCopy(timeliner.TasksRoot, root);
+            //timeliner.TaskAddCopy(root);
         }
 
         #endregion

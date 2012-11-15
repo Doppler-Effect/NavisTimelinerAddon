@@ -159,6 +159,7 @@ namespace Autodesk.Navisworks.Timeliner
                 rootTask.Children.Add(task);
             }
 
+            #region Процесс назначения полей из .csv файла - часть примера Autodesk
             //while (!fileStream.EndOfStream)
             //{
             //    // Read a row & split on the comma character.
@@ -250,6 +251,8 @@ namespace Autodesk.Navisworks.Timeliner
             //}
 
             // Close the file stream.
+            #endregion
+
             fileStream.Close();
 
             importResult.RootTask = rootTask;
