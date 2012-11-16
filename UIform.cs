@@ -392,20 +392,51 @@ namespace NavisTimelinerPlugin
         
         private void button1_Click(object sender, EventArgs e)
         {
-            TimelinerTask root = new TimelinerTask();
-            root.DisplayName = "Foo ROOT";
-
-            for (int i = 0; i < 20; i++)
+            string filename = null;
+            if (openCSVFile(ref filename))
             {
-                TimelinerTask task = new TimelinerTask();
-                task.DisplayName = "Foo" + i;
-                task.ActualStartDate = DateTime.Now;
-                task.ActualEndDate = DateTime.Now;
-                root.Children.Add(task);
-            }
+                TimelinerTask root = new TimelinerTask();
+                root.DisplayName = "Foo ROOT";
 
-            timeliner.TaskAddCopy(timeliner.TasksRoot, root);
-            //timeliner.TaskAddCopy(root);
+
+                makeTask();
+            }            
+        }
+
+        private TimelinerTask makeTask()
+        {
+            //for (int i = 0; i < 20; i++)
+            //{
+            //    TimelinerTask task = new TimelinerTask();
+            //    task.DisplayName = "Foo" + i;
+            //    task.ActualStartDate = DateTime.Now;
+            //    task.ActualEndDate = DateTime.Now;
+            //    //root.Children.Add(task);
+            //}
+
+            //timeliner.TaskAddCopy(timeliner.TasksRoot, root);
+        }
+
+        private bool openCSVFile(ref string filename)
+        {
+            OpenFileDialog opfile = new OpenFileDialog();
+            opfile.AddExtension = true;
+            opfile.CheckFileExists = true;
+            opfile.Multiselect = false;
+            opfile.RestoreDirectory = true;
+            opfile.DefaultExt = "csv";
+            opfile.Filter = "Comma separated values (*.csv)|*.csv";
+            opfile.RestoreDirectory = true;
+            opfile.Title = "Выберите файл...";
+
+            DialogResult res = opfile.ShowDialog(UIform.Instance);
+            if (res == DialogResult.OK)
+            {
+                filename = opfile.FileName;
+                return true;
+            }
+            else
+                return false;
         }
 
         #endregion
