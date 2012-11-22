@@ -35,7 +35,6 @@ namespace NavisTimelinerPlugin
                     if (instance == null)
                     {
                         instance = new UIform();
-                        //addCustomDataSource();
                     }
                     return instance;
                 }
@@ -49,14 +48,23 @@ namespace NavisTimelinerPlugin
         #endregion
 
         #region счётчики, контейнеры для данных итд.
-        List<TimelinerTask> tasks = new List<TimelinerTask>(); //массив тасков проекта. Используется в ручном назначении тасков.
+        public List<TimelinerTask> Tasks
+        {
+            get
+            {
+                return tasks;
+            }
+        }
+        List<TimelinerTask> tasks = new List<TimelinerTask>(); //массив тасков проекта. Используется в процедуре перебора тасков.
         CurrentTask currentTask = new CurrentTask();//Контейнер для хранения обрабатываемого в данный момент таска.
         SerializableDataHolder DataHolder;//массив для сохранения обработанных тасков в файл.
-        bool RootTaskIsAccessible()
+        bool TasksAreAccessible()
         {
             if (timeliner.Tasks.Count != 0)
             {
-                RootTask = timeliner.Tasks[0] as TimelinerTask;
+                tasks.Clear();
+                TimelinerTask RootTask = timeliner.Tasks[0] as TimelinerTask;
+                this.getTasks(RootTask);
                 return true;
             }
             else
@@ -77,6 +85,18 @@ namespace NavisTimelinerPlugin
         #endregion
 
         #region Общие методы и св-ва
+
+        /// <summary>
+        /// Рекурсивный обход дерева тасков и сбор всех тасков в один массив.
+        /// </summary>
+        void getTasks(TimelinerTask task)
+        {
+            foreach (TimelinerTask child in task.Children)
+            {
+                this.tasks.Add(child);
+                getTasks(child);
+            }
+        }
 
         /// <summary>
         /// Убирает селекшны у всех тасков в таймлайнере.
@@ -140,17 +160,13 @@ namespace NavisTimelinerPlugin
         /// <param name="e"></param>
         private void startAssocButton_Click(object sender, EventArgs e)
         {
-            if (RootTaskIsAccessible())
+            if (TasksAreAccessible())
             {
-                //убираем текущие селекшны у тасков.
-                //ClearSelections(); --  больше  не нужно, реальзована фича добавления селекшнов к уже подгруженным из файла.
-
-                DataHolder = new SerializableDataHolder();
-                tasks.Clear();
-                foreach (TimelinerTask task in RootTask.Children)
-                {
-                    tasks.Add(task);
-                }
+                //tasks.Clear();
+                //foreach (TimelinerTask task in RootTask.Children)
+                //{
+                //    tasks.Add(task);
+                //}
 
                 groupBox1.Enabled = true;
                 groupBox2.Enabled = false;
@@ -177,13 +193,13 @@ namespace NavisTimelinerPlugin
                 CurrentAssocTaskBox.Text = "Done.";
 
                 //сохраняем набор ассоциаций в файл
-                Serializer.serialize(DataHolder);
+                SaveTasks();
             }
         }
 
         private void AcceptCurrentSelectionButton_Click(object sender, EventArgs e)
         {
-            if (RootTaskIsAccessible())
+            if (TasksAreAccessible())
             {
                 addSelectionToTask();
             }
@@ -207,13 +223,18 @@ namespace NavisTimelinerPlugin
 
         private void SkipCurrentTaskButton_Click(object sender, EventArgs e)
         {
-            if (RootTaskIsAccessible())
+            if (TasksAreAccessible())
             {
                 nextTaskToAssociate();
             }
         }
         
         private void SaveTaskButton_Click(object sender, EventArgs e)
+        {
+            SaveTasks();
+        }
+
+        public void SaveTasks()
         {
             DataHolder.Clear();
             foreach (TimelinerTask task in RootTask.Children)
@@ -233,7 +254,7 @@ namespace NavisTimelinerPlugin
         {
             groupBox1.Enabled = false;
             groupBox2.Enabled = false;
-            if (RootTaskIsAccessible())
+            if (TasksAreAccessible())
             {
                 LoadTasksAssocFromFile();
             }
@@ -274,7 +295,7 @@ namespace NavisTimelinerPlugin
         /// </summary>
         private void StartDataInputButton_Click(object sender, EventArgs e)
         {
-            if (RootTaskIsAccessible())
+            if (TasksAreAccessible())
             {
                 tasks.Clear();
                 foreach (TimelinerTask task in RootTask.Children)
@@ -389,61 +410,48 @@ namespace NavisTimelinerPlugin
         #endregion
 
         #region Добавление в Таймлайнер данных из .csv MS Project
-        
-        private void button1_Click(object sender, EventArgs e)
-        {
-            string filename = null;
-            if (openCSVFile(ref filename))
-            {
-                TimelinerTask root = new TimelinerTask();
-                root.DisplayName = "Foo ROOT";
+                
+        //private TimelinerTask makeTask()
+        //{
+        //    //for (int i = 0; i < 20; i++)
+        //    //{
+        //    //    TimelinerTask task = new TimelinerTask();
+        //    //    task.DisplayName = "Foo" + i;
+        //    //    task.ActualStartDate = DateTime.Now;
+        //    //    task.ActualEndDate = DateTime.Now;
+        //    //    //root.Children.Add(task);
+        //    //}
 
+        //    //timeliner.TaskAddCopy(timeliner.TasksRoot, root);
+        //}
 
-                makeTask();
-            }            
-        }
+        //private bool openCSVFile(ref string filename)
+        //{
+        //    OpenFileDialog opfile = new OpenFileDialog();
+        //    opfile.AddExtension = true;
+        //    opfile.CheckFileExists = true;
+        //    opfile.Multiselect = false;
+        //    opfile.RestoreDirectory = true;
+        //    opfile.DefaultExt = "csv";
+        //    opfile.Filter = "Comma separated values (*.csv)|*.csv";
+        //    opfile.RestoreDirectory = true;
+        //    opfile.Title = "Выберите файл...";
 
-        private TimelinerTask makeTask()
-        {
-            //for (int i = 0; i < 20; i++)
-            //{
-            //    TimelinerTask task = new TimelinerTask();
-            //    task.DisplayName = "Foo" + i;
-            //    task.ActualStartDate = DateTime.Now;
-            //    task.ActualEndDate = DateTime.Now;
-            //    //root.Children.Add(task);
-            //}
-
-            //timeliner.TaskAddCopy(timeliner.TasksRoot, root);
-        }
-
-        private bool openCSVFile(ref string filename)
-        {
-            OpenFileDialog opfile = new OpenFileDialog();
-            opfile.AddExtension = true;
-            opfile.CheckFileExists = true;
-            opfile.Multiselect = false;
-            opfile.RestoreDirectory = true;
-            opfile.DefaultExt = "csv";
-            opfile.Filter = "Comma separated values (*.csv)|*.csv";
-            opfile.RestoreDirectory = true;
-            opfile.Title = "Выберите файл...";
-
-            DialogResult res = opfile.ShowDialog(UIform.Instance);
-            if (res == DialogResult.OK)
-            {
-                filename = opfile.FileName;
-                return true;
-            }
-            else
-                return false;
-        }
+        //    DialogResult res = opfile.ShowDialog(UIform.Instance);
+        //    if (res == DialogResult.OK)
+        //    {
+        //        filename = opfile.FileName;
+        //        return true;
+        //    }
+        //    else
+        //        return false;
+        //}
 
         #endregion
 
         private void ManualAssocButton_Click(object sender, EventArgs e)
         {
-            if (RootTaskIsAccessible())
+            if (TasksAreAccessible())
             {
                 DetailedForm form = new DetailedForm(timeliner, nDoc, RootTask);
                 form.Show();
