@@ -29,9 +29,10 @@
         private void InitializeComponent()
         {
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.OKButton = new System.Windows.Forms.Button();
+            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TASK = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SET = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.OKButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -41,24 +42,13 @@
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ID,
             this.TASK,
             this.SET});
             this.dataGridView1.Location = new System.Drawing.Point(3, 12);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(575, 600);
             this.dataGridView1.TabIndex = 0;
-            // 
-            // TASK
-            // 
-            this.TASK.HeaderText = "Task";
-            this.TASK.Name = "TASK";
-            this.TASK.Width = 250;
-            // 
-            // SET
-            // 
-            this.SET.HeaderText = "SelectionSet";
-            this.SET.Name = "SET";
-            this.SET.Width = 250;
             // 
             // OKButton
             // 
@@ -69,6 +59,28 @@
             this.OKButton.Text = "OK";
             this.OKButton.UseVisualStyleBackColor = true;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
+            // 
+            // ID
+            // 
+            this.ID.HeaderText = "ID";
+            this.ID.Name = "ID";
+            this.ID.ReadOnly = true;
+            this.ID.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ID.Visible = false;
+            // 
+            // TASK
+            // 
+            this.TASK.HeaderText = "Task";
+            this.TASK.Name = "TASK";
+            this.TASK.ReadOnly = true;
+            this.TASK.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.TASK.Width = 250;
+            // 
+            // SET
+            // 
+            this.SET.HeaderText = "SelectionSet";
+            this.SET.Name = "SET";
+            this.SET.Width = 250;
             // 
             // DetailedForm
             // 
@@ -91,8 +103,9 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Button OKButton;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn TASK;
         private System.Windows.Forms.DataGridViewComboBoxColumn SET;
-        private System.Windows.Forms.Button OKButton;
     }
 }

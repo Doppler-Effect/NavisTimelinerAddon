@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -16,18 +17,17 @@ namespace NavisTimelinerPlugin
     public partial class DetailedForm : Form
     {
         DocumentTimeliner timeliner;
-        TimelinerTask RootTask;
         Document nDoc;
+        TimelinerTask RooTimelinerTask;
 
-        public DetailedForm(DocumentTimeliner timeliner, Document nDoc, TimelinerTask RootTask)
+        public DetailedForm(DocumentTimeliner timeliner, Document nDoc)
         {
             InitializeComponent();
             this.timeliner = timeliner;
             this.nDoc = nDoc;
-            this.RootTask = RootTask;
             FillGridSelections();
             FillTasks();
-            FillSelections();
+            //FillSelections();
         }
 
         /// <summary>
@@ -49,12 +49,9 @@ namespace NavisTimelinerPlugin
         /// </summary>
         void FillTasks()
         {
-            if (RootTask != null)
+            foreach (TaskContainer tc in Core.Self.Tasks)
             {
-                foreach (SavedItem item in RootTask.Children)
-                {
-                    this.dataGridView1.Rows.Add(item.DisplayName);
-                }
+                this.dataGridView1.Rows.Add(tc.Index, tc.Task.DisplayName);
             }
         }
 
@@ -66,10 +63,10 @@ namespace NavisTimelinerPlugin
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
                 string taskName = row.Cells[0].Value.ToString();
-                int taskNo = RootTask.Children.IndexOfDisplayName(taskName);
+                int taskNo = 0;
                 if (taskNo != -1)
                 {
-                    string selection = UIform.Instance.findSelectionSetName(RootTask.Children[taskNo] as TimelinerTask);
+                    string selection = Core.Self.findSelectionSetName(RooTimelinerTask.Children[taskNo] as TimelinerTask);
                     if (selection != null)
                     {
                         List<string> list = SET.DataSource as List<string>;
@@ -89,28 +86,15 @@ namespace NavisTimelinerPlugin
         {
             foreach(DataGridViewRow row in dataGridView1.Rows)
             {
-                string taskName = row.Cells[0].Value.ToString();
-                int taskindex = RootTask.Children.IndexOfDisplayName(taskName);
-
-                if (taskindex != -1)
+                Collection<int> taskindex = row.Cells[0].Value as Collection<int>;
+                if (row.Cells[2].Value != null)
                 {
-                    if (row.Cells[1].Value != null)
-                    {
-                        string setName = row.Cells[1].Value.ToString();
-                        SelectionSourceCollection collection = UIform.Instance.getSelectionSourceByName(setName);
-                        if (collection.Count != 0)
-                        {
-                            TimelinerTask task = RootTask.Children[taskindex].CreateCopy() as TimelinerTask;
-                            task.Selection.CopyFrom(collection);
-                            timeliner.TaskEdit(RootTask, taskindex, task);
-                        }
-                    }
-                    else
-                    {
-                        TimelinerTask task = RootTask.Children[taskindex].CreateCopy() as TimelinerTask;
-                        task.Selection.Clear();
-                        timeliner.TaskEdit(RootTask, taskindex, task);
-                    }
+                    string setName = row.Cells[2].Value.ToString();
+                    Core.Self.WriteTaskToTimeliner(taskindex, setName);
+                }
+                else
+                {
+                    Core.Self.WriteTaskToTimeliner(taskindex);
                 }
             }
             this.Close();
