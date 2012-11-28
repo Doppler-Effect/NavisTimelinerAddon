@@ -98,7 +98,7 @@ namespace NavisTimelinerPlugin
 
             if (!string.IsNullOrEmpty(value))
             {
-                TimelinerTask task = Core.Self.currenTimelinerTask.Task.CreateCopy();
+                TimelinerTask task = Core.Self.currentTimelinerTask.Task.CreateCopy();
                 int index = RootTimelinerTask.Children.IndexOfDisplayName(task.DisplayName);
 
                 task.SetUserFieldByIndex(0, value);
@@ -119,11 +119,12 @@ namespace NavisTimelinerPlugin
         {
             if (Core.Self.Tasks.Count != 0)
             {
-                Core.Self.currenTimelinerTask.update(Core.Self.Tasks.First().Task, CurrentViewTaskBox);
+                TimelinerTask task = timeliner.TaskResolveIndexPath(Core.Self.Tasks.First().Index);
+                Core.Self.currentTimelinerTask.update(task, CurrentViewTaskBox);
                 Core.Self.Tasks.RemoveAt(0);
-                Core.Self.hideAllExcepTimelinerTaskSelection(Core.Self.currenTimelinerTask.Task, CurrentViewTaskBox);
-                CompletionTextBox.Text = Core.Self.currenTimelinerTask.Task.User1;
-                UnitsComboBox.Text = Core.Self.currenTimelinerTask.Task.User2;
+                Core.Self.hideAllExcepTimelinerTaskSelection(Core.Self.currentTimelinerTask.Task, CurrentViewTaskBox);
+                CompletionTextBox.Text = Core.Self.currentTimelinerTask.Task.User1;
+                UnitsComboBox.Text = Core.Self.currentTimelinerTask.Task.User2;
             }
             else
             {

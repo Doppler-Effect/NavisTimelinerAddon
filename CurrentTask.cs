@@ -13,7 +13,7 @@ namespace NavisTimelinerPlugin
     /// <summary>
     ////Контейнер для хранения обрабатываемого в данный момент таска и его отображения в интерфейсе.
     /// </summary>
-    struct CurrenTimelinerTask
+    struct CurrentTimelinerTask
     {
         public TimelinerTask Task
         {

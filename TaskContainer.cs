@@ -10,9 +10,12 @@ using Autodesk.Navisworks.Api.Plugins;
 
 namespace NavisTimelinerPlugin
 {
-    [Serializable()]
     class TaskContainer
     {
+        static Document nDoc = Autodesk.Navisworks.Api.Application.ActiveDocument;
+        static Autodesk.Navisworks.Api.DocumentParts.IDocumentTimeliner Itimeliner = nDoc.Timeliner;
+        static DocumentTimeliner timeliner = (DocumentTimeliner)Itimeliner;
+
         public Collection<int> Index
         {
             get
@@ -20,37 +23,29 @@ namespace NavisTimelinerPlugin
                 return index;
             }
         }
+        public string TaskName
+        {
+            get
+            {
+                return taskname;
+            }
+        }
         public TimelinerTask Task
         {
             get
             {
+                TimelinerTask task = timeliner.TaskResolveIndexPath(this.index);
                 return task;
             }
         }
-        //public bool OKstatus
-        //{
-        //    get
-        //    {
-        //        int id = 0;
-        //        if(int.TryParse(this.task.DisplayId, out id))
-        //        {
-        //            if (id == this.index)
-        //                return true;
-        //            else
-        //                return false;
-        //        }
-        //        else
-        //            return false;
-        //    }
-        //}
 
         Collection<int> index;
-        TimelinerTask task;
+        string taskname;
 
-        public TaskContainer(TimelinerTask task, Collection<int> i)
+        public TaskContainer(string task, Collection<int> i)
         {
             this.index = i;
-            this.task = task;            
+            this.taskname = task;            
         }        
     }
 }

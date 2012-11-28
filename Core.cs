@@ -63,7 +63,7 @@ namespace NavisTimelinerPlugin
             foreach (TimelinerTask child in task.Children)
             {
                 Collection<int> index = timeliner.TaskCreateIndexPath(child);
-                this.tasks.Add(new TaskContainer(child, index));
+                this.tasks.Add(new TaskContainer(child.DisplayName, index));
                 getChildren(child);
             }
         }
@@ -81,7 +81,7 @@ namespace NavisTimelinerPlugin
             }
         }//массив тасков проекта.
         List<TaskContainer> tasks = new List<TaskContainer>(); 
-        public CurrenTimelinerTask currenTimelinerTask = new CurrenTimelinerTask();//Контейнер для хранения обрабатываемого в данный момент таска.
+        public CurrentTimelinerTask currentTimelinerTask = new CurrentTimelinerTask();//Контейнер для хранения обрабатываемого в данный момент таска.
         SerializableDataHolder DataHolder;//массив для сохранения обработанных тасков в файл.
 
 
@@ -103,7 +103,11 @@ namespace NavisTimelinerPlugin
                 }
                 else
                 {
-
+                    TimelinerTask task = timeliner.TaskResolveIndexPath(index).CreateCopy();
+                    task.Selection.Clear();
+                    GroupItem foo = timeliner.TaskResolveIndexPath(index).Parent;
+                    int id = foo.Children.IndexOfDisplayName(task.DisplayName);
+                    timeliner.TaskEdit(foo, id, task);
                 }
             }
             catch (Exception Ex)
@@ -135,7 +139,7 @@ namespace NavisTimelinerPlugin
         }
         
         /// <summary>
-        /// Поиск имени списка выбора по имеющемуся таску
+        /// Поиск имени списка выбора у таска
         /// </summary>
         /// <param name="task">Таск, к которому привязан селекшн, имя которого надо найти</param>
         /// <returns>Имя списка выбора, который выбирает указанный селекшн</returns>
@@ -172,11 +176,11 @@ namespace NavisTimelinerPlugin
         public void SaveTasks()
         {
             DataHolder.Clear();
-            foreach (TimelinerTask task in RootTimelinerTask.Children)
+            foreach(TaskContainer tc in this.tasks)
             {
-                string name = task.DisplayName;
-                string sel = findSelectionSetName(task);
-                DataHolder.Add(name, sel);
+                Collection<int> index = tc.Index;
+                string sel = findSelectionSetName(tc.Task);
+                DataHolder.Add(index, sel);
             }
             Serializer.serialize(DataHolder);
         }
@@ -191,19 +195,9 @@ namespace NavisTimelinerPlugin
             if (DataHolder != null)
             {
                 ClearSelections();
-                foreach (KeyValuePair<string, string> pair in DataHolder.Data)
+                foreach (KeyValuePair<Collection<int>, string> pair in DataHolder.Data)
                 {
-                    if (pair.Value != null)
-                    {
-                        SelectionSourceCollection selectionSource = this.getSelectionSourceByName(pair.Value);
-                        int taskIndex = RootTimelinerTask.Children.IndexOfDisplayName(pair.Key);
-                        if (taskIndex != -1)
-                        {
-                            TimelinerTask task = ((TimelinerTask)RootTimelinerTask.Children[taskIndex]).CreateCopy();
-                            task.Selection.CopyFrom(selectionSource);
-                            timeliner.TaskEdit(RootTimelinerTask, taskIndex, task);
-                        }
-                    }
+                    this.WriteTaskToTimeliner(pair.Key, pair.Value);
                 }
             }
         }

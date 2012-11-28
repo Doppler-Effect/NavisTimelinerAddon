@@ -51,7 +51,7 @@ namespace NavisTimelinerPlugin
         {
             foreach (TaskContainer tc in Core.Self.Tasks)
             {
-                this.dataGridView1.Rows.Add(tc.Index, tc.Task.DisplayName);
+                this.dataGridView1.Rows.Add(tc.Index, tc.TaskName);
             }
         }
 
@@ -62,11 +62,12 @@ namespace NavisTimelinerPlugin
         {
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                string taskName = row.Cells[0].Value.ToString();
-                int taskNo = 0;
-                if (taskNo != -1)
+                string taskName = row.Cells[1].Value.ToString();
+                if (row.Cells[0].Value != null)
                 {
-                    string selection = Core.Self.findSelectionSetName(RooTimelinerTask.Children[taskNo] as TimelinerTask);
+                    Collection<int> taskIndex = row.Cells[0].Value as Collection<int>;
+                    TimelinerTask task = timeliner.TaskResolveIndexPath(taskIndex);
+                    string selection = Core.Self.findSelectionSetName(task);
                     if (selection != null)
                     {
                         List<string> list = SET.DataSource as List<string>;
