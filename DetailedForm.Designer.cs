@@ -29,10 +29,11 @@
         private void InitializeComponent()
         {
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.OKButton = new System.Windows.Forms.Button();
             this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.TASK = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SET = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.OKButton = new System.Windows.Forms.Button();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -49,16 +50,6 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(575, 600);
             this.dataGridView1.TabIndex = 0;
-            // 
-            // OKButton
-            // 
-            this.OKButton.Location = new System.Drawing.Point(503, 618);
-            this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(75, 23);
-            this.OKButton.TabIndex = 1;
-            this.OKButton.Text = "OK";
-            this.OKButton.UseVisualStyleBackColor = true;
-            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
             // ID
             // 
@@ -82,11 +73,29 @@
             this.SET.Name = "SET";
             this.SET.Width = 250;
             // 
+            // OKButton
+            // 
+            this.OKButton.Location = new System.Drawing.Point(503, 618);
+            this.OKButton.Name = "OKButton";
+            this.OKButton.Size = new System.Drawing.Size(75, 23);
+            this.OKButton.TabIndex = 1;
+            this.OKButton.Text = "OK";
+            this.OKButton.UseVisualStyleBackColor = true;
+            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(3, 618);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(494, 23);
+            this.progressBar1.TabIndex = 2;
+            // 
             // DetailedForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(582, 648);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.dataGridView1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -107,5 +116,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn TASK;
         private System.Windows.Forms.DataGridViewComboBoxColumn SET;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }

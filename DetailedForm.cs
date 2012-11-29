@@ -27,7 +27,7 @@ namespace NavisTimelinerPlugin
             this.nDoc = nDoc;
             FillGridSelections();
             FillTasks();
-            //FillSelections();
+            FillSelections();
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace NavisTimelinerPlugin
                         List<string> list = SET.DataSource as List<string>;
                         if (list.Contains(selection))
                         {
-                            row.Cells[1].Value = selection;
+                            row.Cells[2].Value = selection;
                         }
                     }
                 }
@@ -85,6 +85,10 @@ namespace NavisTimelinerPlugin
         /// </summary>
         private void OKButton_Click(object sender, EventArgs e)
         {
+            this.UseWaitCursor = true;
+            this.progressBar1.Refresh();
+            this.progressBar1.Style = ProgressBarStyle.Continuous;
+            this.progressBar1.Maximum = dataGridView1.Rows.Count;
             foreach(DataGridViewRow row in dataGridView1.Rows)
             {
                 Collection<int> taskindex = row.Cells[0].Value as Collection<int>;
@@ -92,13 +96,16 @@ namespace NavisTimelinerPlugin
                 {
                     string setName = row.Cells[2].Value.ToString();
                     Core.Self.WriteTaskToTimeliner(taskindex, setName);
+                    this.progressBar1.PerformStep();
                 }
                 else
                 {
                     Core.Self.WriteTaskToTimeliner(taskindex);
+                    this.progressBar1.PerformStep();
                 }
             }
             this.Close();
+            this.UseWaitCursor = false;
         }
     }
 }

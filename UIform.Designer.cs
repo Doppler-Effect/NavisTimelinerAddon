@@ -45,9 +45,9 @@
             // 
             // SaveTaskButton
             // 
-            this.SaveTaskButton.Location = new System.Drawing.Point(12, 43);
+            this.SaveTaskButton.Location = new System.Drawing.Point(318, 12);
             this.SaveTaskButton.Name = "SaveTaskButton";
-            this.SaveTaskButton.Size = new System.Drawing.Size(80, 25);
+            this.SaveTaskButton.Size = new System.Drawing.Size(147, 37);
             this.SaveTaskButton.TabIndex = 4;
             this.SaveTaskButton.Text = "Сохранить";
             this.SaveTaskButton.UseVisualStyleBackColor = true;
@@ -55,12 +55,12 @@
             // 
             // LoadButton
             // 
-            this.LoadButton.Location = new System.Drawing.Point(102, 43);
+            this.LoadButton.Location = new System.Drawing.Point(165, 12);
             this.LoadButton.Name = "LoadButton";
-            this.LoadButton.Size = new System.Drawing.Size(80, 25);
+            this.LoadButton.Size = new System.Drawing.Size(147, 37);
             this.LoadButton.TabIndex = 1;
             this.LoadButton.TabStop = false;
-            this.LoadButton.Text = "Загрузить";
+            this.LoadButton.Text = "Загрузить прикреплённые наборы";
             this.LoadButton.UseVisualStyleBackColor = true;
             this.LoadButton.Click += new System.EventHandler(this.LoadButton_Click);
             // 
@@ -73,9 +73,9 @@
             this.groupBox2.Controls.Add(this.buttonNext);
             this.groupBox2.Controls.Add(this.CurrentViewTaskBox);
             this.groupBox2.Enabled = false;
-            this.groupBox2.Location = new System.Drawing.Point(188, 43);
+            this.groupBox2.Location = new System.Drawing.Point(75, 55);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(357, 124);
+            this.groupBox2.Size = new System.Drawing.Size(390, 124);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Назначение %% выполнения";
@@ -83,9 +83,9 @@
             // 
             // ButtonAcceptCompletionProgress
             // 
-            this.ButtonAcceptCompletionProgress.Location = new System.Drawing.Point(6, 88);
+            this.ButtonAcceptCompletionProgress.Location = new System.Drawing.Point(134, 88);
             this.ButtonAcceptCompletionProgress.Name = "ButtonAcceptCompletionProgress";
-            this.ButtonAcceptCompletionProgress.Size = new System.Drawing.Size(120, 25);
+            this.ButtonAcceptCompletionProgress.Size = new System.Drawing.Size(122, 25);
             this.ButtonAcceptCompletionProgress.TabIndex = 6;
             this.ButtonAcceptCompletionProgress.Text = "Назначить";
             this.ButtonAcceptCompletionProgress.UseVisualStyleBackColor = true;
@@ -103,7 +103,7 @@
             "шт."});
             this.UnitsComboBox.Location = new System.Drawing.Point(262, 61);
             this.UnitsComboBox.Name = "UnitsComboBox";
-            this.UnitsComboBox.Size = new System.Drawing.Size(89, 21);
+            this.UnitsComboBox.Size = new System.Drawing.Size(122, 21);
             this.UnitsComboBox.Sorted = true;
             this.UnitsComboBox.TabIndex = 11;
             // 
@@ -125,9 +125,9 @@
             // 
             // buttonNext
             // 
-            this.buttonNext.Location = new System.Drawing.Point(136, 88);
+            this.buttonNext.Location = new System.Drawing.Point(262, 88);
             this.buttonNext.Name = "buttonNext";
-            this.buttonNext.Size = new System.Drawing.Size(120, 25);
+            this.buttonNext.Size = new System.Drawing.Size(122, 25);
             this.buttonNext.TabIndex = 7;
             this.buttonNext.Text = "Пропустить";
             this.buttonNext.UseVisualStyleBackColor = true;
@@ -139,15 +139,15 @@
             this.CurrentViewTaskBox.Location = new System.Drawing.Point(6, 23);
             this.CurrentViewTaskBox.Name = "CurrentViewTaskBox";
             this.CurrentViewTaskBox.ReadOnly = true;
-            this.CurrentViewTaskBox.Size = new System.Drawing.Size(345, 20);
+            this.CurrentViewTaskBox.Size = new System.Drawing.Size(378, 20);
             this.CurrentViewTaskBox.TabIndex = 7;
             this.CurrentViewTaskBox.TabStop = false;
             // 
             // StartDataInputButton
             // 
-            this.StartDataInputButton.Location = new System.Drawing.Point(188, 12);
+            this.StartDataInputButton.Location = new System.Drawing.Point(12, 58);
             this.StartDataInputButton.Name = "StartDataInputButton";
-            this.StartDataInputButton.Size = new System.Drawing.Size(170, 25);
+            this.StartDataInputButton.Size = new System.Drawing.Size(57, 121);
             this.StartDataInputButton.TabIndex = 5;
             this.StartDataInputButton.Text = "Начать";
             this.StartDataInputButton.UseVisualStyleBackColor = true;
@@ -155,7 +155,8 @@
             // 
             // buttonExit
             // 
-            this.buttonExit.Location = new System.Drawing.Point(12, 142);
+            this.buttonExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonExit.Location = new System.Drawing.Point(385, 186);
             this.buttonExit.Name = "buttonExit";
             this.buttonExit.Size = new System.Drawing.Size(80, 25);
             this.buttonExit.TabIndex = 8;
@@ -167,9 +168,9 @@
             // 
             this.ManualAssocButton.Location = new System.Drawing.Point(12, 12);
             this.ManualAssocButton.Name = "ManualAssocButton";
-            this.ManualAssocButton.Size = new System.Drawing.Size(170, 25);
+            this.ManualAssocButton.Size = new System.Drawing.Size(147, 37);
             this.ManualAssocButton.TabIndex = 10;
-            this.ManualAssocButton.Text = "Ручное назначение";
+            this.ManualAssocButton.Text = "Прикрепить наборы вручную";
             this.ManualAssocButton.UseVisualStyleBackColor = true;
             this.ManualAssocButton.Click += new System.EventHandler(this.ManualAssocButton_Click);
             // 
@@ -177,7 +178,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(546, 169);
+            this.ClientSize = new System.Drawing.Size(477, 223);
             this.ControlBox = false;
             this.Controls.Add(this.ManualAssocButton);
             this.Controls.Add(this.StartDataInputButton);

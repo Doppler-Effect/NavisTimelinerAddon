@@ -82,7 +82,7 @@ namespace NavisTimelinerPlugin
         }//массив тасков проекта.
         List<TaskContainer> tasks = new List<TaskContainer>(); 
         public CurrentTimelinerTask currentTimelinerTask = new CurrentTimelinerTask();//Контейнер для хранения обрабатываемого в данный момент таска.
-        SerializableDataHolder DataHolder;//массив для сохранения обработанных тасков в файл.
+        SerializableDataHolder DataHolder = new SerializableDataHolder();//массив для сохранения обработанных тасков в файл.
 
 
         public void WriteTaskToTimeliner(Collection<int> index, string setName = null)
@@ -206,7 +206,7 @@ namespace NavisTimelinerPlugin
         /// Показывает на модели только выборку элементов, остальное делает прозрачным.
         /// </summary>
         /// <param name="task">Таск, выборка которого отображается на модели.</param>
-        public void hideAllExcepTimelinerTaskSelection(TimelinerTask task, TextBox textbox)
+        public void hideAllExcepTimelinerTaskSelection(TimelinerTask task, TextBox textbox = null)
         {
             try
             {
@@ -221,7 +221,8 @@ namespace NavisTimelinerPlugin
                 else
                 {
                     MakeAllModelItemsVisible();
-                    textbox.Text += " /не назначена выбрка/";
+                    if(textbox != null)
+                        textbox.Text += " /не назначена выбрка/";
                 }
             }
             catch (Exception Ex)

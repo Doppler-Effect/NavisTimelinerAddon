@@ -62,7 +62,10 @@ namespace NavisTimelinerPlugin
 
         private void SaveTaskButton_Click(object sender, EventArgs e)
         {
-            Core.Self.SaveTasks();
+            if (Core.Self.AreTasksAccessible())
+            {
+                Core.Self.SaveTasks();
+            }
         }
 
         private void LoadButton_Click(object sender, EventArgs e)
@@ -94,17 +97,18 @@ namespace NavisTimelinerPlugin
         {
             string value = removeLetters(CompletionTextBox.Text);
             string units = UnitsComboBox.Text;
-            CompletionTextBox.Text = value;
 
             if (!string.IsNullOrEmpty(value))
             {
                 TimelinerTask task = Core.Self.currentTimelinerTask.Task.CreateCopy();
-                int index = RootTimelinerTask.Children.IndexOfDisplayName(task.DisplayName);
+                Collection<int> index = timeliner.TaskCreateIndexPath(Core.Self.currentTimelinerTask.Task);
+                GroupItem parent = timeliner.TaskResolveIndexPath(index).Parent;
+                int id = parent.Children.IndexOfDisplayName(task.DisplayName);
 
                 task.SetUserFieldByIndex(0, value);
                 task.SetUserFieldByIndex(1, units);
 
-                timeliner.TaskEdit(RootTimelinerTask, index, task);
+                timeliner.TaskEdit(parent, id, task);
 
                 nexTimelinerTaskToDataInput();
             }
@@ -119,12 +123,12 @@ namespace NavisTimelinerPlugin
         {
             if (Core.Self.Tasks.Count != 0)
             {
-                TimelinerTask task = timeliner.TaskResolveIndexPath(Core.Self.Tasks.First().Index);
+                TimelinerTask task = Core.Self.Tasks.First().Task;
                 Core.Self.currentTimelinerTask.update(task, CurrentViewTaskBox);
                 Core.Self.Tasks.RemoveAt(0);
-                Core.Self.hideAllExcepTimelinerTaskSelection(Core.Self.currentTimelinerTask.Task, CurrentViewTaskBox);
-                CompletionTextBox.Text = Core.Self.currentTimelinerTask.Task.User1;
-                UnitsComboBox.Text = Core.Self.currentTimelinerTask.Task.User2;
+                Core.Self.hideAllExcepTimelinerTaskSelection(task, CurrentViewTaskBox);
+                CompletionTextBox.Text = task.User1;
+                UnitsComboBox.Text = task.User2;
             }
             else
             {
