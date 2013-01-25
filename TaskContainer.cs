@@ -38,9 +38,16 @@ namespace NavisTimelinerPlugin
                 return task;
             }
         }
+        public int HierarchyLevel
+        {
+            get
+            {
+                return 0;
+            }
+        }
 
-        Collection<int> index;
-        string taskname;
+        private Collection<int> index;
+        private string taskname;
 
         public TaskContainer(string task, Collection<int> i)
         {
