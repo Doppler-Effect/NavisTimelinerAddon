@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -12,18 +13,18 @@ namespace NavisTimelinerPlugin
     [Serializable()]
     class SerializableDataHolder
     {
-        public Dictionary<string, string> Data
+        public Dictionary<Collection<int>, string> Data
         {
             get
             {
                 return data;
             }
         }
-        public Dictionary<string, string> data = new Dictionary<string, string>();
+        public Dictionary<Collection<int>, string> data = new Dictionary<Collection<int>, string>();
 
-        public void Add(string taskName, string ssetName)
+        public void Add(Collection<int> taskIndex, string ssetName)
         {
-            data.Add(taskName, ssetName);
+            data.Add(taskIndex, ssetName);
         }
 
         public void Clear()

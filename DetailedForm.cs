@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -16,16 +17,15 @@ namespace NavisTimelinerPlugin
     public partial class DetailedForm : Form
     {
         DocumentTimeliner timeliner;
-        TimelinerTask RootTask;
         Document nDoc;
+        TimelinerTask RooTimelinerTask;
 
-        public DetailedForm(DocumentTimeliner timeliner, Document nDoc, TimelinerTask RootTask)
+        public DetailedForm(DocumentTimeliner timeliner, Document nDoc)
         {
             InitializeComponent();
             this.timeliner = timeliner;
             this.nDoc = nDoc;
-            this.RootTask = RootTask;
-            FillGridSelections();
+            FillSelectionSets();
             FillTasks();
             FillSelections();
         }
@@ -33,7 +33,7 @@ namespace NavisTimelinerPlugin
         /// <summary>
         /// Заполняет комбобоксы второй колонки значениями (названиями селекшн сетов документа).
         /// </summary>
-        void FillGridSelections()
+        void FillSelectionSets()
         {
             List<string> dataSource = new List<string>();
             dataSource.Add("");
@@ -41,7 +41,11 @@ namespace NavisTimelinerPlugin
             {
                 dataSource.Add(item.DisplayName);
             }
-            this.SET.DataSource = dataSource;
+            //this.SET.DataSource = dataSource;
+            foreach (string SetName in dataSource)
+            {
+                this.listBox1.Items.Add(SetName);
+            }
         }
 
         /// <summary>
@@ -49,12 +53,9 @@ namespace NavisTimelinerPlugin
         /// </summary>
         void FillTasks()
         {
-            if (RootTask != null)
+            foreach (TaskContainer tc in Core.Self.Tasks)
             {
-                foreach (SavedItem item in RootTask.Children)
-                {
-                    this.dataGridView1.Rows.Add(item.DisplayName);
-                }
+                this.dataGridView1.Rows.Add(tc.Index, tc.TaskName);
             }
         }
 
@@ -65,17 +66,18 @@ namespace NavisTimelinerPlugin
         {
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                string taskName = row.Cells[0].Value.ToString();
-                int taskNo = RootTask.Children.IndexOfDisplayName(taskName);
-                if (taskNo != -1)
+                string taskName = row.Cells[1].Value.ToString();
+                if (row.Cells[0].Value != null)
                 {
-                    string selection = UIform.Instance.findSelectionSetName(RootTask.Children[taskNo] as TimelinerTask);
+                    Collection<int> taskIndex = row.Cells[0].Value as Collection<int>;
+                    TimelinerTask task = timeliner.TaskResolveIndexPath(taskIndex);
+                    string selection = Core.Self.findSelectionSetName(task);
                     if (selection != null)
                     {
                         List<string> list = SET.DataSource as List<string>;
                         if (list.Contains(selection))
                         {
-                            row.Cells[1].Value = selection;
+                            row.Cells[2].Value = selection;
                         }
                     }
                 }
@@ -87,33 +89,27 @@ namespace NavisTimelinerPlugin
         /// </summary>
         private void OKButton_Click(object sender, EventArgs e)
         {
+            this.UseWaitCursor = true;
+            this.progressBar1.Refresh();
+            this.progressBar1.Style = ProgressBarStyle.Continuous;
+            this.progressBar1.Maximum = dataGridView1.Rows.Count;
             foreach(DataGridViewRow row in dataGridView1.Rows)
             {
-                string taskName = row.Cells[0].Value.ToString();
-                int taskindex = RootTask.Children.IndexOfDisplayName(taskName);
-
-                if (taskindex != -1)
+                Collection<int> taskindex = row.Cells[0].Value as Collection<int>;
+                if (row.Cells[2].Value != null)
                 {
-                    if (row.Cells[1].Value != null)
-                    {
-                        string setName = row.Cells[1].Value.ToString();
-                        SelectionSourceCollection collection = UIform.Instance.getSelectionSourceByName(setName);
-                        if (collection.Count != 0)
-                        {
-                            TimelinerTask task = RootTask.Children[taskindex].CreateCopy() as TimelinerTask;
-                            task.Selection.CopyFrom(collection);
-                            timeliner.TaskEdit(RootTask, taskindex, task);
-                        }
-                    }
-                    else
-                    {
-                        TimelinerTask task = RootTask.Children[taskindex].CreateCopy() as TimelinerTask;
-                        task.Selection.Clear();
-                        timeliner.TaskEdit(RootTask, taskindex, task);
-                    }
+                    string setName = row.Cells[2].Value.ToString();
+                    Core.Self.WriteTaskToTimeliner(taskindex, setName);
+                    this.progressBar1.PerformStep();
+                }
+                else
+                {
+                    Core.Self.WriteTaskToTimeliner(taskindex);
+                    this.progressBar1.PerformStep();
                 }
             }
             this.Close();
+            this.UseWaitCursor = false;
         }
     }
 }

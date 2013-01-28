@@ -31,9 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autodesk.Navisworks.Api, Version=10.0.840.82, Culture=neutral, PublicKeyToken=d85e58fa5af9b484, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2013\Autodesk.Navisworks.Api.dll</HintPath>
+    <Reference Include="Autodesk.Navisworks.Api">
+      <HintPath>..\..\Documents\Navisworks API\api\net\bin\x86\Autodesk.Navisworks.Api.dll</HintPath>
     </Reference>
     <Reference Include="Autodesk.Navisworks.Timeliner">
       <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2013\Autodesk.Navisworks.Timeliner.dll</HintPath>
@@ -50,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core.cs" />
     <Compile Include="CurrentTask.cs" />
     <Compile Include="DetailedForm.cs">
       <SubType>Form</SubType>
@@ -58,6 +58,7 @@
       <DependentUpon>DetailedForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SerializableDataHolder.cs" />
+    <Compile Include="TaskContainer.cs" />
     <Compile Include="TimelinerPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UIform.cs">
