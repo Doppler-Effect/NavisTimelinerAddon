@@ -27,7 +27,7 @@ namespace NavisTimelinerPlugin
             this.nDoc = nDoc;
             FillSelectionSets();
             FillTasks();
-            FillSelections();
+            //FillSelections();
         }
 
         /// <summary>
@@ -54,8 +54,8 @@ namespace NavisTimelinerPlugin
         void FillTasks()
         {
             foreach (TaskContainer tc in Core.Self.Tasks)
-            {
-                this.dataGridView1.Rows.Add(tc.Index, tc.TaskName);
+            {                
+                treeView1.Nodes.Add(tc.Index.ToString(), tc.TaskName);
             }
         }
 
@@ -64,24 +64,24 @@ namespace NavisTimelinerPlugin
         /// </summary>
         void FillSelections()
         {
-            foreach (DataGridViewRow row in dataGridView1.Rows)
-            {
-                string taskName = row.Cells[1].Value.ToString();
-                if (row.Cells[0].Value != null)
-                {
-                    Collection<int> taskIndex = row.Cells[0].Value as Collection<int>;
-                    TimelinerTask task = timeliner.TaskResolveIndexPath(taskIndex);
-                    string selection = Core.Self.findSelectionSetName(task);
-                    if (selection != null)
-                    {
-                        List<string> list = SET.DataSource as List<string>;
-                        if (list.Contains(selection))
-                        {
-                            row.Cells[2].Value = selection;
-                        }
-                    }
-                }
-            }
+        //    foreach (DataGridViewRow row in dataGridView1.Rows)
+        //    {
+        //        string taskName = row.Cells[1].Value.ToString();
+        //        if (row.Cells[0].Value != null)
+        //        {
+        //            Collection<int> taskIndex = row.Cells[0].Value as Collection<int>;
+        //            TimelinerTask task = timeliner.TaskResolveIndexPath(taskIndex);
+        //            string selection = Core.Self.findSelectionSetName(task);
+        //            if (selection != null)
+        //            {
+        //                List<string> list = SET.DataSource as List<string>;
+        //                if (list.Contains(selection))
+        //                {
+        //                    row.Cells[2].Value = selection;
+        //                }
+        //            }
+        //        }
+        //    }
         }
 
         /// <summary>
@@ -89,27 +89,27 @@ namespace NavisTimelinerPlugin
         /// </summary>
         private void OKButton_Click(object sender, EventArgs e)
         {
-            this.UseWaitCursor = true;
-            this.progressBar1.Refresh();
-            this.progressBar1.Style = ProgressBarStyle.Continuous;
-            this.progressBar1.Maximum = dataGridView1.Rows.Count;
-            foreach(DataGridViewRow row in dataGridView1.Rows)
-            {
-                Collection<int> taskindex = row.Cells[0].Value as Collection<int>;
-                if (row.Cells[2].Value != null)
-                {
-                    string setName = row.Cells[2].Value.ToString();
-                    Core.Self.WriteTaskToTimeliner(taskindex, setName);
-                    this.progressBar1.PerformStep();
-                }
-                else
-                {
-                    Core.Self.WriteTaskToTimeliner(taskindex);
-                    this.progressBar1.PerformStep();
-                }
-            }
-            this.Close();
-            this.UseWaitCursor = false;
+        //    this.UseWaitCursor = true;
+        //    this.progressBar1.Refresh();
+        //    this.progressBar1.Style = ProgressBarStyle.Continuous;
+        //    this.progressBar1.Maximum = dataGridView1.Rows.Count;
+        //    foreach(DataGridViewRow row in dataGridView1.Rows)
+        //    {
+        //        Collection<int> taskindex = row.Cells[0].Value as Collection<int>;
+        //        if (row.Cells[2].Value != null)
+        //        {
+        //            string setName = row.Cells[2].Value.ToString();
+        //            Core.Self.WriteTaskToTimeliner(taskindex, setName);
+        //            this.progressBar1.PerformStep();
+        //        }
+        //        else
+        //        {
+        //            Core.Self.WriteTaskToTimeliner(taskindex);
+        //            this.progressBar1.PerformStep();
+        //        }
+        //    }
+        //    this.Close();
+        //    this.UseWaitCursor = false;
         }
     }
 }
