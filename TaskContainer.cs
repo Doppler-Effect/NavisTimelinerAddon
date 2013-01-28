@@ -16,19 +16,19 @@ namespace NavisTimelinerPlugin
         static Autodesk.Navisworks.Api.DocumentParts.IDocumentTimeliner Itimeliner = nDoc.Timeliner;
         static DocumentTimeliner timeliner = (DocumentTimeliner)Itimeliner;
 
+        static int maxHierarchyDepth = 0;
+        public static int MaxHierarchyDepth
+        {
+            get { return maxHierarchyDepth; }
+        }
+
         public Collection<int> Index
         {
-            get
-            {
-                return index;
-            }
+            get { return index; }
         }
         public string TaskName
         {
-            get
-            {
-                return taskname;
-            }
+            get { return taskname; }
         }
         public TimelinerTask Task
         {
@@ -53,7 +53,11 @@ namespace NavisTimelinerPlugin
         public TaskContainer(string task, Collection<int> i)
         {
             this.index = i;
-            this.taskname = task;            
+            this.taskname = task;
+            if (this.HierarchyLevel > maxHierarchyDepth)
+            {
+                maxHierarchyDepth = this.HierarchyLevel;
+            }
         }        
     }
 }

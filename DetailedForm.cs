@@ -41,7 +41,7 @@ namespace NavisTimelinerPlugin
             {
                 dataSource.Add(item.DisplayName);
             }
-            //this.SET.DataSource = dataSource;
+
             foreach (string SetName in dataSource)
             {
                 this.listBox1.Items.Add(SetName);
@@ -53,9 +53,15 @@ namespace NavisTimelinerPlugin
         /// </summary>
         void FillTasks()
         {
+            treeView1.Nodes.Add("Root");
+            treeView1.SelectedNode = treeView1.Nodes["Root"];
+            //foreach (TaskContainer tc in Core.Self.Tasks)
+            //{  
+            //    treeView1.Nodes.Add(tc.Index.ToString(), tc.TaskName);
+            //}
             foreach (TaskContainer tc in Core.Self.Tasks)
-            {                
-                treeView1.Nodes.Add(tc.Index.ToString(), tc.TaskName);
+            {
+
             }
         }
 
