@@ -58,16 +58,27 @@ namespace NavisTimelinerPlugin
         /// <summary>
         /// Рекурсивный обход дерева тасков и сбор всех тасков в один массив.
         /// </summary>
-        void getChildren(TimelinerTask task)
+        void getChildren(TimelinerTask rootTask)
         {
-            foreach (TimelinerTask child in task.Children)
+            foreach (TimelinerTask child in rootTask.Children)
             {
                 Collection<int> index = timeliner.TaskCreateIndexPath(child);
-                this.tasks.Add(new TaskContainer(child.DisplayName, index));
-                getChildren(child);
+                TaskContainer Task = new TaskContainer(child.DisplayName, index);
+                this.tasks.Add(Task);
+                getChildren(Task);
             }
         }
-
+        void getChildren(TaskContainer parentContainer)
+        {
+            foreach (TimelinerTask child in parentContainer.Task.Children)
+            {
+                Collection<int> index = timeliner.TaskCreateIndexPath(child);
+                TaskContainer childContainer = new TaskContainer(child.DisplayName, index);
+                this.tasks.Add(childContainer);
+                parentContainer.Children.Add(childContainer);
+                getChildren(childContainer);
+            }
+        }
 
         public List<TaskContainer> Tasks
         {
@@ -87,7 +98,11 @@ namespace NavisTimelinerPlugin
 
         SerializableDataHolder DataHolder = new SerializableDataHolder();//массив для сохранения обработанных тасков в файл.
 
-
+        /// <summary>
+        /// Записывает значение в Timeliner. В случае пустого селекшн сета - очищает таск от прикреплённого набора.
+        /// </summary>
+        /// <param name="index">Коллекция int-ов, описывающая путь к элементу в иерархии таймлайнера.</param>
+        /// <param name="setName">Имя прикрепляемого набора.</param>
         public void WriteTaskToTimeliner(Collection<int> index, string setName = null)
         {
             try
@@ -123,8 +138,7 @@ namespace NavisTimelinerPlugin
         {
             WriteTaskToTimeliner(taskC.Index, setName);
         }
-
-        
+                
         /// <summary>
         /// Убирает селекшны у всех тасков в таймлайнере.
         /// </summary>
@@ -136,15 +150,18 @@ namespace NavisTimelinerPlugin
             }
         }
 
+        /// <summary>
+        /// Убирает селекшны у конкретного таска.
+        /// </summary>
         public void ClearSelection(TaskContainer taskC)
         {
             WriteTaskToTimeliner(taskC);
         }
         
         /// <summary>
-        /// Поиск имени списка выбора у таска
+        /// Поиск имени набора, прикреплённого к таску.
         /// </summary>
-        /// <param name="task">Таск, к которому привязан селекшн, имя которого надо найти</param>
+        /// <param name="task">Таск, к которому привязан искомый набор</param>
         /// <returns>Имя списка выбора, который выбирает указанный селекшн</returns>
         public string findSelectionSetName(TimelinerTask task)
         {
@@ -158,9 +175,9 @@ namespace NavisTimelinerPlugin
         }
 
         /// <summary>
-        /// Возвращает выборку элементов модели по имени списка выбора.
+        /// Возвращает выборку элементов модели по имени списка выбора. Если такой выборки нет - возвращает пустую коллекцию (обрабатывается уже в методах записи в timeliner).
         /// </summary>
-        /// <param name="Name">Имя списка выбора (Selextion Set), для которого нужно получить выборку.</param>
+        /// <param name="Name">Имя списка выбора (Selection Set), для которого нужно получить выборку.</param>
         public SelectionSourceCollection getSelectionSourceByName(string Name)
         {
             SelectionSourceCollection result = new SelectionSourceCollection();
@@ -175,8 +192,11 @@ namespace NavisTimelinerPlugin
             }
             return result;
         }
-               
-        public void SaveTasks()
+          
+        /// <summary>
+        /// Сохранение данных из Timeliner в файл.
+        /// </summary>
+        public void SaveTasksToFile()
         {
             DataHolder.Clear();
             foreach(TaskContainer tc in this.tasks)
@@ -209,7 +229,7 @@ namespace NavisTimelinerPlugin
         /// Показывает на модели только выборку элементов, остальное делает прозрачным.
         /// </summary>
         /// <param name="task">Таск, выборка которого отображается на модели.</param>
-        public void hideAllExcepTimelinerTaskSelection(TimelinerTask task, TextBox textbox = null)
+        public void hideAllExceptTimelinerTaskSelection(TimelinerTask task, TextBox textbox = null)
         {
             try
             {
@@ -217,9 +237,11 @@ namespace NavisTimelinerPlugin
                 {
                     ModelItemCollection collection = task.Selection.GetSelectedItems(nDoc);
                     nDoc.CurrentSelection.SelectAll();
-                    nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0.99);
+                    //nDoc.Models.SetHidden(nDoc.CurrentSelection.SelectedItems, true);
+                    //nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0.99);
                     nDoc.CurrentSelection.Clear();
-                    nDoc.Models.OverridePermanentTransparency(collection, 0);
+                    //nDoc.Models.OverridePermanentTransparency(collection, 0);
+                    nDoc.Models.SetHidden(collection, true);
                 }
                 else
                 {
@@ -234,12 +256,15 @@ namespace NavisTimelinerPlugin
             }
         }        
 
+        /// <summary>
+        /// Делает видимой ВСЮ модель.
+        /// </summary>
         public void MakeAllModelItemsVisible()
         {
             nDoc.CurrentSelection.SelectAll();
-            nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0);
+            //nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0);
+            nDoc.Models.SetHidden(nDoc.CurrentSelection.SelectedItems, false);
             nDoc.CurrentSelection.Clear();
         }
-
     }
 }

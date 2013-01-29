@@ -64,7 +64,7 @@ namespace NavisTimelinerPlugin
         {
             if (Core.Self.AreTasksAccessible())
             {
-                Core.Self.SaveTasks();
+                Core.Self.SaveTasksToFile();
             }
         }
 
@@ -126,7 +126,7 @@ namespace NavisTimelinerPlugin
                 TimelinerTask task = Core.Self.Tasks.First().Task;
                 Core.Self.currentTimelinerTask.update(task, CurrentViewTaskBox);
                 Core.Self.Tasks.RemoveAt(0);
-                Core.Self.hideAllExcepTimelinerTaskSelection(task, CurrentViewTaskBox);
+                Core.Self.hideAllExceptTimelinerTaskSelection(task, CurrentViewTaskBox);
                 CompletionTextBox.Text = task.User1;
                 UnitsComboBox.Text = task.User2;
             }
@@ -166,6 +166,7 @@ namespace NavisTimelinerPlugin
             {
                 DetailedForm form = new DetailedForm(timeliner, nDoc);
                 form.Show();
+                this.Visible = false;
             }
         }
 

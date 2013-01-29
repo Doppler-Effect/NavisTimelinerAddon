@@ -18,104 +18,101 @@ namespace NavisTimelinerPlugin
     {
         DocumentTimeliner timeliner;
         Document nDoc;
-        TimelinerTask RooTimelinerTask;
-
+        private static bool FreezeTreeUpdate;//нужно для запрета перерисовки TreeView в момент назначения таску набора.
+        
         public DetailedForm(DocumentTimeliner timeliner, Document nDoc)
         {
+            FreezeTreeUpdate = false;
+
             InitializeComponent();
             this.timeliner = timeliner;
             this.nDoc = nDoc;
+            
             FillSelectionSets();
             FillTasks();
-            //FillSelections();
+
+            timeliner.Changed += new EventHandler<SavedItemChangedEventArgs>(this.Timeliner_Changed);
         }
 
         /// <summary>
-        /// Заполняет комбобоксы второй колонки значениями (названиями селекшн сетов документа).
+        /// Заполняет ListView названиями селекшн сетов документа.
         /// </summary>
         void FillSelectionSets()
         {
-            List<string> dataSource = new List<string>();
-            dataSource.Add("");
+            this.listBox1.Items.Add("NULL");
             foreach (SavedItem item in nDoc.SelectionSets.Value)
             {
-                dataSource.Add(item.DisplayName);
-            }
-
-            foreach (string SetName in dataSource)
-            {
-                this.listBox1.Items.Add(SetName);
+                this.listBox1.Items.Add(item.DisplayName);
             }
         }
 
         /// <summary>
-        /// Заполняет первую колонку именами тасков.
+        /// Заполняет TreeView структорой тасков.
         /// </summary>
         void FillTasks()
         {
-            treeView1.Nodes.Add("Root");
-            treeView1.SelectedNode = treeView1.Nodes["Root"];
-            //foreach (TaskContainer tc in Core.Self.Tasks)
-            //{  
-            //    treeView1.Nodes.Add(tc.Index.ToString(), tc.TaskName);
-            //}
+            treeView1.BeginUpdate();
             foreach (TaskContainer tc in Core.Self.Tasks)
             {
-
+                if (tc.HierarchyLevel == TaskContainer.MinHierarchyDepth)
+                {
+                    TreeNode node = new TreeNode(tc.TaskName);
+                    node.Tag = tc.Index;                    
+                    FillChildrenTasks(tc, node);
+                    treeView1.Nodes.Add(node);
+                }
+            }
+            treeView1.EndUpdate();
+        }
+        void FillChildrenTasks(TaskContainer tc, TreeNode node)
+        {
+            foreach (TaskContainer childContainer in tc.Children)
+            {
+                TreeNode childNode = new TreeNode(childContainer.TaskName);
+                childNode.Tag = childContainer.Index;                
+                node.Nodes.Add(childNode);
+                node.ExpandAll();
+                FillChildrenTasks(childContainer, childNode);
             }
         }
-
+        
         /// <summary>
-        /// Выбирает во второй колонке уже назначенные селекшны, если у соответствующих тасков они есть.
+        /// По клику вносит изменения в Timeliner.
         /// </summary>
-        void FillSelections()
+        private void listBox1_DoubleClick(object sender, EventArgs e)
         {
-        //    foreach (DataGridViewRow row in dataGridView1.Rows)
-        //    {
-        //        string taskName = row.Cells[1].Value.ToString();
-        //        if (row.Cells[0].Value != null)
-        //        {
-        //            Collection<int> taskIndex = row.Cells[0].Value as Collection<int>;
-        //            TimelinerTask task = timeliner.TaskResolveIndexPath(taskIndex);
-        //            string selection = Core.Self.findSelectionSetName(task);
-        //            if (selection != null)
-        //            {
-        //                List<string> list = SET.DataSource as List<string>;
-        //                if (list.Contains(selection))
-        //                {
-        //                    row.Cells[2].Value = selection;
-        //                }
-        //            }
-        //        }
-        //    }
+            TreeNode node = treeView1.SelectedNode;
+            Collection<int> index = node.Tag as Collection<int>;
+            string selSet = listBox1.SelectedItem.ToString();
+            if (selSet == "NULL")
+            {
+                selSet = null;
+            }
+
+            FreezeTreeUpdate = true;
+            Core.Self.WriteTaskToTimeliner(index, selSet);
+            FreezeTreeUpdate = false;
+
+            node.BackColor = System.Drawing.Color.LawnGreen;
         }
 
         /// <summary>
-        /// Заносит выбранные (или обнулённые) селекшны к таскам в таймлайнер.
+        /// Если у таска есть прикреплённый набор - он подсвечивается при выборе таска.
         /// </summary>
-        private void OKButton_Click(object sender, EventArgs e)
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-        //    this.UseWaitCursor = true;
-        //    this.progressBar1.Refresh();
-        //    this.progressBar1.Style = ProgressBarStyle.Continuous;
-        //    this.progressBar1.Maximum = dataGridView1.Rows.Count;
-        //    foreach(DataGridViewRow row in dataGridView1.Rows)
-        //    {
-        //        Collection<int> taskindex = row.Cells[0].Value as Collection<int>;
-        //        if (row.Cells[2].Value != null)
-        //        {
-        //            string setName = row.Cells[2].Value.ToString();
-        //            Core.Self.WriteTaskToTimeliner(taskindex, setName);
-        //            this.progressBar1.PerformStep();
-        //        }
-        //        else
-        //        {
-        //            Core.Self.WriteTaskToTimeliner(taskindex);
-        //            this.progressBar1.PerformStep();
-        //        }
-        //    }
-        //    this.Close();
-        //    this.UseWaitCursor = false;
+            TreeNode node = treeView1.SelectedNode;
+            Collection<int> index = node.Tag as Collection<int>;
+            TimelinerTask task = timeliner.TaskResolveIndexPath(index);
+            string SetName = Core.Self.findSelectionSetName(task);
+
+            listBox1.SelectedItem = SetName;
+        }
+
+        private void Timeliner_Changed(object sender, EventArgs e)
+        {
+            if (!FreezeTreeUpdate)
+                this.Close();
         }
     }
 }
