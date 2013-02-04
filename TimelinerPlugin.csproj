@@ -69,7 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core.cs" />
-    <Compile Include="CurrentTask.cs" />
     <Compile Include="DetailedForm.cs">
       <SubType>Form</SubType>
     </Compile>

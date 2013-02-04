@@ -34,8 +34,7 @@ namespace NavisTimelinerPlugin
 
         static Document nDoc = Autodesk.Navisworks.Api.Application.ActiveDocument;
         static Autodesk.Navisworks.Api.DocumentParts.IDocumentTimeliner Itimeliner = nDoc.Timeliner;
-        static DocumentTimeliner timeliner = (DocumentTimeliner)Itimeliner;
-        static TimelinerTask RootTimelinerTask;
+        static DocumentTimeliner timeliner = (DocumentTimeliner)Itimeliner;        
         
         /// <summary>
         ////Проверка наличия тасков в таймлайнере и перезаполнение массива тасков в программе.
@@ -45,8 +44,8 @@ namespace NavisTimelinerPlugin
             if (timeliner.Tasks.Count != 0)
             {
                 this.tasks.Clear();
-                RootTimelinerTask = timeliner.Tasks[0] as TimelinerTask;
-                this.getChildren(RootTimelinerTask);
+                TimelinerTask Root = timeliner.Tasks[0] as TimelinerTask;
+                this.getChildren(Root);
                 return true;
             }
             else
@@ -91,12 +90,7 @@ namespace NavisTimelinerPlugin
                 value = tasks;
             }
         }
-
-        List<TaskContainer> tasks = new List<TaskContainer>(); //массив тасков проекта.
-
-        public CurrentTimelinerTask currentTimelinerTask = new CurrentTimelinerTask();//Контейнер для хранения обрабатываемого в данный момент таска.
-
-        SerializableDataHolder DataHolder = new SerializableDataHolder();//массив для сохранения обработанных тасков в файл.
+        List<TaskContainer> tasks = new List<TaskContainer>(); //массив тасков проекта.      
 
         /// <summary>
         /// Записывает значение в Timeliner. В случае пустого селекшн сета - очищает таск от прикреплённого набора.
@@ -114,18 +108,18 @@ namespace NavisTimelinerPlugin
                     {
                         TimelinerTask task = timeliner.TaskResolveIndexPath(index).CreateCopy();
                         task.Selection.CopyFrom(collection);
-                        GroupItem foo = timeliner.TaskResolveIndexPath(index).Parent;
-                        int id = foo.Children.IndexOfDisplayName(task.DisplayName);
-                        timeliner.TaskEdit(foo, id, task);
+                        GroupItem parent = timeliner.TaskResolveIndexPath(index).Parent;
+                        int id = parent.Children.IndexOfDisplayName(task.DisplayName);
+                        timeliner.TaskEdit(parent, id, task);
                     }
                 }
                 else
                 {
                     TimelinerTask task = timeliner.TaskResolveIndexPath(index).CreateCopy();
                     task.Selection.Clear();
-                    GroupItem foo = timeliner.TaskResolveIndexPath(index).Parent;
-                    int id = foo.Children.IndexOfDisplayName(task.DisplayName);
-                    timeliner.TaskEdit(foo, id, task);
+                    GroupItem parent = timeliner.TaskResolveIndexPath(index).Parent;
+                    int id = parent.Children.IndexOfDisplayName(task.DisplayName);
+                    timeliner.TaskEdit(parent, id, task);
                 }
             }
             catch (Exception Ex)
@@ -198,7 +192,7 @@ namespace NavisTimelinerPlugin
         /// </summary>
         public void SaveTasksToFile()
         {
-            DataHolder.Clear();
+            SerializableDataHolder DataHolder = new SerializableDataHolder();
             foreach(TaskContainer tc in this.tasks)
             {
                 Collection<int> index = tc.Index;
@@ -213,6 +207,7 @@ namespace NavisTimelinerPlugin
         /// </summary>
         public void LoadTasksAssocFromFile()
         {
+            SerializableDataHolder DataHolder = new SerializableDataHolder();
             DataHolder = Serializer.deserialize();
 
             if (DataHolder != null)
@@ -226,22 +221,54 @@ namespace NavisTimelinerPlugin
         }
        
         /// <summary>
-        /// Показывает на модели только выборку элементов, остальное делает прозрачным.
+        /// Показывает на модели только выборку элементов, остальное прячет.
         /// </summary>
         /// <param name="task">Таск, выборка которого отображается на модели.</param>
-        public void hideAllExceptTimelinerTaskSelection(TimelinerTask task, TextBox textbox = null)
+        public void hideAllExceptTaskSelection(TimelinerTask task, TextBox textbox = null)
         {
             try
             {
                 if (!task.Selection.IsClear)
                 {
-                    ModelItemCollection collection = task.Selection.GetSelectedItems(nDoc);
-                    nDoc.CurrentSelection.SelectAll();
-                    //nDoc.Models.SetHidden(nDoc.CurrentSelection.SelectedItems, true);
-                    //nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0.99);
-                    nDoc.CurrentSelection.Clear();
-                    //nDoc.Models.OverridePermanentTransparency(collection, 0);
-                    nDoc.Models.SetHidden(collection, true);
+                    #region Способ из мануала, работает медленно и неправильно
+                    //ModelItemCollection hidden = new ModelItemCollection();
+                    //ModelItemCollection visible = new ModelItemCollection();
+                    //ModelItemCollection taskItems = task.Selection.GetSelectedItems(nDoc);
+                                        
+                    //foreach (ModelItem item in taskItems)
+                    //{
+                    //if (item.AncestorsAndSelf != null)
+                    //    visible.AddRange(item.AncestorsAndSelf);
+                    //if (item.Descendants != null)
+                    //    visible.AddRange(item.Descendants);
+                    //}
+
+                    ////mark as invisible all the siblings of the visible items as well as the visible items
+                    //foreach (ModelItem toShow in visible)
+                    //{
+                    //    if (toShow.Parent != null)
+                    //    {
+                    //        hidden.AddRange(toShow.Parent.Children);
+                    //    }
+                    //}
+
+                    ////remove the visible items from the collection
+                    //foreach (ModelItem toShow in visible)
+                    //{
+                    //    hidden.Remove(toShow);
+                    //}                   
+
+                    ////hide the remaining items
+                    //nDoc.Models.SetHidden(hidden, true);
+                    #endregion
+
+                    MakeAllModelItemsVisible();
+                    ModelItemCollection taskItems = task.Selection.GetSelectedItems(nDoc);
+                    taskItems.Invert(nDoc);
+
+                    //nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 1);
+                    nDoc.Models.SetHidden(taskItems, true);                    
+                    //nDoc.Models.OverridePermanentTransparency(task.Selection.GetSelectedItems(nDoc), 0);
                 }
                 else
                 {
@@ -263,7 +290,7 @@ namespace NavisTimelinerPlugin
         {
             nDoc.CurrentSelection.SelectAll();
             //nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0);
-            nDoc.Models.SetHidden(nDoc.CurrentSelection.SelectedItems, false);
+            nDoc.Models.ResetAllHidden();
             nDoc.CurrentSelection.Clear();
         }
     }

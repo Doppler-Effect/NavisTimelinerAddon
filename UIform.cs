@@ -19,7 +19,6 @@ namespace NavisTimelinerPlugin
         static Document nDoc = Autodesk.Navisworks.Api.Application.ActiveDocument;
         static Autodesk.Navisworks.Api.DocumentParts.IDocumentTimeliner Itimeliner = nDoc.Timeliner;
         static DocumentTimeliner timeliner = (DocumentTimeliner)Itimeliner;
-        TimelinerTask RootTimelinerTask;
 
         #region логика конструктора - синглтона
         private static UIform instance;
@@ -81,27 +80,64 @@ namespace NavisTimelinerPlugin
                 
         #region Просмотр тасков и отображение только тех элементов модели, которые с ними ассоциированы
 
+        private int CurrentTaskNumber;
+
         /// <summary>
         /// Обработчик клика по кнопке "начать". Заполняет коллекции и инициализирует счётчики, загружает первый таск.
         /// </summary>
         private void StartDataInputButton_Click(object sender, EventArgs e)
-        {
+        {            
             if (Core.Self.AreTasksAccessible())
             {
+                CurrentTaskNumber = 0;
                 groupBox2.Enabled = true;
-                nexTimelinerTaskToDataInput();
+                viewCurrentTask();
             }
         }
 
-        private void WriteCompletionToTask()
+        void viewCurrentTask()
+        {
+            if (CurrentTaskNumber >= Core.Self.Tasks.Count)
+                CurrentTaskNumber = 0;
+            if (CurrentTaskNumber < 0)
+                CurrentTaskNumber = Core.Self.Tasks.Count - 1;
+            TimelinerTask task = Core.Self.Tasks[CurrentTaskNumber].Task;
+            CurrentViewTaskBox.Text = task.DisplayName;
+            Core.Self.hideAllExceptTaskSelection(task);
+            CompletionTextBox.Text = task.User1;
+            UnitsComboBox.Text = task.User2;
+
+        }
+
+        private void buttonNext_Click(object sender, EventArgs e)
+        {
+            CurrentTaskNumber++;
+            viewCurrentTask();
+        }
+
+        private void buttonPrevious_Click(object sender, EventArgs e)
+        {
+            CurrentTaskNumber--;
+            viewCurrentTask();
+        }
+        
+        private void ButtonAcceptCompletionProgress_Click(object sender, EventArgs e)
+        {
+            WriteCompletionToCurrentTask();
+        }
+
+        /// <summary>
+        /// Запись введённой информации и единиц измерения в таск.
+        /// </summary>
+        private void WriteCompletionToCurrentTask()
         {
             string value = removeLetters(CompletionTextBox.Text);
             string units = UnitsComboBox.Text;
 
-            if (!string.IsNullOrEmpty(value))
+            if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(units))
             {
-                TimelinerTask task = Core.Self.currentTimelinerTask.Task.CreateCopy();
-                Collection<int> index = timeliner.TaskCreateIndexPath(Core.Self.currentTimelinerTask.Task);
+                TimelinerTask task = Core.Self.Tasks[CurrentTaskNumber].Task.CreateCopy();
+                Collection<int> index = timeliner.TaskCreateIndexPath(task);
                 GroupItem parent = timeliner.TaskResolveIndexPath(index).Parent;
                 int id = parent.Children.IndexOfDisplayName(task.DisplayName);
 
@@ -110,43 +146,13 @@ namespace NavisTimelinerPlugin
 
                 timeliner.TaskEdit(parent, id, task);
 
-                nexTimelinerTaskToDataInput();
+                CurrentTaskNumber++;
+                viewCurrentTask();
             }
             else
-                MessageBox.Show("Введите значение");
-        }
-
-        /// <summary>
-        /// Отображает на модели следующий по порядку таск.
-        /// </summary>
-        void nexTimelinerTaskToDataInput()
-        {
-            if (Core.Self.Tasks.Count != 0)
-            {
-                TimelinerTask task = Core.Self.Tasks.First().Task;
-                Core.Self.currentTimelinerTask.update(task, CurrentViewTaskBox);
-                Core.Self.Tasks.RemoveAt(0);
-                Core.Self.hideAllExceptTimelinerTaskSelection(task, CurrentViewTaskBox);
-                CompletionTextBox.Text = task.User1;
-                UnitsComboBox.Text = task.User2;
-            }
-            else
-            {
-                groupBox2.Enabled = false;
-            }
-
-        }        
-
-        private void buttonNext_Click(object sender, EventArgs e)
-        {
-            nexTimelinerTaskToDataInput();
+                MessageBox.Show("Введите значения");
         }
         
-        private void ButtonAcceptCompletionProgress_Click(object sender, EventArgs e)
-        {
-            WriteCompletionToTask();
-        }
-
         string removeLetters(string str)
         {
             string result = null;
@@ -169,6 +175,5 @@ namespace NavisTimelinerPlugin
                 this.Visible = false;
             }
         }
-
     }
 }

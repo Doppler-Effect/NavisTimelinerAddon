@@ -83,6 +83,7 @@
             this.Controls.Add(this.splitContainer1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(200, 300);
             this.Name = "DetailedForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
