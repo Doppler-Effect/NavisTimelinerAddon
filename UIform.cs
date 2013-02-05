@@ -46,22 +46,19 @@ namespace NavisTimelinerPlugin
             }
         }
         #endregion
-                        
-        private void groupBox2_EnabledChanged(object sender, EventArgs e)
-        {
-            Core.Self.MakeAllModelItemsVisible();
-        }
+        
         private void buttonExit_Click(object sender, EventArgs e)
         {
             this.Visible = false;
-            Core.Self.MakeAllModelItemsVisible();
+            StopDataInput();
         }        
         
         #region Загрузка и сохранение данных об ассоциированных тасках из файла
 
         private void SaveTaskButton_Click(object sender, EventArgs e)
         {
-            if (Core.Self.AreTasksAccessible())
+            StopDataInput();
+            if (Core.Self.TasksOK())
             {
                 Core.Self.SaveTasksToFile();
             }
@@ -69,8 +66,8 @@ namespace NavisTimelinerPlugin
 
         private void LoadButton_Click(object sender, EventArgs e)
         {
-            groupBox2.Enabled = false;
-            if (Core.Self.AreTasksAccessible())
+            StopDataInput();
+            if (Core.Self.TasksOK())
             {
                 Core.Self.LoadTasksAssocFromFile();
             }
@@ -79,80 +76,137 @@ namespace NavisTimelinerPlugin
         #endregion
                 
         #region Просмотр тасков и отображение только тех элементов модели, которые с ними ассоциированы
-
-        private int CurrentTaskNumber;
-
-        /// <summary>
-        /// Обработчик клика по кнопке "начать". Заполняет коллекции и инициализирует счётчики, загружает первый таск.
-        /// </summary>
+        
         private void StartDataInputButton_Click(object sender, EventArgs e)
         {            
-            if (Core.Self.AreTasksAccessible())
+            if (Core.Self.TasksOK())
             {
-                CurrentTaskNumber = 0;
+                FillTaskList();
                 groupBox2.Enabled = true;
-                viewCurrentTask();
             }
         }
 
-        void viewCurrentTask()
+        private void StopDataInput()
         {
-            if (CurrentTaskNumber >= Core.Self.Tasks.Count)
-                CurrentTaskNumber = 0;
-            if (CurrentTaskNumber < 0)
-                CurrentTaskNumber = Core.Self.Tasks.Count - 1;
-            TimelinerTask task = Core.Self.Tasks[CurrentTaskNumber].Task;
-            CurrentViewTaskBox.Text = task.DisplayName;
+            TasksView.Nodes.Clear();
+            Core.Self.MakeAllModelItemsVisible();
+            groupBox2.Enabled = false;
+        }
+
+        /// <summary>
+        ////Наполняет тасклист теми тасками, у которых есть назначенные наборы элементов.
+        /// </summary>
+        private void FillTaskList()
+        {
+            TasksView.BeginUpdate();
+            TasksView.Nodes.Clear();
+            foreach (TaskContainer taskC in Core.Self.Tasks)
+            {
+                if (!taskC.Task.Selection.IsClear)
+                {
+                    TreeNode node = new TreeNode(taskC.TaskName);
+                    node.Tag = taskC.Index;
+                    TasksView.Nodes.Add(node);
+                }
+            }
+            if (TasksView.Nodes.Count != 0)
+            {
+                TasksView.SelectedNode = TasksView.Nodes[0];
+                TasksView.SelectedNode = TasksView.Nodes[0];
+            }
+            TasksView.EndUpdate();
+        }
+        
+        private void TasksView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            Collection<int> index = TasksView.SelectedNode.Tag as Collection<int>;
+            TimelinerTask task = timeliner.TaskResolveIndexPath(index);
             Core.Self.hideAllExceptTaskSelection(task);
+
+            //заполнение полей выполнения и единиц измерения
             CompletionTextBox.Text = task.User1;
             UnitsComboBox.Text = task.User2;
-
-        }
-
-        private void buttonNext_Click(object sender, EventArgs e)
-        {
-            CurrentTaskNumber++;
-            viewCurrentTask();
-        }
-
-        private void buttonPrevious_Click(object sender, EventArgs e)
-        {
-            CurrentTaskNumber--;
-            viewCurrentTask();
         }
         
         private void ButtonAcceptCompletionProgress_Click(object sender, EventArgs e)
         {
-            WriteCompletionToCurrentTask();
+            WriteCompletionProgress();
+        }
+
+        private void buttonUP_Click(object sender, EventArgs e)
+        {
+            taskUp();
+        }
+
+        private void buttonDOWN_Click(object sender, EventArgs e)
+        {
+            taskDown();
+        }
+
+        /// <summary>
+        /// Перелистывание таска назад
+        /// </summary>
+        private void taskUp()
+        {
+            if (TasksView.SelectedNode != null)
+            {
+                if (TasksView.SelectedNode.PrevNode != null)
+                    TasksView.SelectedNode = TasksView.SelectedNode.PrevNode;
+                else
+                    TasksView.SelectedNode = TasksView.Nodes[TasksView.Nodes.Count - 1];
+            }
+        }
+
+        /// <summary>
+        /// Перелистывание таска вперёд
+        /// </summary>
+        private void taskDown()
+        {
+            if (TasksView.SelectedNode != null)
+            {
+                if (TasksView.SelectedNode.NextNode != null)
+                    TasksView.SelectedNode = TasksView.SelectedNode.NextNode;
+                else
+                    TasksView.SelectedNode = TasksView.Nodes[0];
+            }
         }
 
         /// <summary>
         /// Запись введённой информации и единиц измерения в таск.
         /// </summary>
-        private void WriteCompletionToCurrentTask()
+        private void WriteCompletionProgress()
         {
             string value = removeLetters(CompletionTextBox.Text);
             string units = UnitsComboBox.Text;
 
-            if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(units))
+            try
             {
-                TimelinerTask task = Core.Self.Tasks[CurrentTaskNumber].Task.CreateCopy();
-                Collection<int> index = timeliner.TaskCreateIndexPath(task);
-                GroupItem parent = timeliner.TaskResolveIndexPath(index).Parent;
-                int id = parent.Children.IndexOfDisplayName(task.DisplayName);
+                if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(units))
+                {
+                    Collection<int> index = TasksView.SelectedNode.Tag as Collection<int>;
+                    TimelinerTask task = timeliner.TaskResolveIndexPath(index).CreateCopy();
+                    GroupItem parent = timeliner.TaskResolveIndexPath(index).Parent;
+                    int id = parent.Children.IndexOfDisplayName(task.DisplayName);
 
-                task.SetUserFieldByIndex(0, value);
-                task.SetUserFieldByIndex(1, units);
+                    task.SetUserFieldByIndex(0, value);
+                    task.SetUserFieldByIndex(1, units);
 
-                timeliner.TaskEdit(parent, id, task);
+                    timeliner.TaskEdit(parent, id, task);
 
-                CurrentTaskNumber++;
-                viewCurrentTask();
+                    taskDown();
+                }
+                else
+                    MessageBox.Show("Введите значения");
             }
-            else
-                MessageBox.Show("Введите значения");
+            catch (Exception Ex)
+            {
+                MessageBox.Show(Ex.Message);
+            }
         }
         
+        /// <summary>
+        /// Убирает буквы из полученной строки.
+        /// </summary>
         string removeLetters(string str)
         {
             string result = null;
@@ -168,7 +222,8 @@ namespace NavisTimelinerPlugin
 
         private void ManualAssocButton_Click(object sender, EventArgs e)
         {
-            if (Core.Self.AreTasksAccessible())
+            StopDataInput();
+            if (Core.Self.TasksOK())
             {
                 DetailedForm form = new DetailedForm(timeliner, nDoc);
                 form.Show();

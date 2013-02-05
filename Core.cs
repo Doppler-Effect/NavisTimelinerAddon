@@ -39,7 +39,7 @@ namespace NavisTimelinerPlugin
         /// <summary>
         ////Проверка наличия тасков в таймлайнере и перезаполнение массива тасков в программе.
         /// </summary>
-        public bool AreTasksAccessible()
+        public bool TasksOK()
         {
             if (timeliner.Tasks.Count != 0)
             {
@@ -101,7 +101,7 @@ namespace NavisTimelinerPlugin
         {
             try
             {
-                if (setName != null)
+                if (setName != null) //прикрепление к таску набора
                 {
                     SelectionSourceCollection collection = Core.Self.getSelectionSourceByName(setName);
                     if (collection.Count != 0)
@@ -113,7 +113,7 @@ namespace NavisTimelinerPlugin
                         timeliner.TaskEdit(parent, id, task);
                     }
                 }
-                else
+                else //удаление прикреплённого набора
                 {
                     TimelinerTask task = timeliner.TaskResolveIndexPath(index).CreateCopy();
                     task.Selection.Clear();
@@ -140,7 +140,8 @@ namespace NavisTimelinerPlugin
         {
             foreach (TaskContainer taskC in tasks)
             {
-                WriteTaskToTimeliner(taskC);
+                if(!taskC.Task.Selection.IsClear)
+                    WriteTaskToTimeliner(taskC);
             }
         }
 
@@ -215,7 +216,8 @@ namespace NavisTimelinerPlugin
                 ClearAllSelections();
                 foreach (KeyValuePair<Collection<int>, string> pair in DataHolder.Data)
                 {
-                    this.WriteTaskToTimeliner(pair.Key, pair.Value);
+                    if(pair.Value != null)
+                        this.WriteTaskToTimeliner(pair.Key, pair.Value);
                 }
             }
         }

@@ -31,17 +31,17 @@
             this.SaveTaskButton = new System.Windows.Forms.Button();
             this.LoadButton = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.buttonPrevious = new System.Windows.Forms.Button();
-            this.buttonNext = new System.Windows.Forms.Button();
+            this.TasksView = new System.Windows.Forms.TreeView();
             this.label1 = new System.Windows.Forms.Label();
             this.ButtonAcceptCompletionProgress = new System.Windows.Forms.Button();
             this.UnitsComboBox = new System.Windows.Forms.ComboBox();
             this.CompletionTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.CurrentViewTaskBox = new System.Windows.Forms.TextBox();
             this.StartDataInputButton = new System.Windows.Forms.Button();
             this.buttonExit = new System.Windows.Forms.Button();
             this.ManualAssocButton = new System.Windows.Forms.Button();
+            this.buttonUP = new System.Windows.Forms.Button();
+            this.buttonDOWN = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,62 +68,51 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.buttonPrevious);
-            this.groupBox2.Controls.Add(this.buttonNext);
+            this.groupBox2.Controls.Add(this.buttonDOWN);
+            this.groupBox2.Controls.Add(this.buttonUP);
+            this.groupBox2.Controls.Add(this.TasksView);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.ButtonAcceptCompletionProgress);
             this.groupBox2.Controls.Add(this.UnitsComboBox);
             this.groupBox2.Controls.Add(this.CompletionTextBox);
             this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.CurrentViewTaskBox);
             this.groupBox2.Enabled = false;
-            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold);
+            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.groupBox2.Location = new System.Drawing.Point(183, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(474, 241);
+            this.groupBox2.Size = new System.Drawing.Size(350, 570);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Назначение %% выполнения";
-            this.groupBox2.EnabledChanged += new System.EventHandler(this.groupBox2_EnabledChanged);
             // 
-            // buttonPrevious
+            // TasksView
             // 
-            this.buttonPrevious.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonPrevious.Location = new System.Drawing.Point(6, 53);
-            this.buttonPrevious.Name = "buttonPrevious";
-            this.buttonPrevious.Size = new System.Drawing.Size(217, 48);
-            this.buttonPrevious.TabIndex = 12;
-            this.buttonPrevious.Text = "PREVIOUS";
-            this.buttonPrevious.UseVisualStyleBackColor = true;
-            this.buttonPrevious.Click += new System.EventHandler(this.buttonPrevious_Click);
-            // 
-            // buttonNext
-            // 
-            this.buttonNext.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.buttonNext.Location = new System.Drawing.Point(251, 53);
-            this.buttonNext.Name = "buttonNext";
-            this.buttonNext.Size = new System.Drawing.Size(217, 48);
-            this.buttonNext.TabIndex = 7;
-            this.buttonNext.Text = "NEXT";
-            this.buttonNext.UseVisualStyleBackColor = true;
-            this.buttonNext.Click += new System.EventHandler(this.buttonNext_Click);
+            this.TasksView.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.TasksView.FullRowSelect = true;
+            this.TasksView.HideSelection = false;
+            this.TasksView.Location = new System.Drawing.Point(6, 19);
+            this.TasksView.Name = "TasksView";
+            this.TasksView.Scrollable = false;
+            this.TasksView.Size = new System.Drawing.Size(337, 489);
+            this.TasksView.TabIndex = 14;
+            this.TasksView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TasksView_AfterSelect);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(6, 144);
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label1.Location = new System.Drawing.Point(3, 543);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(153, 18);
+            this.label1.Size = new System.Drawing.Size(114, 13);
             this.label1.TabIndex = 13;
             this.label1.Text = "Единицы измерения:";
             // 
             // ButtonAcceptCompletionProgress
             // 
-            this.ButtonAcceptCompletionProgress.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ButtonAcceptCompletionProgress.Location = new System.Drawing.Point(346, 111);
+            this.ButtonAcceptCompletionProgress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.ButtonAcceptCompletionProgress.Location = new System.Drawing.Point(206, 514);
             this.ButtonAcceptCompletionProgress.Name = "ButtonAcceptCompletionProgress";
-            this.ButtonAcceptCompletionProgress.Size = new System.Drawing.Size(122, 56);
+            this.ButtonAcceptCompletionProgress.Size = new System.Drawing.Size(69, 47);
             this.ButtonAcceptCompletionProgress.TabIndex = 6;
             this.ButtonAcceptCompletionProgress.Text = "Назначить";
             this.ButtonAcceptCompletionProgress.UseVisualStyleBackColor = true;
@@ -131,7 +120,7 @@
             // 
             // UnitsComboBox
             // 
-            this.UnitsComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold);
+            this.UnitsComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.UnitsComboBox.FormattingEnabled = true;
             this.UnitsComboBox.Items.AddRange(new object[] {
             "%",
@@ -140,40 +129,29 @@
             "м3",
             "тн.",
             "шт."});
-            this.UnitsComboBox.Location = new System.Drawing.Point(179, 141);
+            this.UnitsComboBox.Location = new System.Drawing.Point(133, 540);
             this.UnitsComboBox.Name = "UnitsComboBox";
-            this.UnitsComboBox.Size = new System.Drawing.Size(164, 26);
+            this.UnitsComboBox.Size = new System.Drawing.Size(67, 21);
             this.UnitsComboBox.Sorted = true;
             this.UnitsComboBox.TabIndex = 11;
             // 
             // CompletionTextBox
             // 
-            this.CompletionTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold);
-            this.CompletionTextBox.Location = new System.Drawing.Point(179, 111);
+            this.CompletionTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.CompletionTextBox.Location = new System.Drawing.Point(133, 514);
             this.CompletionTextBox.Name = "CompletionTextBox";
-            this.CompletionTextBox.Size = new System.Drawing.Size(164, 24);
+            this.CompletionTextBox.Size = new System.Drawing.Size(67, 20);
             this.CompletionTextBox.TabIndex = 10;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(6, 114);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label2.Location = new System.Drawing.Point(3, 517);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(167, 18);
+            this.label2.Size = new System.Drawing.Size(124, 13);
             this.label2.TabIndex = 9;
             this.label2.Text = "Прогресс выполнения:";
-            // 
-            // CurrentViewTaskBox
-            // 
-            this.CurrentViewTaskBox.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.CurrentViewTaskBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.CurrentViewTaskBox.Location = new System.Drawing.Point(6, 23);
-            this.CurrentViewTaskBox.Name = "CurrentViewTaskBox";
-            this.CurrentViewTaskBox.ReadOnly = true;
-            this.CurrentViewTaskBox.Size = new System.Drawing.Size(462, 24);
-            this.CurrentViewTaskBox.TabIndex = 7;
-            this.CurrentViewTaskBox.TabStop = false;
             // 
             // StartDataInputButton
             // 
@@ -205,11 +183,31 @@
             this.ManualAssocButton.UseVisualStyleBackColor = true;
             this.ManualAssocButton.Click += new System.EventHandler(this.ManualAssocButton_Click);
             // 
+            // buttonUP
+            // 
+            this.buttonUP.Location = new System.Drawing.Point(281, 514);
+            this.buttonUP.Name = "buttonUP";
+            this.buttonUP.Size = new System.Drawing.Size(61, 20);
+            this.buttonUP.TabIndex = 15;
+            this.buttonUP.Text = "ВВЕРХ";
+            this.buttonUP.UseVisualStyleBackColor = true;
+            this.buttonUP.Click += new System.EventHandler(this.buttonUP_Click);
+            // 
+            // buttonDOWN
+            // 
+            this.buttonDOWN.Location = new System.Drawing.Point(281, 540);
+            this.buttonDOWN.Name = "buttonDOWN";
+            this.buttonDOWN.Size = new System.Drawing.Size(61, 21);
+            this.buttonDOWN.TabIndex = 16;
+            this.buttonDOWN.Text = "ВНИЗ";
+            this.buttonDOWN.UseVisualStyleBackColor = true;
+            this.buttonDOWN.Click += new System.EventHandler(this.buttonDOWN_Click);
+            // 
             // UIform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(659, 242);
+            this.ClientSize = new System.Drawing.Size(538, 576);
             this.ControlBox = false;
             this.Controls.Add(this.ManualAssocButton);
             this.Controls.Add(this.StartDataInputButton);
@@ -235,8 +233,6 @@
         private System.Windows.Forms.Button LoadButton;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button StartDataInputButton;
-        private System.Windows.Forms.TextBox CurrentViewTaskBox;
-        private System.Windows.Forms.Button buttonNext;
         private System.Windows.Forms.Button SaveTaskButton;
         private System.Windows.Forms.ComboBox UnitsComboBox;
         private System.Windows.Forms.TextBox CompletionTextBox;
@@ -244,7 +240,9 @@
         private System.Windows.Forms.Button ButtonAcceptCompletionProgress;
         private System.Windows.Forms.Button buttonExit;
         private System.Windows.Forms.Button ManualAssocButton;
-        private System.Windows.Forms.Button buttonPrevious;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TreeView TasksView;
+        private System.Windows.Forms.Button buttonDOWN;
+        private System.Windows.Forms.Button buttonUP;
     }
 }
