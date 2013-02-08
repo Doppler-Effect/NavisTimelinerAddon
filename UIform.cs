@@ -83,14 +83,24 @@ namespace NavisTimelinerPlugin
             {
                 FillTaskList();
                 groupBox2.Enabled = true;
+                nDoc.CurrentSelection.Changed += CurrentSelection_Changed;
             }
         }
+
+        void CurrentSelection_Changed(object sender, EventArgs e)
+        {
+            if (nDoc.CurrentSelection.SelectedItems.Count == 1)
+            {
+                MessageBox.Show(Core.Self.GetElementUniqueID(nDoc.CurrentSelection.SelectedItems.First));
+            }
+        }        
 
         private void StopDataInput()
         {
             TasksView.Nodes.Clear();
             Core.Self.MakeAllModelItemsVisible();
             groupBox2.Enabled = false;
+            nDoc.CurrentSelection.Changed -= this.CurrentSelection_Changed;
         }
 
         /// <summary>
@@ -121,7 +131,7 @@ namespace NavisTimelinerPlugin
         {
             Collection<int> index = TasksView.SelectedNode.Tag as Collection<int>;
             TimelinerTask task = timeliner.TaskResolveIndexPath(index);
-            Core.Self.hideAllExceptTaskSelection(task);
+            Core.Self.HideAllExceptTaskSelection(task);
 
             //заполнение полей выполнения и единиц измерения
             CompletionTextBox.Text = task.User1;

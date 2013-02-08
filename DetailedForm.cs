@@ -104,7 +104,7 @@ namespace NavisTimelinerPlugin
             TreeNode node = treeView1.SelectedNode;
             Collection<int> index = node.Tag as Collection<int>;
             TimelinerTask task = timeliner.TaskResolveIndexPath(index);
-            string SetName = Core.Self.findSelectionSetName(task);
+            string SetName = Core.Self.FindSelectionSetName(task);
 
             listBox1.SelectedItem = SetName;
         }

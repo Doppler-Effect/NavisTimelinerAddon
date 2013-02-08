@@ -103,7 +103,7 @@ namespace NavisTimelinerPlugin
             {
                 if (setName != null) //прикрепление к таску набора
                 {
-                    SelectionSourceCollection collection = Core.Self.getSelectionSourceByName(setName);
+                    SelectionSourceCollection collection = Core.Self.GetSelectionSourceByName(setName);
                     if (collection.Count != 0)
                     {
                         TimelinerTask task = timeliner.TaskResolveIndexPath(index).CreateCopy();
@@ -158,7 +158,7 @@ namespace NavisTimelinerPlugin
         /// </summary>
         /// <param name="task">Таск, к которому привязан искомый набор</param>
         /// <returns>Имя списка выбора, который выбирает указанный селекшн</returns>
-        public string findSelectionSetName(TimelinerTask task)
+        public string FindSelectionSetName(TimelinerTask task)
         {
             if (task.Selection.HasSelectionSources == true)
             {
@@ -173,7 +173,7 @@ namespace NavisTimelinerPlugin
         /// Возвращает выборку элементов модели по имени списка выбора. Если такой выборки нет - возвращает пустую коллекцию (обрабатывается уже в методах записи в timeliner).
         /// </summary>
         /// <param name="Name">Имя списка выбора (Selection Set), для которого нужно получить выборку.</param>
-        public SelectionSourceCollection getSelectionSourceByName(string Name)
+        public SelectionSourceCollection GetSelectionSourceByName(string Name)
         {
             SelectionSourceCollection result = new SelectionSourceCollection();
             foreach (SavedItem item in nDoc.SelectionSets.Value)
@@ -197,7 +197,7 @@ namespace NavisTimelinerPlugin
             foreach(TaskContainer tc in this.tasks)
             {
                 Collection<int> index = tc.Index;
-                string sel = findSelectionSetName(tc.Task);
+                string sel = FindSelectionSetName(tc.Task);
                 DataHolder.Add(index, sel);
             }
             Serializer.serialize(DataHolder);
@@ -226,7 +226,7 @@ namespace NavisTimelinerPlugin
         /// Показывает на модели только выборку элементов, остальное прячет.
         /// </summary>
         /// <param name="task">Таск, выборка которого отображается на модели.</param>
-        public void hideAllExceptTaskSelection(TimelinerTask task, TextBox textbox = null)
+        public void HideAllExceptTaskSelection(TimelinerTask task, TextBox textbox = null)
         {
             try
             {
@@ -294,6 +294,31 @@ namespace NavisTimelinerPlugin
             //nDoc.Models.OverridePermanentTransparency(nDoc.CurrentSelection.SelectedItems, 0);
             nDoc.Models.ResetAllHidden();
             nDoc.CurrentSelection.Clear();
+        }
+
+        /// <summary>
+        /// Возвращает уникальный идентификатор элемента
+        /// </summary>
+        public string GetElementUniqueID(ModelItem item)
+        {
+            string Stable_ID = null;
+            try
+            {
+                PropertyCategory idCategory = item.PropertyCategories.FindCategoryWithStableId();
+                if (idCategory != null)
+                {
+                    if (idCategory.HasInt64StableId)
+                        Stable_ID = idCategory.GetInt64StableId().ToString();
+                    if (idCategory.HasStringStableId)
+                        Stable_ID = idCategory.GetStringStableId();
+                }
+                return Stable_ID;
+            }
+            catch (Exception Ex)
+            {
+                MessageBox.Show(Ex.Message);
+                return Stable_ID;
+            }
         }
     }
 }
