@@ -94,6 +94,12 @@
       <DependentUpon>UIform.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="MSProjectLib\MSProjectLib.csproj">
+      <Project>{f865fa85-f3fd-43db-ad1d-f10421290f25}</Project>
+      <Name>MSProjectLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

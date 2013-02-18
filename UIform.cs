@@ -240,5 +240,11 @@ namespace NavisTimelinerPlugin
                 this.Visible = false;
             }
         }
+
+        private void buttonMSProject_Click(object sender, EventArgs e)
+        {
+            MSProjectLib.MSProjectInterop msp = new MSProjectLib.MSProjectInterop();
+            msp.LaunchProject();
+        }
     }
 }

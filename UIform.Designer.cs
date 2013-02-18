@@ -31,6 +31,8 @@
             this.SaveTaskButton = new System.Windows.Forms.Button();
             this.LoadButton = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.buttonDOWN = new System.Windows.Forms.Button();
+            this.buttonUP = new System.Windows.Forms.Button();
             this.TasksView = new System.Windows.Forms.TreeView();
             this.label1 = new System.Windows.Forms.Label();
             this.ButtonAcceptCompletionProgress = new System.Windows.Forms.Button();
@@ -40,8 +42,7 @@
             this.StartDataInputButton = new System.Windows.Forms.Button();
             this.buttonExit = new System.Windows.Forms.Button();
             this.ManualAssocButton = new System.Windows.Forms.Button();
-            this.buttonUP = new System.Windows.Forms.Button();
-            this.buttonDOWN = new System.Windows.Forms.Button();
+            this.buttonMSProject = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -84,6 +85,26 @@
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Назначение %% выполнения";
+            // 
+            // buttonDOWN
+            // 
+            this.buttonDOWN.Location = new System.Drawing.Point(281, 540);
+            this.buttonDOWN.Name = "buttonDOWN";
+            this.buttonDOWN.Size = new System.Drawing.Size(61, 21);
+            this.buttonDOWN.TabIndex = 16;
+            this.buttonDOWN.Text = "ВНИЗ";
+            this.buttonDOWN.UseVisualStyleBackColor = true;
+            this.buttonDOWN.Click += new System.EventHandler(this.buttonDOWN_Click);
+            // 
+            // buttonUP
+            // 
+            this.buttonUP.Location = new System.Drawing.Point(281, 514);
+            this.buttonUP.Name = "buttonUP";
+            this.buttonUP.Size = new System.Drawing.Size(61, 20);
+            this.buttonUP.TabIndex = 15;
+            this.buttonUP.Text = "ВВЕРХ";
+            this.buttonUP.UseVisualStyleBackColor = true;
+            this.buttonUP.Click += new System.EventHandler(this.buttonUP_Click);
             // 
             // TasksView
             // 
@@ -183,25 +204,15 @@
             this.ManualAssocButton.UseVisualStyleBackColor = true;
             this.ManualAssocButton.Click += new System.EventHandler(this.ManualAssocButton_Click);
             // 
-            // buttonUP
+            // buttonMSProject
             // 
-            this.buttonUP.Location = new System.Drawing.Point(281, 514);
-            this.buttonUP.Name = "buttonUP";
-            this.buttonUP.Size = new System.Drawing.Size(61, 20);
-            this.buttonUP.TabIndex = 15;
-            this.buttonUP.Text = "ВВЕРХ";
-            this.buttonUP.UseVisualStyleBackColor = true;
-            this.buttonUP.Click += new System.EventHandler(this.buttonUP_Click);
-            // 
-            // buttonDOWN
-            // 
-            this.buttonDOWN.Location = new System.Drawing.Point(281, 540);
-            this.buttonDOWN.Name = "buttonDOWN";
-            this.buttonDOWN.Size = new System.Drawing.Size(61, 21);
-            this.buttonDOWN.TabIndex = 16;
-            this.buttonDOWN.Text = "ВНИЗ";
-            this.buttonDOWN.UseVisualStyleBackColor = true;
-            this.buttonDOWN.Click += new System.EventHandler(this.buttonDOWN_Click);
+            this.buttonMSProject.Location = new System.Drawing.Point(12, 517);
+            this.buttonMSProject.Name = "buttonMSProject";
+            this.buttonMSProject.Size = new System.Drawing.Size(160, 40);
+            this.buttonMSProject.TabIndex = 11;
+            this.buttonMSProject.Text = "-->MSProject";
+            this.buttonMSProject.UseVisualStyleBackColor = true;
+            this.buttonMSProject.Click += new System.EventHandler(this.buttonMSProject_Click);
             // 
             // UIform
             // 
@@ -209,6 +220,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(538, 576);
             this.ControlBox = false;
+            this.Controls.Add(this.buttonMSProject);
             this.Controls.Add(this.ManualAssocButton);
             this.Controls.Add(this.StartDataInputButton);
             this.Controls.Add(this.buttonExit);
@@ -244,5 +256,6 @@
         private System.Windows.Forms.TreeView TasksView;
         private System.Windows.Forms.Button buttonDOWN;
         private System.Windows.Forms.Button buttonUP;
+        private System.Windows.Forms.Button buttonMSProject;
     }
 }
