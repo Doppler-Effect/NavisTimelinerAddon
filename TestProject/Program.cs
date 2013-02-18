@@ -11,7 +11,6 @@ namespace TestProject
         static void Main(string[] args)
         {
             MSProjectLib.MSProjectInterop msp = new MSProjectLib.MSProjectInterop();
-            msp.LaunchProject();
         }
     }
 }
