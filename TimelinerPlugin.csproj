@@ -57,6 +57,9 @@
       <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2013\Autodesk.Navisworks.Timeliner.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.MSProject, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -75,6 +78,13 @@
     <Compile Include="DetailedForm.Designer.cs">
       <DependentUpon>DetailedForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ProgressForm.Designer.cs">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MSProjectInterop.cs" />
     <Compile Include="SerializableDataHolder.cs" />
     <Compile Include="TaskContainer.cs" />
     <Compile Include="TimelinerPlugin.cs" />
@@ -90,15 +100,15 @@
     <EmbeddedResource Include="DetailedForm.resx">
       <DependentUpon>DetailedForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ProgressForm.resx">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UIform.resx">
       <DependentUpon>UIform.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="MSProjectLib\MSProjectLib.csproj">
-      <Project>{f865fa85-f3fd-43db-ad1d-f10421290f25}</Project>
-      <Name>MSProjectLib</Name>
-    </ProjectReference>
+    <Content Include="MSProject Field mapping.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

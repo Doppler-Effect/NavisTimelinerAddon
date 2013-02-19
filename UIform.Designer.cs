@@ -43,6 +43,7 @@
             this.buttonExit = new System.Windows.Forms.Button();
             this.ManualAssocButton = new System.Windows.Forms.Button();
             this.buttonMSProject = new System.Windows.Forms.Button();
+            this.StartDataInputWithoutSelectedButton = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -113,7 +114,6 @@
             this.TasksView.HideSelection = false;
             this.TasksView.Location = new System.Drawing.Point(6, 19);
             this.TasksView.Name = "TasksView";
-            this.TasksView.Scrollable = false;
             this.TasksView.Size = new System.Drawing.Size(337, 489);
             this.TasksView.TabIndex = 14;
             this.TasksView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TasksView_AfterSelect);
@@ -180,13 +180,13 @@
             this.StartDataInputButton.Name = "StartDataInputButton";
             this.StartDataInputButton.Size = new System.Drawing.Size(160, 40);
             this.StartDataInputButton.TabIndex = 5;
-            this.StartDataInputButton.Text = "Начать ---->";
+            this.StartDataInputButton.Text = "Начать";
             this.StartDataInputButton.UseVisualStyleBackColor = true;
             this.StartDataInputButton.Click += new System.EventHandler(this.StartDataInputButton_Click);
             // 
             // buttonExit
             // 
-            this.buttonExit.Location = new System.Drawing.Point(12, 196);
+            this.buttonExit.Location = new System.Drawing.Point(12, 242);
             this.buttonExit.Name = "buttonExit";
             this.buttonExit.Size = new System.Drawing.Size(160, 40);
             this.buttonExit.TabIndex = 8;
@@ -210,9 +210,19 @@
             this.buttonMSProject.Name = "buttonMSProject";
             this.buttonMSProject.Size = new System.Drawing.Size(160, 40);
             this.buttonMSProject.TabIndex = 11;
-            this.buttonMSProject.Text = "-->MSProject";
+            this.buttonMSProject.Text = "выгрузка в MSProject";
             this.buttonMSProject.UseVisualStyleBackColor = true;
             this.buttonMSProject.Click += new System.EventHandler(this.buttonMSProject_Click);
+            // 
+            // StartDataInputWithoutSelectedButton
+            // 
+            this.StartDataInputWithoutSelectedButton.Location = new System.Drawing.Point(12, 196);
+            this.StartDataInputWithoutSelectedButton.Name = "StartDataInputWithoutSelectedButton";
+            this.StartDataInputWithoutSelectedButton.Size = new System.Drawing.Size(160, 40);
+            this.StartDataInputWithoutSelectedButton.TabIndex = 12;
+            this.StartDataInputWithoutSelectedButton.Text = "Начать (без наборов)";
+            this.StartDataInputWithoutSelectedButton.UseVisualStyleBackColor = true;
+            this.StartDataInputWithoutSelectedButton.Click += new System.EventHandler(this.StartDataInputWithoutSelectedButton_Click);
             // 
             // UIform
             // 
@@ -220,6 +230,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(538, 576);
             this.ControlBox = false;
+            this.Controls.Add(this.StartDataInputWithoutSelectedButton);
             this.Controls.Add(this.buttonMSProject);
             this.Controls.Add(this.ManualAssocButton);
             this.Controls.Add(this.StartDataInputButton);
@@ -257,5 +268,6 @@
         private System.Windows.Forms.Button buttonDOWN;
         private System.Windows.Forms.Button buttonUP;
         private System.Windows.Forms.Button buttonMSProject;
+        private System.Windows.Forms.Button StartDataInputWithoutSelectedButton;
     }
 }

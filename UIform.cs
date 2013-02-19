@@ -81,9 +81,18 @@ namespace NavisTimelinerPlugin
         {            
             if (Core.Self.TasksOK())
             {
-                FillTaskList();
+                FillTaskList(true);
                 groupBox2.Enabled = true;
                 nDoc.CurrentSelection.Changed += CurrentSelection_Changed;
+            }
+        }
+
+        private void StartDataInputWithoutSelectedButton_Click(object sender, EventArgs e)
+        {
+            if (Core.Self.TasksOK())
+            {
+                FillTaskList(false);
+                groupBox2.Enabled = true;
             }
         }
 
@@ -106,13 +115,22 @@ namespace NavisTimelinerPlugin
         /// <summary>
         ////Наполняет тасклист теми тасками, у которых есть назначенные наборы элементов.
         /// </summary>
-        private void FillTaskList()
+        private void FillTaskList(bool WithSelection)
         {
             TasksView.BeginUpdate();
             TasksView.Nodes.Clear();
             foreach (TaskContainer taskC in Core.Self.Tasks)
             {
-                if (!taskC.Task.Selection.IsClear)
+                if (WithSelection)
+                {
+                    if (!taskC.Task.Selection.IsClear)
+                    {
+                        TreeNode node = new TreeNode(taskC.TaskName);
+                        node.Tag = taskC.Index;
+                        TasksView.Nodes.Add(node);
+                    }
+                }
+                else if (taskC.Task.Selection.IsClear)
                 {
                     TreeNode node = new TreeNode(taskC.TaskName);
                     node.Tag = taskC.Index;
@@ -243,8 +261,9 @@ namespace NavisTimelinerPlugin
 
         private void buttonMSProject_Click(object sender, EventArgs e)
         {
-            MSProjectLib.MSProjectInterop msp = new MSProjectLib.MSProjectInterop();
-            msp.LaunchProject();
+            this.Visible = false;
+            Core.Self.MSProjectExport();
         }
+
     }
 }

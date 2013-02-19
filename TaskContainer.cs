@@ -10,7 +10,7 @@ using Autodesk.Navisworks.Api.Plugins;
 
 namespace NavisTimelinerPlugin
 {
-    class TaskContainer
+    public class TaskContainer
     {
         static Document nDoc = Autodesk.Navisworks.Api.Application.ActiveDocument;
         static Autodesk.Navisworks.Api.DocumentParts.IDocumentTimeliner Itimeliner = nDoc.Timeliner;
@@ -26,8 +26,7 @@ namespace NavisTimelinerPlugin
         {
             get { return minHierarchyDepth; }
         }
-
-
+        
         public List<TaskContainer> Children;
 
         public Collection<int> Index

@@ -127,7 +127,6 @@ namespace NavisTimelinerPlugin
                 MessageBox.Show(Ex.Message);
             }
         }
-
         public void WriteTaskToTimeliner(TaskContainer taskC, string setName = null)
         {
             WriteTaskToTimeliner(taskC.Index, setName);
@@ -318,6 +317,16 @@ namespace NavisTimelinerPlugin
             {
                 MessageBox.Show(Ex.Message);
                 return Stable_ID;
+            }
+        }
+
+        public void MSProjectExport()
+        {
+            if (TasksOK())
+            {
+                ProgressForm pForm = new ProgressForm(this.tasks.Count);
+                MSProjectInterop msp = new MSProjectInterop(pForm);
+                msp.AddTasks(this.Tasks);
             }
         }
     }
