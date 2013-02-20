@@ -154,6 +154,7 @@ namespace NavisTimelinerPlugin
             //заполнение полей выполнения и единиц измерения
             CompletionTextBox.Text = task.User1;
             UnitsComboBox.Text = task.User2;
+            maxCompletionTextBox.Text = task.User3;
         }
         
         private void ButtonAcceptCompletionProgress_Click(object sender, EventArgs e)
@@ -206,30 +207,63 @@ namespace NavisTimelinerPlugin
         {
             string value = removeLetters(CompletionTextBox.Text);
             string units = UnitsComboBox.Text;
-
-            try
+            string maxValue = removeLetters(maxCompletionTextBox.Text);
+            
+            //проверяем введённые значения и расчитываем процент выполнения:
+            double percent = 0;
+            if (this.inputIsCorrect(value, units, maxValue))
             {
-                if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(units))
+                if (units == "%")
                 {
-                    Collection<int> index = TasksView.SelectedNode.Tag as Collection<int>;
-                    TimelinerTask task = timeliner.TaskResolveIndexPath(index).CreateCopy();
-                    GroupItem parent = timeliner.TaskResolveIndexPath(index).Parent;
-                    int id = parent.Children.IndexOfDisplayName(task.DisplayName);
+                    percent = double.Parse(value);
+                }
+                else if (maxValue != null)
+                {
+                    double maxV = double.Parse(maxValue);
+                    double val = double.Parse(value);
+                    percent = val * 100 / maxV;
+                }
 
-                    task.SetUserFieldByIndex(0, value);
-                    task.SetUserFieldByIndex(1, units);
-
-                    timeliner.TaskEdit(parent, id, task);
-
+                Collection<int> index = TasksView.SelectedNode.Tag as Collection<int>;
+                if (Core.Self.WriteCompletionToTask(index, value, units, maxValue, percent))
                     taskDown();
+            }            
+        }
+
+        /// <summary>
+        /// Проверяет введённые данные на null и прочие ограничения
+        /// </summary>
+        /// <returns></returns>
+        bool inputIsCorrect(string value, string units, string maxValue)
+        {
+            if (string.IsNullOrEmpty(value) || string.IsNullOrEmpty(units))
+            {
+                MessageBox.Show("Введите необходимые значения!");
+                return false;
+            }
+            if (!string.IsNullOrEmpty(maxValue))
+            {
+                double maxV;
+                double val;
+
+                if (double.TryParse(maxValue, out maxV))
+                {
+                    if (double.TryParse(value, out val) && maxV != 0)
+                    {
+                        if (val > maxV)
+                        {
+                            MessageBox.Show("Указанное значение прогресса выполнения больше максимального!");
+                            return false;
+                        }
+                    }
+                    else
+                        return false;
                 }
                 else
-                    MessageBox.Show("Введите значения");
+                    return false;
             }
-            catch (Exception Ex)
-            {
-                MessageBox.Show(Ex.Message);
-            }
+
+            return true;
         }
         
         /// <summary>

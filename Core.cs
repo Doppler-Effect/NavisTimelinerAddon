@@ -131,7 +131,31 @@ namespace NavisTimelinerPlugin
         {
             WriteTaskToTimeliner(taskC.Index, setName);
         }
-                
+
+
+        public bool WriteCompletionToTask(Collection<int> index, string value, string units, string maxValue, double percentage)
+        {
+            try
+            {
+                TimelinerTask task = timeliner.TaskResolveIndexPath(index).CreateCopy();
+                GroupItem parent = timeliner.TaskResolveIndexPath(index).Parent;
+                int id = parent.Children.IndexOfDisplayName(task.DisplayName);
+
+                task.SetUserFieldByIndex(0, value);
+                task.SetUserFieldByIndex(1, units);
+                task.SetUserFieldByIndex(2, maxValue);
+                task.ProgressPercent = percentage;
+
+                timeliner.TaskEdit(parent, id, task);
+                return true;
+            }
+            catch (Exception Ex)
+            {
+                MessageBox.Show(Ex.Message);
+                return false;
+            }
+        }
+
         /// <summary>
         /// Убирает селекшны у всех тасков в таймлайнере.
         /// </summary>
