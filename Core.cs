@@ -132,7 +132,15 @@ namespace NavisTimelinerPlugin
             WriteTaskToTimeliner(taskC.Index, setName);
         }
 
-
+        /// <summary>
+        /// Записывает значение, вводимые пользователем в таск.
+        /// </summary>
+        /// <param name="index">Индекс таска, в который будет вестись запись</param>
+        /// <param name="value">Прогресс выполнения</param>
+        /// <param name="units">Единицы измерения</param>
+        /// <param name="maxValue">Макс.возможное значение прогресса выполнения</param>
+        /// <param name="percentage">Рассчитанный процент выполнения</param>
+        /// <returns></returns>
         public bool WriteCompletionToTask(Collection<int> index, string value, string units, string maxValue, double percentage)
         {
             try

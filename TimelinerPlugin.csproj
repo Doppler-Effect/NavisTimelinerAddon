@@ -110,6 +110,12 @@
   <ItemGroup>
     <Content Include="MSProject Field mapping.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="NaviSQLite\NaviSQLite.csproj">
+      <Project>{063fb138-c0f5-4a77-b2cc-dde771a3a64a}</Project>
+      <Name>NaviSQLite</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -16,4 +16,7 @@
     <StartProgram>C:\Program Files\Autodesk\Navisworks Manage 2013\Roamer.exe</StartProgram>
     <StartAction>Program</StartAction>
   </PropertyGroup>
+  <PropertyGroup>
+    <ProjectView>ProjectFiles</ProjectView>
+  </PropertyGroup>
 </Project>
