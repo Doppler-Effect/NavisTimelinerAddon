@@ -295,8 +295,9 @@ namespace NavisTimelinerPlugin
 
         private void buttonMSProject_Click(object sender, EventArgs e)
         {
-            this.Visible = false;
-            Core.Self.MSProjectExport();
+            //this.Visible = false;
+            //Core.Self.MSProjectExport();
+            Core.Self.foo();
         }
 
     }

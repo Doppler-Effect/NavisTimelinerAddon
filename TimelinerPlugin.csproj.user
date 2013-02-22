@@ -8,14 +8,6 @@
     <StartAction>Program</StartAction>
     <StartProgram>C:\Program Files\Autodesk\Navisworks Manage 2013\Roamer.exe</StartProgram>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <StartProgram>C:\Program Files\Autodesk\Navisworks Manage 2013\Roamer.exe</StartProgram>
-    <StartAction>Program</StartAction>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <StartProgram>C:\Program Files\Autodesk\Navisworks Manage 2013\Roamer.exe</StartProgram>
-    <StartAction>Program</StartAction>
-  </PropertyGroup>
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>

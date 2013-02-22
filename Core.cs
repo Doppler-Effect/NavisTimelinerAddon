@@ -361,5 +361,10 @@ namespace NavisTimelinerPlugin
                 msp.AddTasks(this.Tasks);
             }
         }
+
+        public void foo()
+        {
+            //NaviSQLite.NavisDB db = new NaviSQLite.NavisDB();
+        }
     }
 }
