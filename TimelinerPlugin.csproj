@@ -94,9 +94,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MSProject Field mapping.txt" />
-    <Content Include="SQLite.Interop.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="FilesDB\FilesDB.csproj">
+      <Project>{2ba87ba8-6453-47d0-b2db-9d6e0dc5dfbd}</Project>
+      <Name>FilesDB</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

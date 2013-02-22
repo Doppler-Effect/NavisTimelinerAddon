@@ -38,28 +38,28 @@
 //        /// <summary>
 //        /// Селектит данные по идентификатору элемента и имени проекта
 //        /// </summary>
-//        public Dictionary<string, string> Select(string Project, string ID)
-//        {
-//            string[] resultFields = { "Value", "MaxValue", "Units" };
-//            SQLiteCommand command =
-//                new SQLiteCommand(string.Format("SELECT DISTINCT * FROM {0} WHERE Project=\"{1}\" AND StableID=\"{2}\"", this.tableName, Project, ID), this.connection);
-//            SQLiteDataReader reader = command.ExecuteReader();
-//            if (reader.HasRows)
-//            {
-//                Dictionary<string, string> result = new Dictionary<string, string>();
-//                reader.Read();
-//                NameValueCollection row = reader.GetValues();
+//        //public Dictionary<string, string> Select(string Project, string ID)
+//        //{
+//        //    string[] resultFields = { "Value", "MaxValue", "Units" };
+//        //    SQLiteCommand command =
+//        //        new SQLiteCommand(string.Format("SELECT DISTINCT * FROM {0} WHERE Project=\"{1}\" AND StableID=\"{2}\"", this.tableName, Project, ID), this.connection);
+//        //    SQLiteDataReader reader = command.ExecuteReader();
+//        //    if (reader.HasRows)
+//        //    {
+//        //        Dictionary<string, string> result = new Dictionary<string, string>();
+//        //        reader.Read();
+//        //        NameValueCollection row = reader.GetValues();
 
-//                foreach (string field in resultFields)
-//                {
-//                    result.Add(field, row[field]);
-//                }
+//        //        foreach (string field in resultFields)
+//        //        {
+//        //            result.Add(field, row[field]);
+//        //        }
 
-//                return result;
-//            }
-//            else
-//                return null;
-//        }
+//        //        return result;
+//        //    }
+//        //    else
+//        //        return null;
+//        //}
 
 //        /// <summary>
 //        /// Записывает данные о процессе выполнения в базу
@@ -127,11 +127,5 @@
 //                }
 //            }
 //        }
-
-//        //public string foo;
-//        //public NavisDB()
-//        //{
-//        //    foo = "ok";
-//        //}
 //    }
 //}
