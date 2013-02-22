@@ -17,16 +17,22 @@ namespace FilesDB
         IOException CorruptedException = new IOException("Data file corrupted.");
         FileStream stream;
 
+        /// <summary>
+        /// Конструктор, при вызове проверяет существование файла БД указанного проекта и создаёт его при необходимости.
+        /// </summary>
+        /// <param name="Project">Имя проекта Нэвис, оно же имя файла</param>
         public DataBase(string Project)
         {
             this.Path = folderName + Project;
             System.IO.Directory.CreateDirectory(folderName);
             if (!File.Exists(this.Path))
                 AddHeader();
-            else
-                getStableIDs();
+            getStableIDs();
         }
 
+        /// <summary>
+        /// Наполняет массив ID уже существующих в базе элементов.
+        /// </summary>
         private void getStableIDs()
         {
             try
@@ -50,6 +56,9 @@ namespace FilesDB
             }
         }
 
+        /// <summary>
+        /// Добавляет в свежесозданный файл "шапку" из имён полей.
+        /// </summary>
         private void AddHeader()
         {
             this.stream = File.Open(this.Path, FileMode.Create, FileAccess.ReadWrite);
@@ -62,6 +71,10 @@ namespace FilesDB
             stream.Dispose();
         }
 
+        /// <summary>
+        /// Собирает "шапку" из имён полей и ";".
+        /// </summary>
+        /// <returns></returns>
         private string compileHeader()
         {
             string row = null;
@@ -73,6 +86,9 @@ namespace FilesDB
             return row;
         }
 
+        /// <summary>
+        /// Записывает данные в таблицу. Если уже существует такой StableID - правит существующие значения, если нет - добавляет новую запись в конец файла.
+        /// </summary>
         public void Insert(string StableID, string Value, string MaxValue, string Units)
         {
             try
@@ -89,7 +105,38 @@ namespace FilesDB
                 }
                 else
                 {
+                    string[] lines = File.ReadAllLines(this.Path, currentEnc);
+                    if (lines[0] != this.compileHeader())
+                        throw CorruptedException;
 
+                    for (int i = 0; i < lines.Count(); i++)
+                    {
+                        string oldLine = lines[i];
+                        string[] tokens = oldLine.Split(';');
+                        if (tokens.Count() != this.colNames.Count())
+                            throw CorruptedException;
+                        if (tokens[0] == StableID)
+                        {
+                            tokens[1] = Value;
+                            tokens[2] = MaxValue;
+                            tokens[3] = Units;
+
+                            string newLine = null;
+                            foreach (string token in tokens)
+                            {
+                                newLine += token + ";";
+                            }
+                            newLine = newLine.TrimEnd(';');
+
+                            if (newLine != oldLine)
+                            {
+                                lines.SetValue(newLine, i);
+                                File.WriteAllLines(this.Path, lines, currentEnc);
+                            }
+                            return;
+                        }
+
+                    }                    
                 }
             }
             catch
@@ -98,36 +145,63 @@ namespace FilesDB
             }
         }
 
+        /// <summary>
+        /// Ищет в файле запись с нужным StableID.
+        /// </summary>
+        /// <returns>Массив данных - вся строка файла.</returns>
         public Dictionary<string, string> Select(string StableID)
         {
             try
             {
-                Dictionary<string, string> Data = new Dictionary<string, string>();
-                this.stream = File.Open(this.Path, FileMode.Open, FileAccess.Read);
-                StreamReader reader = new StreamReader(this.stream, currentEnc);
-                using (reader)
+                Dictionary<string, string> result = new Dictionary<string, string>();
+                string[] lines = File.ReadAllLines(this.Path, currentEnc);
+                if (lines[0] != this.compileHeader())
+                    throw CorruptedException;
+                foreach (string line in lines)
                 {
-                    if (reader.ReadLine() != compileHeader())
+                    string[] tokens = line.Split(';');
+
+                    if (tokens.Count() != this.colNames.Count())
                         throw CorruptedException;
 
-                    while (!reader.EndOfStream)
+                    if (tokens[0] == StableID)
                     {
-                        Data.Clear();
-                        string row = reader.ReadLine();
-                        string[] tokens = row.Split(';');
-
-                        if (tokens.Count() != this.colNames.Count())
-                            throw CorruptedException;
-
                         for (int i = 0; i < this.colNames.Count(); i++)
                         {
-                            Data.Add(colNames[i], tokens[i]);
+                            result.Add(colNames[i], tokens[i]);
                         }
-
-                        if (Data[colNames[0]] == StableID)
-                            return Data;
+                        return result;
                     }
                 }
+
+                #region the Old way - readline style.
+                //this.stream = File.Open(this.Path, FileMode.Open, FileAccess.Read);
+                //StreamReader reader = new StreamReader(this.stream, currentEnc);
+                //using (reader)
+                //{
+                //    if (reader.ReadLine() != compileHeader())
+                //        throw CorruptedException;
+
+                //    while (!reader.EndOfStream)
+                //    {
+                //        result.Clear();
+                //        string row = reader.ReadLine();
+                //        string[] tokens = row.Split(';');
+
+                //        if (tokens.Count() != this.colNames.Count())
+                //            throw CorruptedException;
+
+                //        for (int i = 0; i < this.colNames.Count(); i++)
+                //        {
+                //            result.Add(colNames[i], tokens[i]);
+                //        }
+
+                //        if (result[colNames[0]] == StableID)
+                //            return result;
+                //    }
+                //} 
+                #endregion
+
                 return null;
             }
             catch (Exception ex)
