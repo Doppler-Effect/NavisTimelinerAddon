@@ -62,7 +62,14 @@
     <Compile Include="DetailedForm.Designer.cs">
       <DependentUpon>DetailedForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="NavisDB.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="FilesDB.cs" />
+    <Compile Include="inputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="inputForm.Designer.cs">
+      <DependentUpon>inputForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ProgressForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,6 +92,9 @@
     <EmbeddedResource Include="DetailedForm.resx">
       <DependentUpon>DetailedForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="inputForm.resx">
+      <DependentUpon>inputForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ProgressForm.resx">
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -94,12 +104,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MSProject Field mapping.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="FilesDB\FilesDB.csproj">
-      <Project>{2ba87ba8-6453-47d0-b2db-9d6e0dc5dfbd}</Project>
-      <Name>FilesDB</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

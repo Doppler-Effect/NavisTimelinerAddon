@@ -69,47 +69,50 @@ namespace NavisTimelinerPlugin
             StopDataInput();
             if (Core.Self.TasksOK())
             {
-                Core.Self.LoadTasksAssocFromFile();
+                Core.Self.LoadTasksFromFile();
             }
         }
         
         #endregion
                 
         #region Просмотр тасков и отображение только тех элементов модели, которые с ними ассоциированы
-        
-        private void StartDataInputButton_Click(object sender, EventArgs e)
-        {            
+
+        /// <summary>
+        /// Отрисовывает интерфейс программы, отвечающий за внесение данных в NavisWorks
+        /// </summary>
+        /// <param name="withSelections">Обрабатывать таски с присоединёнными наборами или нет</param>
+        private void DrawInputArea(bool withSelections)
+        {
             if (Core.Self.TasksOK())
             {
-                FillTaskList(true);
+                FillTaskList(withSelections);
                 groupBox2.Enabled = true;
-                nDoc.CurrentSelection.Changed += CurrentSelection_Changed;
+                groupBoxElem.Enabled = !withSelections;
+                radioButtonAll.Enabled = withSelections;
+                radioButtonElem.Enabled = withSelections;
+                radioButtonAll.Checked = true;
+                radioButtonAll.Checked = false;
+                radioButtonAll.Checked = withSelections;
             }
+        }
+
+        private void StartDataInputButton_Click(object sender, EventArgs e)
+        {
+            DrawInputArea(true);
         }
 
         private void StartDataInputWithoutSelectedButton_Click(object sender, EventArgs e)
         {
-            if (Core.Self.TasksOK())
-            {
-                FillTaskList(false);
-                groupBox2.Enabled = true;
-            }
+            DrawInputArea(false);
         }
-
-        void CurrentSelection_Changed(object sender, EventArgs e)
-        {
-            if (nDoc.CurrentSelection.SelectedItems.Count == 1)
-            {
-                MessageBox.Show(Core.Self.GetElementUniqueID(nDoc.CurrentSelection.SelectedItems.First));
-            }
-        }        
-
+        
         private void StopDataInput()
         {
             TasksView.Nodes.Clear();
             Core.Self.MakeAllModelItemsVisible();
+            radioButtonAll.Checked = false;
+            radioButtonElem.Checked = false;
             groupBox2.Enabled = false;
-            nDoc.CurrentSelection.Changed -= this.CurrentSelection_Changed;
         }
 
         /// <summary>
@@ -123,6 +126,7 @@ namespace NavisTimelinerPlugin
             {
                 if (WithSelection)
                 {
+                    Core.Self.CalculateTaskSummaryProgress(taskC.Task);
                     if (!taskC.Task.Selection.IsClear)
                     {
                         TreeNode node = new TreeNode(taskC.TaskName);
@@ -145,6 +149,9 @@ namespace NavisTimelinerPlugin
             TasksView.EndUpdate();
         }
         
+        /// <summary>
+        /// Событие, происходящее при изменении выбора таска в списке.
+        /// </summary>
         private void TasksView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             Collection<int> index = TasksView.SelectedNode.Tag as Collection<int>;
@@ -152,26 +159,19 @@ namespace NavisTimelinerPlugin
             Core.Self.HideAllExceptTaskSelection(task);
 
             //заполнение полей выполнения и единиц измерения
-            CompletionTextBox.Text = task.User1;
-            UnitsComboBox.Text = task.User2;
-            maxCompletionTextBox.Text = task.User3;
-        }
-        
-        private void ButtonAcceptCompletionProgress_Click(object sender, EventArgs e)
-        {
-            WriteCompletionProgress();
+            fillDataFromTask(task);
         }
 
-        private void buttonUP_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Заполняет поля на форме значениями. Берёт данные из полей таймлайнера.
+        /// </summary>
+        public void fillDataFromTask(TimelinerTask Task)
         {
-            taskUp();
+            CompletionTextBox.Text = Task.User1;
+            UnitsComboBox.Text = Task.User2;
+            maxCompletionTextBox.Text = Task.User3;
         }
-
-        private void buttonDOWN_Click(object sender, EventArgs e)
-        {
-            taskDown();
-        }
-
+      
         /// <summary>
         /// Перелистывание таска назад
         /// </summary>
@@ -184,6 +184,10 @@ namespace NavisTimelinerPlugin
                 else
                     TasksView.SelectedNode = TasksView.Nodes[TasksView.Nodes.Count - 1];
             }
+        }
+        private void buttonUP_Click(object sender, EventArgs e)
+        {
+            taskUp();
         }
 
         /// <summary>
@@ -199,15 +203,25 @@ namespace NavisTimelinerPlugin
                     TasksView.SelectedNode = TasksView.Nodes[0];
             }
         }
+        private void buttonDOWN_Click(object sender, EventArgs e)
+        {
+            taskDown();
+        }
+        #endregion
 
+        #region Внесение данных о выполнении тасков
+        private void ButtonAcceptCompletionProgress_Click(object sender, EventArgs e)
+        {
+            WriteCompletionFromUI();
+        }
         /// <summary>
         /// Запись введённой информации и единиц измерения в таск.
         /// </summary>
-        private void WriteCompletionProgress()
+        private void WriteCompletionFromUI()
         {
-            string value = removeLetters(CompletionTextBox.Text);
+            string value = CompletionTextBox.Text.removeLetters();
             string units = UnitsComboBox.Text;
-            string maxValue = removeLetters(maxCompletionTextBox.Text);
+            string maxValue = maxCompletionTextBox.Text.removeLetters();
             
             //проверяем введённые значения и расчитываем процент выполнения:
             double percent = 0;
@@ -266,19 +280,31 @@ namespace NavisTimelinerPlugin
             return true;
         }
         
-        /// <summary>
-        /// Убирает буквы из полученной строки.
-        /// </summary>
-        string removeLetters(string str)
+        private void radioButtonAll_CheckedChanged(object sender, EventArgs e)
         {
-            string result = null;
-            foreach (char c in str)
+            if (radioButtonElem.Checked)
             {
-                if (char.IsDigit(c) || char.IsPunctuation(c))
-                    result += c;
+                nDoc.CurrentSelection.Changed += CurrentNavisSelection_Changed;
+                groupBoxElem.Enabled = false;
             }
-            return result;
+            else
+            {
+                nDoc.CurrentSelection.Changed -= this.CurrentNavisSelection_Changed;
+                groupBoxElem.Enabled = true;
+            }
         }
+
+        void CurrentNavisSelection_Changed(object sender, EventArgs e)
+        {
+            if (nDoc.CurrentSelection.SelectedItems.Count == 1)
+            {
+                string id = Core.Self.GetElementUniqueID(nDoc.CurrentSelection.SelectedItems.First);
+                Collection<int> index = TasksView.SelectedNode.Tag as Collection<int>;
+                TimelinerTask task = timeliner.TaskResolveIndexPath(index);
+                inputForm input = new inputForm(task, id, this);
+                input.Show();
+            }
+        } 
         
         #endregion
 
@@ -295,10 +321,8 @@ namespace NavisTimelinerPlugin
 
         private void buttonMSProject_Click(object sender, EventArgs e)
         {
-            //this.Visible = false;
-            //Core.Self.MSProjectExport();
-            Core.Self.foo();
+            this.Visible = false;
+            Core.Self.MSProjectExport();
         }
-
     }
 }

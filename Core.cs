@@ -17,7 +17,8 @@ namespace NavisTimelinerPlugin
         private static Core self;
         private Core()
         {
-
+            //Инициализация базы данных для хранения вводимых пользователем значений.
+            filesDB = new FilesDB.DataBase(projectName + ".base");
         }
         public static Core Self
         {
@@ -34,8 +35,18 @@ namespace NavisTimelinerPlugin
 
         static Document nDoc = Autodesk.Navisworks.Api.Application.ActiveDocument;
         static Autodesk.Navisworks.Api.DocumentParts.IDocumentTimeliner Itimeliner = nDoc.Timeliner;
-        static DocumentTimeliner timeliner = (DocumentTimeliner)Itimeliner;        
-        
+        static DocumentTimeliner timeliner = (DocumentTimeliner)Itimeliner;
+        static string projectName
+        {
+            get
+            {
+                string filepath = nDoc.FileName;
+                string[] tokens = filepath.Split('\\');
+                return tokens.Last();
+            }
+        }
+        public FilesDB.DataBase filesDB;
+
         /// <summary>
         ////Проверка наличия тасков в таймлайнере и перезаполнение массива тасков в программе.
         /// </summary>
@@ -103,7 +114,7 @@ namespace NavisTimelinerPlugin
             {
                 if (setName != null) //прикрепление к таску набора
                 {
-                    SelectionSourceCollection collection = Core.Self.GetSelectionSourceByName(setName);
+                    SelectionSourceCollection collection = Core.Self.GetSelectionSetByName(setName);
                     if (collection.Count != 0)
                     {
                         TimelinerTask task = timeliner.TaskResolveIndexPath(index).CreateCopy();
@@ -187,13 +198,13 @@ namespace NavisTimelinerPlugin
         /// <summary>
         /// Поиск имени набора, прикреплённого к таску.
         /// </summary>
-        /// <param name="task">Таск, к которому привязан искомый набор</param>
+        /// <param name="Task">Таск, к которому привязан искомый набор</param>
         /// <returns>Имя списка выбора, который выбирает указанный селекшн</returns>
-        public string FindSelectionSetName(TimelinerTask task)
+        public string FindSelectionSetName(TimelinerTask Task)
         {
-            if (task.Selection.HasSelectionSources == true)
+            if (Task.Selection.HasSelectionSources)
             {
-                SelectionSource sSource = task.Selection.SelectionSources[0];
+                SelectionSource sSource = Task.Selection.SelectionSources[0];
                 SavedItem sSet = nDoc.SelectionSets.ResolveSelectionSource(sSource);
                 return sSet.DisplayName;
             }
@@ -201,10 +212,10 @@ namespace NavisTimelinerPlugin
         }
 
         /// <summary>
-        /// Возвращает выборку элементов модели по имени списка выбора. Если такой выборки нет - возвращает пустую коллекцию (обрабатывается уже в методах записи в timeliner).
+        /// Возвращает выборку элементов модели по имени списка выбора. Если такой выборки нет - возвращает пустую коллекцию.
         /// </summary>
         /// <param name="Name">Имя списка выбора (Selection Set), для которого нужно получить выборку.</param>
-        public SelectionSourceCollection GetSelectionSourceByName(string Name)
+        public SelectionSourceCollection GetSelectionSetByName(string Name)
         {
             SelectionSourceCollection result = new SelectionSourceCollection();
             foreach (SavedItem item in nDoc.SelectionSets.Value)
@@ -237,7 +248,7 @@ namespace NavisTimelinerPlugin
         /// <summary>
         /// Загрузка пар "порядковый номер" - "Selection set name" из бинарного файла и назначение селекшнов таскам.
         /// </summary>
-        public void LoadTasksAssocFromFile()
+        public void LoadTasksFromFile()
         {
             SerializableDataHolder DataHolder = new SerializableDataHolder();
             DataHolder = Serializer.deserialize();
@@ -328,6 +339,45 @@ namespace NavisTimelinerPlugin
         }
 
         /// <summary>
+        /// Пересчитывает данные из БД и сохраняет в таск.
+        /// </summary>
+        public void CalculateTaskSummaryProgress(TimelinerTask Task)
+        {
+            if (Task.Selection.HasSelectionSources)
+            {
+                ModelItemCollection items = Task.Selection.GetSelectedItems(nDoc);
+                List<double> values = new List<double>();
+                foreach (ModelItem item in items)
+                {
+                    string UniqueID = Core.Self.GetElementUniqueID(item);
+                    Dictionary<string, string> qResult = Core.Self.filesDB.Select(UniqueID);
+                    if (qResult != null)
+                    {
+                        double value = qResult["Value"].ToDouble();
+                        double maxValue = qResult["MaxValue"].ToDouble();
+                        if (maxValue != 0)
+                        {
+                            values.Add(value / maxValue);
+                        }                            
+                    }
+                }
+
+                //среднее арифметическое
+                if (values.Count > 0)
+                {
+                    double Sum = 0;
+                    foreach (double val in values)
+                    {
+                        Sum += val;
+                    }
+                    double percent = Sum * 100 / values.Count;
+                    string result = percent.ToString("G", System.Globalization.CultureInfo.CurrentCulture);
+                    this.WriteCompletionToTask(timeliner.TaskCreateIndexPath(Task), result, "%", null, percent);
+                }
+            }
+        }
+
+        /// <summary>
         /// Возвращает уникальный идентификатор элемента
         /// </summary>
         public string GetElementUniqueID(ModelItem item)
@@ -360,11 +410,6 @@ namespace NavisTimelinerPlugin
                 MSProjectInterop msp = new MSProjectInterop(pForm);
                 msp.AddTasks(this.Tasks);
             }
-        }
-
-        public void foo()
-        {
-            //NaviSQLite.NavisDB db = new NaviSQLite.NavisDB();
         }
     }
 }

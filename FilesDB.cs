@@ -8,7 +8,7 @@ namespace FilesDB
 {
     public class DataBase
     {
-        string folderName = "FilesDB\\";
+        string folderName = System.Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\NavisTimelinerPlugin Database\\";
         string Path;
         string[] colNames = {"StableID", "Value", "MaxValue", "Units"};
         List<string> StableIDs = new List<string>();
@@ -22,11 +22,13 @@ namespace FilesDB
         /// </summary>
         /// <param name="Project">Имя проекта Нэвис, оно же имя файла</param>
         public DataBase(string Project)
-        {
+        {            
             this.Path = folderName + Project;
             System.IO.Directory.CreateDirectory(folderName);
             if (!File.Exists(this.Path))
+            {
                 AddHeader();
+            }
             getStableIDs();
         }
 
@@ -93,50 +95,53 @@ namespace FilesDB
         {
             try
             {
-                if (!this.StableIDs.Contains(StableID))
+                if (!string.IsNullOrEmpty(StableID))
                 {
-                    this.stream = File.Open(this.Path, FileMode.Append, FileAccess.Write);
-                    StreamWriter writer = new StreamWriter(stream, currentEnc);
-                    using (writer)
+                    if (!this.StableIDs.Contains(StableID))
                     {
-                        writer.WriteLine(string.Format("{0};{1};{2};{3}", StableID, Value, MaxValue, Units));
-                        this.StableIDs.Add(StableID);
-                    }
-                }
-                else
-                {
-                    string[] lines = File.ReadAllLines(this.Path, currentEnc);
-                    if (lines[0] != this.compileHeader())
-                        throw CorruptedException;
-
-                    for (int i = 0; i < lines.Count(); i++)
-                    {
-                        string oldLine = lines[i];
-                        string[] tokens = oldLine.Split(';');
-                        if (tokens.Count() != this.colNames.Count())
-                            throw CorruptedException;
-                        if (tokens[0] == StableID)
+                        this.stream = File.Open(this.Path, FileMode.Append, FileAccess.Write);
+                        StreamWriter writer = new StreamWriter(stream, currentEnc);
+                        using (writer)
                         {
-                            tokens[1] = Value;
-                            tokens[2] = MaxValue;
-                            tokens[3] = Units;
-
-                            string newLine = null;
-                            foreach (string token in tokens)
-                            {
-                                newLine += token + ";";
-                            }
-                            newLine = newLine.TrimEnd(';');
-
-                            if (newLine != oldLine)
-                            {
-                                lines.SetValue(newLine, i);
-                                File.WriteAllLines(this.Path, lines, currentEnc);
-                            }
-                            return;
+                            writer.WriteLine(string.Format("{0};{1};{2};{3}", StableID, Value, MaxValue, Units));
+                            this.StableIDs.Add(StableID);
                         }
+                    }
+                    else
+                    {
+                        string[] lines = File.ReadAllLines(this.Path, currentEnc);
+                        if (lines[0] != this.compileHeader())
+                            throw CorruptedException;
 
-                    }                    
+                        for (int i = 0; i < lines.Count(); i++)
+                        {
+                            string oldLine = lines[i];
+                            string[] tokens = oldLine.Split(';');
+                            if (tokens.Count() != this.colNames.Count())
+                                throw CorruptedException;
+                            if (tokens[0] == StableID)
+                            {
+                                tokens[1] = Value;
+                                tokens[2] = MaxValue;
+                                tokens[3] = Units;
+
+                                string newLine = null;
+                                foreach (string token in tokens)
+                                {
+                                    newLine += token + ";";
+                                }
+                                newLine = newLine.TrimEnd(';');
+
+                                if (newLine != oldLine)
+                                {
+                                    lines.SetValue(newLine, i);
+                                    File.WriteAllLines(this.Path, lines, currentEnc);
+                                }
+                                return;
+                            }
+
+                        }
+                    }
                 }
             }
             catch
@@ -153,7 +158,7 @@ namespace FilesDB
         {
             try
             {
-                Dictionary<string, string> result = new Dictionary<string, string>();
+                Dictionary<string, string> result; 
                 string[] lines = File.ReadAllLines(this.Path, currentEnc);
                 if (lines[0] != this.compileHeader())
                     throw CorruptedException;
@@ -166,6 +171,7 @@ namespace FilesDB
 
                     if (tokens[0] == StableID)
                     {
+                        result = new Dictionary<string, string>();
                         for (int i = 0; i < this.colNames.Count(); i++)
                         {
                             result.Add(colNames[i], tokens[i]);
@@ -173,6 +179,7 @@ namespace FilesDB
                         return result;
                     }
                 }
+                return null;
 
                 #region the Old way - readline style.
                 //this.stream = File.Open(this.Path, FileMode.Open, FileAccess.Read);
@@ -202,7 +209,6 @@ namespace FilesDB
                 //} 
                 #endregion
 
-                return null;
             }
             catch (Exception ex)
             {
