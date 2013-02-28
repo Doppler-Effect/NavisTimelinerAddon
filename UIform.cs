@@ -238,9 +238,14 @@ namespace NavisTimelinerPlugin
                     percent = val * 100 / maxV;
                 }
 
-                Collection<int> index = TasksView.SelectedNode.Tag as Collection<int>;
-                if (Core.Self.WriteCompletionToTask(index, value, units, maxValue, percent))
-                    taskDown();
+                DialogResult res = MessageBox.Show( "Удалить данные об отдельных элементах и внести данные для всего набора?", "Внимание!", MessageBoxButtons.OKCancel);
+                if (res == DialogResult.OK)
+                {
+                    Collection<int> index = TasksView.SelectedNode.Tag as Collection<int>;
+                    Core.Self.ClearTaskItemsFromDB(timeliner.TaskResolveIndexPath(index));
+                    if (Core.Self.WriteCompletionToTask(index, value, units, maxValue, percent))
+                        taskDown();
+                }
             }            
         }
 
@@ -266,7 +271,7 @@ namespace NavisTimelinerPlugin
                     {
                         if (val > maxV)
                         {
-                            MessageBox.Show("Указанное значение прогресса выполнения больше максимального!");
+                            MessageBox.Show("Указанное значение выполнения больше максимального!");
                             return false;
                         }
                     }
@@ -301,7 +306,13 @@ namespace NavisTimelinerPlugin
                 string id = Core.Self.GetElementUniqueID(nDoc.CurrentSelection.SelectedItems.First);
                 Collection<int> index = TasksView.SelectedNode.Tag as Collection<int>;
                 TimelinerTask task = timeliner.TaskResolveIndexPath(index);
+
                 inputForm input = new inputForm(task, id, this);
+                if (Core.Self.activeInputForm != null)
+                {
+                    Core.Self.activeInputForm.Close();
+                }
+                Core.Self.activeInputForm = input;
                 input.Show();
             }
         } 

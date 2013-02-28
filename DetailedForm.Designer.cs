@@ -89,6 +89,7 @@
             this.ShowInTaskbar = false;
             this.Text = "DetailedForm";
             this.TopMost = true;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.DetailedForm_FormClosed);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

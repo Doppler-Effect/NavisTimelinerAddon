@@ -90,15 +90,19 @@ namespace NavisTimelinerPlugin
                     newTask.ActualFinish = task.ActualEndDate;
 
                 if (task.User1 != null)
-                    newTask.Text9 = task.User1;
+                    newTask.Text8 = task.User1;
                 if (task.User2 != null)
-                    newTask.Text10 = task.User2;
+                    newTask.Text9 = task.User2;
+                if (task.User3 != null)
+                    newTask.Text10 = task.User3;
                 if (task.User9 != null)
                     newTask.Text11 = task.User9;
                 if (task.User10 != null)
                     newTask.Text12 = task.User10;
                 if (task.Selection != null)
                     newTask.Text4 = task.Selection.DisplayString;
+                if (task.ProgressPercent != null)
+                    newTask.PercentComplete = task.ProgressPercent;
 
                 //
 

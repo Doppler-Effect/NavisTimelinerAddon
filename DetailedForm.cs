@@ -114,5 +114,10 @@ namespace NavisTimelinerPlugin
             if (!FreezeTreeUpdate)
                 this.Close();
         }
+
+        private void DetailedForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            UIform.Instance.Visible = true;
+        }
     }
 }

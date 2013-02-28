@@ -111,11 +111,13 @@
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.KeyPreview = true;
             this.Name = "inputForm";
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Введите данные:";
             this.TopMost = true;
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.inputForm_KeyPress);
             this.ResumeLayout(false);
             this.PerformLayout();
 

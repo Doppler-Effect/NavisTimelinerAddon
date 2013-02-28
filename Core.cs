@@ -46,6 +46,7 @@ namespace NavisTimelinerPlugin
             }
         }
         public FilesDB.DataBase filesDB;
+        public inputForm activeInputForm;
 
         /// <summary>
         ////Проверка наличия тасков в таймлайнере и перезаполнение массива тасков в программе.
@@ -347,7 +348,7 @@ namespace NavisTimelinerPlugin
             {
                 ModelItemCollection items = Task.Selection.GetSelectedItems(nDoc);
                 List<double> values = new List<double>();
-                foreach (ModelItem item in items)
+                foreach (ModelItem item in items.DescendantsAndSelf)
                 {
                     string UniqueID = Core.Self.GetElementUniqueID(item);
                     Dictionary<string, string> qResult = Core.Self.filesDB.Select(UniqueID);
@@ -358,7 +359,7 @@ namespace NavisTimelinerPlugin
                         if (maxValue != 0)
                         {
                             values.Add(value / maxValue);
-                        }                            
+                        }
                     }
                 }
 
@@ -373,6 +374,23 @@ namespace NavisTimelinerPlugin
                     double percent = Sum * 100 / values.Count;
                     string result = percent.ToString("G", System.Globalization.CultureInfo.CurrentCulture);
                     this.WriteCompletionToTask(timeliner.TaskCreateIndexPath(Task), result, "%", null, percent);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Удаляет из базы все данные об элементах, присвоенных таску.
+        /// </summary>
+        /// <param name="Task"></param>
+        public void ClearTaskItemsFromDB(TimelinerTask Task)
+        {
+            if (Task.Selection.HasSelectionSources)
+            {
+                ModelItemCollection items = Task.Selection.GetSelectedItems(nDoc);
+                foreach (ModelItem item in items)
+                {
+                    string UniqueID = Core.Self.GetElementUniqueID(item);
+                    this.filesDB.Remove(UniqueID);
                 }
             }
         }

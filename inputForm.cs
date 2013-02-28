@@ -37,7 +37,7 @@ namespace NavisTimelinerPlugin
 
         private void OKbutton_Click(object sender, EventArgs e)
         {
-            if(!string.IsNullOrEmpty(textBox1.Text) && !string.IsNullOrEmpty(textBox2.Text))
+            if (!string.IsNullOrEmpty(textBox1.Text) && !string.IsNullOrEmpty(textBox2.Text) && !string.IsNullOrEmpty(comboBox1.Text))
             {
                 string value = textBox1.Text.removeLetters();
                 string maxValue = textBox2.Text.removeLetters();
@@ -49,6 +49,18 @@ namespace NavisTimelinerPlugin
                 thisParent.fillDataFromTask(Task);
 
                 this.Close();
+            }
+        }
+
+        private void inputForm_KeyPress(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                this.Close();
+            }
+            if (e.KeyCode == Keys.Enter)
+            {
+                this.OKbutton_Click(sender, e);
             }
         }
     }

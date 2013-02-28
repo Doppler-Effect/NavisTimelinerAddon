@@ -117,10 +117,11 @@ namespace FilesDB
                         {
                             string oldLine = lines[i];
                             string[] tokens = oldLine.Split(';');
-                            if (tokens.Count() != this.colNames.Count())
+                            if (tokens.Count() < this.colNames.Count())
                                 throw CorruptedException;
+
                             if (tokens[0] == StableID)
-                            {
+                            {                                
                                 tokens[1] = Value;
                                 tokens[2] = MaxValue;
                                 tokens[3] = Units;
@@ -142,6 +143,10 @@ namespace FilesDB
 
                         }
                     }
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("У элемента не определяется Unique ID");
                 }
             }
             catch
@@ -166,7 +171,7 @@ namespace FilesDB
                 {
                     string[] tokens = line.Split(';');
 
-                    if (tokens.Count() != this.colNames.Count())
+                    if (tokens.Count() < this.colNames.Count())
                         throw CorruptedException;
 
                     if (tokens[0] == StableID)
@@ -214,6 +219,44 @@ namespace FilesDB
             {
                 System.Windows.Forms.MessageBox.Show(ex.Message);
                 return null;
+            }
+        }
+
+        /// <summary>
+        ////Удаляет из базы элемент с заданным StableID
+        /// </summary>
+        public void Remove(string StableID)
+        {
+            try
+            {
+                string[] lines = File.ReadAllLines(this.Path, currentEnc);
+                if (lines[0] != this.compileHeader())
+                    throw CorruptedException;
+
+                List<string> resultLines = new List<string>();
+
+                foreach (string line in lines)
+                {
+                    string[] tokens = line.Split(';');
+
+                    if (tokens.Count() == 0)
+                        throw CorruptedException;
+
+                    if (tokens[0] != StableID)
+                    {
+                        resultLines.Add(line);
+                    }
+                    else
+                    {
+                        this.StableIDs.Remove(StableID);
+                    }
+                }
+                string[] result = resultLines.ToArray();
+                File.WriteAllLines(this.Path, result, currentEnc);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message);
             }
         }
     }
