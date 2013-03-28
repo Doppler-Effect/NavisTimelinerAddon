@@ -30,25 +30,35 @@ namespace NavisTimelinerPlugin
             if (data != null)
             {
                 this.textBox1.Text = data["Value"];
-                this.textBox2.Text = data["MaxValue"];
-                this.comboBox1.Text = data["Units"];
             }
         }
 
         private void OKbutton_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(textBox1.Text) && !string.IsNullOrEmpty(textBox2.Text) && !string.IsNullOrEmpty(comboBox1.Text))
+            if (!string.IsNullOrEmpty(textBox1.Text))
             {
                 string value = textBox1.Text.removeLetters();
-                string maxValue = textBox2.Text.removeLetters();
-                string units = comboBox1.Text;
-
-                Core.Self.filesDB.Insert(this.UniqueID, value, maxValue, units);
-                Core.Self.CalculateTaskSummaryProgress(this.Task);
-
-                thisParent.fillDataFromTask(Task);
-
-                this.Close();
+                string maxValue = "100";
+                string units = "%";
+                double dValue;
+                if (double.TryParse(value, out dValue))
+                {
+                    if (dValue > 100)
+                    {
+                        MessageBox.Show("Введённое значение больше 100 %");
+                    }
+                    else if (dValue < 0)
+                    {
+                        MessageBox.Show("Введено отрицательное значение!");
+                    }
+                    else
+                    {
+                        Core.Self.filesDB.Insert(this.UniqueID, value, maxValue, units);
+                        Core.Self.CalculateTaskSummaryProgress(this.Task);
+                        thisParent.fillDataFromTask(Task);
+                        this.Close();
+                    }                        
+                }
             }
         }
 

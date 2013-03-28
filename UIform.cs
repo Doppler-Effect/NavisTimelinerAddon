@@ -88,6 +88,8 @@ namespace NavisTimelinerPlugin
                 FillTaskList(withSelections);
                 groupBox2.Enabled = true;
                 groupBoxElem.Enabled = !withSelections;
+                buttonDOWN.Enabled = withSelections;
+                buttonUP.Enabled = buttonDOWN.Enabled;
                 radioButtonAll.Enabled = withSelections;
                 radioButtonElem.Enabled = withSelections;
                 radioButtonAll.Checked = true;
@@ -122,9 +124,9 @@ namespace NavisTimelinerPlugin
         {
             TasksView.BeginUpdate();
             TasksView.Nodes.Clear();
-            foreach (TaskContainer taskC in Core.Self.Tasks)
+            if (WithSelection)
             {
-                if (WithSelection)
+                foreach (TaskContainer taskC in Core.Self.Tasks)
                 {
                     Core.Self.CalculateTaskSummaryProgress(taskC.Task);
                     if (!taskC.Task.Selection.IsClear)
@@ -134,13 +136,12 @@ namespace NavisTimelinerPlugin
                         TasksView.Nodes.Add(node);
                     }
                 }
-                else if (taskC.Task.Selection.IsClear)
-                {
-                    TreeNode node = new TreeNode(taskC.TaskName);
-                    node.Tag = taskC.Index;
-                    TasksView.Nodes.Add(node);
-                }
             }
+            else
+            {
+                Core.Self.FillTreeViewWithTasks(this.TasksView);
+            }
+
             if (TasksView.Nodes.Count != 0)
             {
                 TasksView.SelectedNode = TasksView.Nodes[0];

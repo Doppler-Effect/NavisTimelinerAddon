@@ -29,7 +29,7 @@ namespace NavisTimelinerPlugin
             this.nDoc = nDoc;
             
             FillSelectionSets();
-            FillTasks();
+            Core.Self.FillTreeViewWithTasks(this.treeView1);
 
             timeliner.Changed += new EventHandler<SavedItemChangedEventArgs>(this.Timeliner_Changed);
         }
@@ -43,36 +43,6 @@ namespace NavisTimelinerPlugin
             foreach (SavedItem item in nDoc.SelectionSets.Value)
             {
                 this.listBox1.Items.Add(item.DisplayName);
-            }
-        }
-
-        /// <summary>
-        /// Заполняет TreeView структорой тасков.
-        /// </summary>
-        void FillTasks()
-        {
-            treeView1.BeginUpdate();
-            foreach (TaskContainer tc in Core.Self.Tasks)
-            {
-                if (tc.HierarchyLevel == TaskContainer.MinHierarchyDepth)
-                {
-                    TreeNode node = new TreeNode(tc.TaskName);
-                    node.Tag = tc.Index;                    
-                    FillChildrenTasks(tc, node);
-                    treeView1.Nodes.Add(node);
-                }
-            }
-            treeView1.EndUpdate();
-        }
-        void FillChildrenTasks(TaskContainer tc, TreeNode node)
-        {
-            foreach (TaskContainer childContainer in tc.Children)
-            {
-                TreeNode childNode = new TreeNode(childContainer.TaskName);
-                childNode.Tag = childContainer.Index;                
-                node.Nodes.Add(childNode);
-                node.ExpandAll();
-                FillChildrenTasks(childContainer, childNode);
             }
         }
         
@@ -94,6 +64,7 @@ namespace NavisTimelinerPlugin
             FreezeTreeUpdate = false;
 
             node.BackColor = System.Drawing.Color.LawnGreen;
+            treeView1.SelectedNode = null;
         }
 
         /// <summary>
@@ -104,9 +75,15 @@ namespace NavisTimelinerPlugin
             TreeNode node = treeView1.SelectedNode;
             Collection<int> index = node.Tag as Collection<int>;
             TimelinerTask task = timeliner.TaskResolveIndexPath(index);
-            string SetName = Core.Self.FindSelectionSetName(task);
-
-            listBox1.SelectedItem = SetName;
+            if (task.Selection.IsClear)
+            {
+                listBox1.SelectedItem = "NULL";
+            }
+            else
+            {
+                string SetName = Core.Self.FindSelectionSetName(task);
+                listBox1.SelectedItem = SetName;
+            }
         }
 
         private void Timeliner_Changed(object sender, EventArgs e)

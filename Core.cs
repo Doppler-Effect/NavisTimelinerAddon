@@ -420,6 +420,40 @@ namespace NavisTimelinerPlugin
             }
         }
 
+        /// <summary>
+        /// Заполняет TreeView структорой тасков.
+        /// </summary>
+        public void FillTreeViewWithTasks(TreeView treeView, bool highlightWithSelectionSet = true)
+        {
+            treeView.BeginUpdate();
+            foreach (TaskContainer tc in Core.Self.Tasks)
+            {
+                if (tc.HierarchyLevel == TaskContainer.MinHierarchyDepth)
+                {
+                    TreeNode node = new TreeNode(tc.TaskName);
+                    if (!tc.Task.Selection.IsClear && highlightWithSelectionSet)
+                        node.BackColor = System.Drawing.Color.Green;
+                    node.Tag = tc.Index;
+                    FillTreeViewWithChildrenTasks(tc, node, highlightWithSelectionSet);                    
+                    treeView.Nodes.Add(node);
+                }
+            }
+            treeView.EndUpdate();
+        }
+        void FillTreeViewWithChildrenTasks(TaskContainer tc, TreeNode node, bool highlightWithSelectionSet)
+        {
+            foreach (TaskContainer childContainer in tc.Children)
+            {
+                TreeNode childNode = new TreeNode(childContainer.TaskName);
+                if (!childContainer.Task.Selection.IsClear && highlightWithSelectionSet)
+                    childNode.BackColor = System.Drawing.Color.Green;
+                childNode.Tag = childContainer.Index;
+                node.Nodes.Add(childNode);
+                node.ExpandAll();
+                FillTreeViewWithChildrenTasks(childContainer, childNode, highlightWithSelectionSet);
+            }
+        }
+
         public void MSProjectExport()
         {
             if (TasksOK())
