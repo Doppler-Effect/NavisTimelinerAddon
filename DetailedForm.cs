@@ -52,19 +52,22 @@ namespace NavisTimelinerPlugin
         private void listBox1_DoubleClick(object sender, EventArgs e)
         {
             TreeNode node = treeView1.SelectedNode;
-            Collection<int> index = node.Tag as Collection<int>;
-            string selSet = listBox1.SelectedItem.ToString();
-            if (selSet == "NULL")
+            if (node != null)
             {
-                selSet = null;
+                Collection<int> index = node.Tag as Collection<int>;
+                string selSet = listBox1.SelectedItem.ToString();
+                if (selSet == "NULL")
+                {
+                    selSet = null;
+                }
+
+                FreezeTreeUpdate = true;
+                Core.Self.WriteTaskToTimeliner(index, selSet);
+                FreezeTreeUpdate = false;
+
+                node.BackColor = System.Drawing.Color.LawnGreen;
+                treeView1.SelectedNode = null;
             }
-
-            FreezeTreeUpdate = true;
-            Core.Self.WriteTaskToTimeliner(index, selSet);
-            FreezeTreeUpdate = false;
-
-            node.BackColor = System.Drawing.Color.LawnGreen;
-            treeView1.SelectedNode = null;
         }
 
         /// <summary>
