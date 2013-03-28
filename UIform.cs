@@ -208,6 +208,23 @@ namespace NavisTimelinerPlugin
         {
             taskDown();
         }
+         
+        /// <summary>
+        /// Отображает tooltip при наведении указателя на мышь
+        /// </summary>
+        private void TasksView_NodeMouseHover(object sender, TreeNodeMouseHoverEventArgs e)
+        {
+            int itemsNum;
+            TreeNode node = e.Node;
+            Collection<int> index = node.Tag as Collection<int>;
+            TimelinerTask task = timeliner.TaskResolveIndexPath(index);
+            if (task.Selection.IsClear)
+                itemsNum = 0;
+            else
+                itemsNum = task.Selection.GetSelectedItems(nDoc).Count;
+
+            node.ToolTipText = itemsNum.ToString() + " элементов в выборке";
+        }
         #endregion
 
         #region Внесение данных о выполнении тасков
@@ -335,6 +352,6 @@ namespace NavisTimelinerPlugin
         {
             this.Visible = false;
             Core.Self.MSProjectExport();
-        }
+        }               
     }
 }

@@ -31,23 +31,23 @@
             this.SaveTaskButton = new System.Windows.Forms.Button();
             this.LoadButton = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBoxElem = new System.Windows.Forms.GroupBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.CompletionTextBox = new System.Windows.Forms.TextBox();
+            this.UnitsComboBox = new System.Windows.Forms.ComboBox();
+            this.maxCompletionTextBox = new System.Windows.Forms.TextBox();
+            this.ButtonAcceptCompletionProgress = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.radioButtonAll = new System.Windows.Forms.RadioButton();
             this.radioButtonElem = new System.Windows.Forms.RadioButton();
-            this.maxCompletionTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.buttonDOWN = new System.Windows.Forms.Button();
             this.buttonUP = new System.Windows.Forms.Button();
             this.TasksView = new System.Windows.Forms.TreeView();
-            this.ButtonAcceptCompletionProgress = new System.Windows.Forms.Button();
-            this.UnitsComboBox = new System.Windows.Forms.ComboBox();
-            this.CompletionTextBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.StartDataInputButton = new System.Windows.Forms.Button();
             this.buttonExit = new System.Windows.Forms.Button();
             this.ManualAssocButton = new System.Windows.Forms.Button();
             this.buttonMSProject = new System.Windows.Forms.Button();
             this.StartDataInputWithoutSelectedButton = new System.Windows.Forms.Button();
-            this.groupBoxElem = new System.Windows.Forms.GroupBox();
             this.groupBox2.SuspendLayout();
             this.groupBoxElem.SuspendLayout();
             this.SuspendLayout();
@@ -90,6 +90,84 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Назначение %% выполнения";
             // 
+            // groupBoxElem
+            // 
+            this.groupBoxElem.Controls.Add(this.label2);
+            this.groupBoxElem.Controls.Add(this.CompletionTextBox);
+            this.groupBoxElem.Controls.Add(this.UnitsComboBox);
+            this.groupBoxElem.Controls.Add(this.maxCompletionTextBox);
+            this.groupBoxElem.Controls.Add(this.ButtonAcceptCompletionProgress);
+            this.groupBoxElem.Controls.Add(this.label1);
+            this.groupBoxElem.Location = new System.Drawing.Point(6, 548);
+            this.groupBoxElem.Name = "groupBoxElem";
+            this.groupBoxElem.Size = new System.Drawing.Size(358, 68);
+            this.groupBoxElem.TabIndex = 21;
+            this.groupBoxElem.TabStop = false;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label2.Location = new System.Drawing.Point(6, 16);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(124, 13);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Прогресс выполнения:";
+            // 
+            // CompletionTextBox
+            // 
+            this.CompletionTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.CompletionTextBox.Location = new System.Drawing.Point(133, 13);
+            this.CompletionTextBox.Name = "CompletionTextBox";
+            this.CompletionTextBox.Size = new System.Drawing.Size(81, 20);
+            this.CompletionTextBox.TabIndex = 10;
+            // 
+            // UnitsComboBox
+            // 
+            this.UnitsComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.UnitsComboBox.FormattingEnabled = true;
+            this.UnitsComboBox.Items.AddRange(new object[] {
+            "%",
+            "м.п.",
+            "м2",
+            "м3",
+            "тн.",
+            "шт."});
+            this.UnitsComboBox.Location = new System.Drawing.Point(220, 13);
+            this.UnitsComboBox.Name = "UnitsComboBox";
+            this.UnitsComboBox.Size = new System.Drawing.Size(52, 21);
+            this.UnitsComboBox.Sorted = true;
+            this.UnitsComboBox.TabIndex = 11;
+            // 
+            // maxCompletionTextBox
+            // 
+            this.maxCompletionTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.maxCompletionTextBox.Location = new System.Drawing.Point(169, 40);
+            this.maxCompletionTextBox.Name = "maxCompletionTextBox";
+            this.maxCompletionTextBox.Size = new System.Drawing.Size(103, 20);
+            this.maxCompletionTextBox.TabIndex = 18;
+            // 
+            // ButtonAcceptCompletionProgress
+            // 
+            this.ButtonAcceptCompletionProgress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.ButtonAcceptCompletionProgress.Location = new System.Drawing.Point(278, 13);
+            this.ButtonAcceptCompletionProgress.Name = "ButtonAcceptCompletionProgress";
+            this.ButtonAcceptCompletionProgress.Size = new System.Drawing.Size(74, 47);
+            this.ButtonAcceptCompletionProgress.TabIndex = 6;
+            this.ButtonAcceptCompletionProgress.Text = "Назначить";
+            this.ButtonAcceptCompletionProgress.UseVisualStyleBackColor = true;
+            this.ButtonAcceptCompletionProgress.Click += new System.EventHandler(this.ButtonAcceptCompletionProgress_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.label1.Location = new System.Drawing.Point(6, 43);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(157, 13);
+            this.label1.TabIndex = 17;
+            this.label1.Text = "Максимальный объём работ:";
+            // 
             // radioButtonAll
             // 
             this.radioButtonAll.AutoSize = true;
@@ -110,24 +188,6 @@
             this.radioButtonElem.TabIndex = 19;
             this.radioButtonElem.Text = "Поэлементное назначение";
             this.radioButtonElem.UseVisualStyleBackColor = true;
-            // 
-            // maxCompletionTextBox
-            // 
-            this.maxCompletionTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.maxCompletionTextBox.Location = new System.Drawing.Point(169, 40);
-            this.maxCompletionTextBox.Name = "maxCompletionTextBox";
-            this.maxCompletionTextBox.Size = new System.Drawing.Size(103, 20);
-            this.maxCompletionTextBox.TabIndex = 18;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label1.Location = new System.Drawing.Point(6, 43);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(157, 13);
-            this.label1.TabIndex = 17;
-            this.label1.Text = "Максимальный объём работ:";
             // 
             // buttonDOWN
             // 
@@ -156,55 +216,11 @@
             this.TasksView.HideSelection = false;
             this.TasksView.Location = new System.Drawing.Point(6, 19);
             this.TasksView.Name = "TasksView";
+            this.TasksView.ShowNodeToolTips = true;
             this.TasksView.Size = new System.Drawing.Size(425, 500);
             this.TasksView.TabIndex = 14;
+            this.TasksView.NodeMouseHover += new System.Windows.Forms.TreeNodeMouseHoverEventHandler(this.TasksView_NodeMouseHover);
             this.TasksView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TasksView_AfterSelect);
-            // 
-            // ButtonAcceptCompletionProgress
-            // 
-            this.ButtonAcceptCompletionProgress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.ButtonAcceptCompletionProgress.Location = new System.Drawing.Point(278, 13);
-            this.ButtonAcceptCompletionProgress.Name = "ButtonAcceptCompletionProgress";
-            this.ButtonAcceptCompletionProgress.Size = new System.Drawing.Size(74, 47);
-            this.ButtonAcceptCompletionProgress.TabIndex = 6;
-            this.ButtonAcceptCompletionProgress.Text = "Назначить";
-            this.ButtonAcceptCompletionProgress.UseVisualStyleBackColor = true;
-            this.ButtonAcceptCompletionProgress.Click += new System.EventHandler(this.ButtonAcceptCompletionProgress_Click);
-            // 
-            // UnitsComboBox
-            // 
-            this.UnitsComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.UnitsComboBox.FormattingEnabled = true;
-            this.UnitsComboBox.Items.AddRange(new object[] {
-            "%",
-            "м.п.",
-            "м2",
-            "м3",
-            "тн.",
-            "шт."});
-            this.UnitsComboBox.Location = new System.Drawing.Point(220, 13);
-            this.UnitsComboBox.Name = "UnitsComboBox";
-            this.UnitsComboBox.Size = new System.Drawing.Size(52, 21);
-            this.UnitsComboBox.Sorted = true;
-            this.UnitsComboBox.TabIndex = 11;
-            // 
-            // CompletionTextBox
-            // 
-            this.CompletionTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.CompletionTextBox.Location = new System.Drawing.Point(133, 13);
-            this.CompletionTextBox.Name = "CompletionTextBox";
-            this.CompletionTextBox.Size = new System.Drawing.Size(81, 20);
-            this.CompletionTextBox.TabIndex = 10;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.label2.Location = new System.Drawing.Point(6, 16);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(124, 13);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "Прогресс выполнения:";
             // 
             // StartDataInputButton
             // 
@@ -255,20 +271,6 @@
             this.StartDataInputWithoutSelectedButton.Text = "Начать (без наборов)";
             this.StartDataInputWithoutSelectedButton.UseVisualStyleBackColor = true;
             this.StartDataInputWithoutSelectedButton.Click += new System.EventHandler(this.StartDataInputWithoutSelectedButton_Click);
-            // 
-            // groupBoxElem
-            // 
-            this.groupBoxElem.Controls.Add(this.label2);
-            this.groupBoxElem.Controls.Add(this.CompletionTextBox);
-            this.groupBoxElem.Controls.Add(this.UnitsComboBox);
-            this.groupBoxElem.Controls.Add(this.maxCompletionTextBox);
-            this.groupBoxElem.Controls.Add(this.ButtonAcceptCompletionProgress);
-            this.groupBoxElem.Controls.Add(this.label1);
-            this.groupBoxElem.Location = new System.Drawing.Point(6, 548);
-            this.groupBoxElem.Name = "groupBoxElem";
-            this.groupBoxElem.Size = new System.Drawing.Size(358, 68);
-            this.groupBoxElem.TabIndex = 21;
-            this.groupBoxElem.TabStop = false;
             // 
             // UIform
             // 

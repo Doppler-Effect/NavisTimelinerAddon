@@ -420,10 +420,29 @@ namespace NavisTimelinerPlugin
             }
         }
 
+        public double? GetVolumeFromModelItem(ModelItem Item)
+        {
+            double? result = null;
+            try
+            {
+
+            }
+            catch
+            {
+
+            }
+
+
+            return result;
+        }
+
         /// <summary>
         /// Заполняет TreeView структорой тасков.
         /// </summary>
-        public void FillTreeViewWithTasks(TreeView treeView, bool highlightWithSelectionSet = true)
+        /// <param name="treeView">Элемент TreeView, который будет наполнен данными</param>
+        /// <param name="highlight">Выделять ли зелёным цветом элементы, у которых есть назначенный SelectionSet</param>
+        /// <param name="hide">Скрывать ли элементы, у которых есть назначенный SelectionSet</param>
+        public void FillTreeViewWithTasks(TreeView treeView, bool highlight = true)
         {
             treeView.BeginUpdate();
             foreach (TaskContainer tc in Core.Self.Tasks)
@@ -431,26 +450,26 @@ namespace NavisTimelinerPlugin
                 if (tc.HierarchyLevel == TaskContainer.MinHierarchyDepth)
                 {
                     TreeNode node = new TreeNode(tc.TaskName);
-                    if (!tc.Task.Selection.IsClear && highlightWithSelectionSet)
-                        node.BackColor = System.Drawing.Color.Green;
+                    if (!tc.Task.Selection.IsClear && highlight)
+                        node.BackColor = System.Drawing.Color.Green;                    
                     node.Tag = tc.Index;
-                    FillTreeViewWithChildrenTasks(tc, node, highlightWithSelectionSet);                    
+                    FillTreeViewWithChildrenTasks(tc, node, highlight);                    
                     treeView.Nodes.Add(node);
                 }
             }
             treeView.EndUpdate();
         }
-        void FillTreeViewWithChildrenTasks(TaskContainer tc, TreeNode node, bool highlightWithSelectionSet)
+        void FillTreeViewWithChildrenTasks(TaskContainer tc, TreeNode node, bool highlight)
         {
             foreach (TaskContainer childContainer in tc.Children)
             {
                 TreeNode childNode = new TreeNode(childContainer.TaskName);
-                if (!childContainer.Task.Selection.IsClear && highlightWithSelectionSet)
+                if (!childContainer.Task.Selection.IsClear && highlight)
                     childNode.BackColor = System.Drawing.Color.Green;
                 childNode.Tag = childContainer.Index;
                 node.Nodes.Add(childNode);
                 node.ExpandAll();
-                FillTreeViewWithChildrenTasks(childContainer, childNode, highlightWithSelectionSet);
+                FillTreeViewWithChildrenTasks(childContainer, childNode, highlight);
             }
         }
 
