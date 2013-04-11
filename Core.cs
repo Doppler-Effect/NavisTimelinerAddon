@@ -47,6 +47,7 @@ namespace NavisTimelinerPlugin
         }
         public FilesDB.DataBase filesDB;
         public inputForm activeInputForm;
+        public UIform activeUIForm;
 
         /// <summary>
         ////Проверка наличия тасков в таймлайнере и перезаполнение массива тасков в программе.
@@ -450,6 +451,7 @@ namespace NavisTimelinerPlugin
                 if (tc.HierarchyLevel == TaskContainer.MinHierarchyDepth)
                 {
                     TreeNode node = new TreeNode(tc.TaskName);
+                    Core.Self.CalculateTaskSummaryProgress(tc.Task);
                     if (!tc.Task.Selection.IsClear && highlight)
                         node.BackColor = System.Drawing.Color.Green;                    
                     node.Tag = tc.Index;
@@ -464,6 +466,7 @@ namespace NavisTimelinerPlugin
             foreach (TaskContainer childContainer in tc.Children)
             {
                 TreeNode childNode = new TreeNode(childContainer.TaskName);
+                Core.Self.CalculateTaskSummaryProgress(childContainer.Task);
                 if (!childContainer.Task.Selection.IsClear && highlight)
                     childNode.BackColor = System.Drawing.Color.Green;
                 childNode.Tag = childContainer.Index;

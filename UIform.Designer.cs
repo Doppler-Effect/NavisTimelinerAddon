@@ -43,11 +43,10 @@
             this.buttonDOWN = new System.Windows.Forms.Button();
             this.buttonUP = new System.Windows.Forms.Button();
             this.TasksView = new System.Windows.Forms.TreeView();
-            this.StartDataInputButton = new System.Windows.Forms.Button();
             this.buttonExit = new System.Windows.Forms.Button();
             this.ManualAssocButton = new System.Windows.Forms.Button();
             this.buttonMSProject = new System.Windows.Forms.Button();
-            this.StartDataInputWithoutSelectedButton = new System.Windows.Forms.Button();
+            this.StartDataInput = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.groupBoxElem.SuspendLayout();
             this.SuspendLayout();
@@ -69,12 +68,15 @@
             this.LoadButton.Size = new System.Drawing.Size(160, 40);
             this.LoadButton.TabIndex = 1;
             this.LoadButton.TabStop = false;
-            this.LoadButton.Text = "Загрузить прикреплённые наборы";
+            this.LoadButton.Text = "Загрузить наборы";
             this.LoadButton.UseVisualStyleBackColor = true;
             this.LoadButton.Click += new System.EventHandler(this.LoadButton_Click);
             // 
             // groupBox2
             // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.groupBoxElem);
             this.groupBox2.Controls.Add(this.radioButtonAll);
             this.groupBox2.Controls.Add(this.radioButtonElem);
@@ -92,6 +94,7 @@
             // 
             // groupBoxElem
             // 
+            this.groupBoxElem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBoxElem.Controls.Add(this.label2);
             this.groupBoxElem.Controls.Add(this.CompletionTextBox);
             this.groupBoxElem.Controls.Add(this.UnitsComboBox);
@@ -124,6 +127,7 @@
             // 
             // UnitsComboBox
             // 
+            this.UnitsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.UnitsComboBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.UnitsComboBox.FormattingEnabled = true;
             this.UnitsComboBox.Items.AddRange(new object[] {
@@ -138,6 +142,7 @@
             this.UnitsComboBox.Size = new System.Drawing.Size(52, 21);
             this.UnitsComboBox.Sorted = true;
             this.UnitsComboBox.TabIndex = 11;
+            this.UnitsComboBox.SelectedIndexChanged += new System.EventHandler(this.UnitsComboBox_SelectedIndexChanged);
             // 
             // maxCompletionTextBox
             // 
@@ -170,6 +175,7 @@
             // 
             // radioButtonAll
             // 
+            this.radioButtonAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButtonAll.AutoSize = true;
             this.radioButtonAll.Location = new System.Drawing.Point(6, 525);
             this.radioButtonAll.Name = "radioButtonAll";
@@ -181,6 +187,7 @@
             // 
             // radioButtonElem
             // 
+            this.radioButtonElem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.radioButtonElem.AutoSize = true;
             this.radioButtonElem.Location = new System.Drawing.Point(190, 525);
             this.radioButtonElem.Name = "radioButtonElem";
@@ -191,6 +198,7 @@
             // 
             // buttonDOWN
             // 
+            this.buttonDOWN.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonDOWN.Location = new System.Drawing.Point(370, 587);
             this.buttonDOWN.Name = "buttonDOWN";
             this.buttonDOWN.Size = new System.Drawing.Size(61, 29);
@@ -201,6 +209,7 @@
             // 
             // buttonUP
             // 
+            this.buttonUP.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonUP.Location = new System.Drawing.Point(370, 548);
             this.buttonUP.Name = "buttonUP";
             this.buttonUP.Size = new System.Drawing.Size(61, 29);
@@ -211,6 +220,9 @@
             // 
             // TasksView
             // 
+            this.TasksView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.TasksView.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.TasksView.FullRowSelect = true;
             this.TasksView.HideSelection = false;
@@ -221,16 +233,6 @@
             this.TasksView.TabIndex = 14;
             this.TasksView.NodeMouseHover += new System.Windows.Forms.TreeNodeMouseHoverEventHandler(this.TasksView_NodeMouseHover);
             this.TasksView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TasksView_AfterSelect);
-            // 
-            // StartDataInputButton
-            // 
-            this.StartDataInputButton.Location = new System.Drawing.Point(12, 150);
-            this.StartDataInputButton.Name = "StartDataInputButton";
-            this.StartDataInputButton.Size = new System.Drawing.Size(160, 40);
-            this.StartDataInputButton.TabIndex = 5;
-            this.StartDataInputButton.Text = "Начать";
-            this.StartDataInputButton.UseVisualStyleBackColor = true;
-            this.StartDataInputButton.Click += new System.EventHandler(this.StartDataInputButton_Click);
             // 
             // buttonExit
             // 
@@ -254,7 +256,7 @@
             // 
             // buttonMSProject
             // 
-            this.buttonMSProject.Location = new System.Drawing.Point(12, 288);
+            this.buttonMSProject.Location = new System.Drawing.Point(12, 196);
             this.buttonMSProject.Name = "buttonMSProject";
             this.buttonMSProject.Size = new System.Drawing.Size(160, 40);
             this.buttonMSProject.TabIndex = 11;
@@ -262,34 +264,31 @@
             this.buttonMSProject.UseVisualStyleBackColor = true;
             this.buttonMSProject.Click += new System.EventHandler(this.buttonMSProject_Click);
             // 
-            // StartDataInputWithoutSelectedButton
+            // StartDataInput
             // 
-            this.StartDataInputWithoutSelectedButton.Location = new System.Drawing.Point(12, 196);
-            this.StartDataInputWithoutSelectedButton.Name = "StartDataInputWithoutSelectedButton";
-            this.StartDataInputWithoutSelectedButton.Size = new System.Drawing.Size(160, 40);
-            this.StartDataInputWithoutSelectedButton.TabIndex = 12;
-            this.StartDataInputWithoutSelectedButton.Text = "Начать (без наборов)";
-            this.StartDataInputWithoutSelectedButton.UseVisualStyleBackColor = true;
-            this.StartDataInputWithoutSelectedButton.Click += new System.EventHandler(this.StartDataInputWithoutSelectedButton_Click);
+            this.StartDataInput.Location = new System.Drawing.Point(12, 150);
+            this.StartDataInput.Name = "StartDataInput";
+            this.StartDataInput.Size = new System.Drawing.Size(160, 40);
+            this.StartDataInput.TabIndex = 12;
+            this.StartDataInput.Text = "НАЧАЛО МОНИТОРИНГА";
+            this.StartDataInput.UseVisualStyleBackColor = true;
+            this.StartDataInput.Click += new System.EventHandler(this.StartDataInput_Click);
             // 
             // UIform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(628, 632);
-            this.ControlBox = false;
-            this.Controls.Add(this.StartDataInputWithoutSelectedButton);
+            this.Controls.Add(this.StartDataInput);
             this.Controls.Add(this.buttonMSProject);
             this.Controls.Add(this.ManualAssocButton);
-            this.Controls.Add(this.StartDataInputButton);
             this.Controls.Add(this.buttonExit);
             this.Controls.Add(this.SaveTaskButton);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.LoadButton);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.MinimumSize = new System.Drawing.Size(400, 300);
             this.Name = "UIform";
             this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "TimelinerPlugin";
             this.TopMost = true;
@@ -305,7 +304,6 @@
 
         private System.Windows.Forms.Button LoadButton;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button StartDataInputButton;
         private System.Windows.Forms.Button SaveTaskButton;
         private System.Windows.Forms.ComboBox UnitsComboBox;
         private System.Windows.Forms.TextBox CompletionTextBox;
@@ -317,7 +315,7 @@
         private System.Windows.Forms.Button buttonDOWN;
         private System.Windows.Forms.Button buttonUP;
         private System.Windows.Forms.Button buttonMSProject;
-        private System.Windows.Forms.Button StartDataInputWithoutSelectedButton;
+        private System.Windows.Forms.Button StartDataInput;
         private System.Windows.Forms.TextBox maxCompletionTextBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.RadioButton radioButtonAll;

@@ -20,38 +20,27 @@ namespace NavisTimelinerPlugin
         static Autodesk.Navisworks.Api.DocumentParts.IDocumentTimeliner Itimeliner = nDoc.Timeliner;
         static DocumentTimeliner timeliner = (DocumentTimeliner)Itimeliner;
 
-        #region логика конструктора - синглтона
-        private static UIform instance;
-        private UIform()
+
+        #region Конструктор и обработчики закрытия формы
+        public UIform()
         {
             InitializeComponent();
+            Core.Self.activeUIForm = this;
+            this.FormClosed += UIform_FormClosed;
         }
-        public static UIform Instance
+
+        void UIform_FormClosed(object sender, FormClosedEventArgs e)
         {
-            get
-            {
-                if (!nDoc.IsClear)
-                {
-                    if (instance == null)
-                    {
-                        instance = new UIform();
-                    }
-                    return instance;
-                }
-                else
-                {
-                    MessageBox.Show("Для работы с программой откройте проект", "Нет данных для работы", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    return null;
-                }
-            }
+            Core.Self.activeUIForm = null;
         }
-        #endregion
-        
+
         private void buttonExit_Click(object sender, EventArgs e)
         {
-            this.Visible = false;
+            //this.Visible = false;
             StopDataInput();
-        }        
+            this.Close();
+        }   
+        #endregion      
         
         #region Загрузка и сохранение данных об ассоциированных тасках из файла
 
@@ -81,31 +70,25 @@ namespace NavisTimelinerPlugin
         /// Отрисовывает интерфейс программы, отвечающий за внесение данных в NavisWorks
         /// </summary>
         /// <param name="withSelections">Обрабатывать таски с присоединёнными наборами или нет</param>
-        private void DrawInputArea(bool withSelections)
+        private void DrawInputArea()
         {
             if (Core.Self.TasksOK())
             {
-                FillTaskList(withSelections);
+                FillTaskList();
                 groupBox2.Enabled = true;
-                groupBoxElem.Enabled = !withSelections;
-                buttonDOWN.Enabled = withSelections;
+                groupBoxElem.Enabled = true;
+                buttonDOWN.Enabled = true;
                 buttonUP.Enabled = buttonDOWN.Enabled;
-                radioButtonAll.Enabled = withSelections;
-                radioButtonElem.Enabled = withSelections;
-                radioButtonAll.Checked = true;
+                radioButtonAll.Enabled = true;
+                radioButtonElem.Enabled = true;
                 radioButtonAll.Checked = false;
-                radioButtonAll.Checked = withSelections;
+                radioButtonAll.Checked = true;
             }
         }
-
-        private void StartDataInputButton_Click(object sender, EventArgs e)
+        
+        private void StartDataInput_Click(object sender, EventArgs e)
         {
-            DrawInputArea(true);
-        }
-
-        private void StartDataInputWithoutSelectedButton_Click(object sender, EventArgs e)
-        {
-            DrawInputArea(false);
+            DrawInputArea();
         }
         
         private void StopDataInput()
@@ -120,32 +103,17 @@ namespace NavisTimelinerPlugin
         /// <summary>
         ////Наполняет тасклист теми тасками, у которых есть назначенные наборы элементов.
         /// </summary>
-        private void FillTaskList(bool WithSelection)
+        private void FillTaskList()
         {
             TasksView.BeginUpdate();
             TasksView.Nodes.Clear();
-            if (WithSelection)
-            {
-                foreach (TaskContainer taskC in Core.Self.Tasks)
-                {
-                    Core.Self.CalculateTaskSummaryProgress(taskC.Task);
-                    if (!taskC.Task.Selection.IsClear)
-                    {
-                        TreeNode node = new TreeNode(taskC.TaskName);
-                        node.Tag = taskC.Index;
-                        TasksView.Nodes.Add(node);
-                    }
-                }
-            }
-            else
-            {
-                Core.Self.FillTreeViewWithTasks(this.TasksView);
-            }
+            
+            Core.Self.FillTreeViewWithTasks(this.TasksView);
 
             if (TasksView.Nodes.Count != 0)
             {
                 TasksView.SelectedNode = TasksView.Nodes[0];
-                TasksView.SelectedNode = TasksView.Nodes[0];
+                //TasksView.SelectedNode = TasksView.Nodes[0];
             }
             TasksView.EndUpdate();
         }
@@ -171,7 +139,33 @@ namespace NavisTimelinerPlugin
             CompletionTextBox.Text = Task.User1;
             UnitsComboBox.Text = Task.User2;
             maxCompletionTextBox.Text = Task.User3;
+            if (string.IsNullOrEmpty(maxCompletionTextBox.Text))
+                checkMaxCompletionAndUnits();
         }
+
+        /// <summary>
+        /// Выставляет предустановленное максивальное значение (или вычисляет его) в зависимости от выбранных единиц измерения.
+        /// </summary>
+        void checkMaxCompletionAndUnits()
+        {
+            if (UnitsComboBox.SelectedItem != null)
+            {
+                string sel = UnitsComboBox.SelectedItem.ToString();
+                switch (sel)
+                {
+                    case "%":
+                        maxCompletionTextBox.Text = "100";
+                        break;
+                    default:
+                        maxCompletionTextBox.Text = null;
+                        break;
+                }
+            }
+        }        
+        private void UnitsComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            checkMaxCompletionAndUnits();
+        }   
       
         /// <summary>
         /// Перелистывание таска назад
@@ -180,10 +174,8 @@ namespace NavisTimelinerPlugin
         {
             if (TasksView.SelectedNode != null)
             {
-                if (TasksView.SelectedNode.PrevNode != null)
-                    TasksView.SelectedNode = TasksView.SelectedNode.PrevNode;
-                else
-                    TasksView.SelectedNode = TasksView.Nodes[TasksView.Nodes.Count - 1];
+                if (TasksView.SelectedNode.PrevVisibleNode != null)
+                    TasksView.SelectedNode = TasksView.SelectedNode.PrevVisibleNode;
             }
         }
         private void buttonUP_Click(object sender, EventArgs e)
@@ -198,10 +190,8 @@ namespace NavisTimelinerPlugin
         {
             if (TasksView.SelectedNode != null)
             {
-                if (TasksView.SelectedNode.NextNode != null)
-                    TasksView.SelectedNode = TasksView.SelectedNode.NextNode;
-                else
-                    TasksView.SelectedNode = TasksView.Nodes[0];
+                if (TasksView.SelectedNode.NextVisibleNode != null)
+                    TasksView.SelectedNode = TasksView.SelectedNode.NextVisibleNode;
             }
         }
         private void buttonDOWN_Click(object sender, EventArgs e)
@@ -223,11 +213,14 @@ namespace NavisTimelinerPlugin
             else
                 itemsNum = task.Selection.GetSelectedItems(nDoc).Count;
 
-            node.ToolTipText = itemsNum.ToString() + " элементов в выборке";
+            string SelSetName = Core.Self.FindSelectionSetName(task);
+
+            node.ToolTipText = string.Format("Набор: {0}, {1} элемент(ов) в выборке", SelSetName, itemsNum.ToString());
         }
         #endregion
 
         #region Внесение данных о выполнении тасков
+
         private void ButtonAcceptCompletionProgress_Click(object sender, EventArgs e)
         {
             WriteCompletionFromUI();
@@ -243,7 +236,7 @@ namespace NavisTimelinerPlugin
             
             //проверяем введённые значения и расчитываем процент выполнения:
             double percent = 0;
-            if (this.inputIsCorrect(value, units, maxValue))
+            if (this.checkInputIsOK(value, units, maxValue))
             {
                 if (units == "%")
                 {
@@ -251,8 +244,8 @@ namespace NavisTimelinerPlugin
                 }
                 else if (maxValue != null)
                 {
-                    double maxV = double.Parse(maxValue);
-                    double val = double.Parse(value);
+                    double maxV = double.Parse(maxValue, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture);
+                    double val = double.Parse(value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture);
                     percent = val * 100 / maxV;
                 }
 
@@ -262,7 +255,12 @@ namespace NavisTimelinerPlugin
                     Collection<int> index = TasksView.SelectedNode.Tag as Collection<int>;
                     Core.Self.ClearTaskItemsFromDB(timeliner.TaskResolveIndexPath(index));
                     if (Core.Self.WriteCompletionToTask(index, value, units, maxValue, percent))
+                    {
+                        Font currFont = TasksView.SelectedNode.NodeFont;
+                        TasksView.SelectedNode.NodeFont = new System.Drawing.Font(currFont, FontStyle.Bold);
+                        TasksView.SelectedNode.NodeFont = new System.Drawing.Font(currFont, FontStyle.Italic);
                         taskDown();
+                    }
                 }
             }            
         }
@@ -271,36 +269,44 @@ namespace NavisTimelinerPlugin
         /// Проверяет введённые данные на null и прочие ограничения
         /// </summary>
         /// <returns></returns>
-        bool inputIsCorrect(string value, string units, string maxValue)
+        bool checkInputIsOK(string value, string units, string maxValue)
         {
             if (string.IsNullOrEmpty(value) || string.IsNullOrEmpty(units))
             {
-                MessageBox.Show("Введите необходимые значения!");
+                MessageBox.Show("Введите прогресс выполнения и единицы измерения!");
                 return false;
             }
-            if (!string.IsNullOrEmpty(maxValue))
+            
+            if (string.IsNullOrEmpty(maxValue))
             {
-                double maxV;
-                double val;
+                MessageBox.Show("Введите максимальное значение!");
+                return false;
+            }
+            
+            double maxV;
+            double val;
 
-                if (double.TryParse(maxValue, out maxV))
+            if (double.TryParse(maxValue, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, out maxV))
+            {
+                if (double.TryParse(value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, out val) && maxV != 0)
                 {
-                    if (double.TryParse(value, out val) && maxV != 0)
+                    if (val < maxV)
                     {
-                        if (val > maxV)
-                        {
-                            MessageBox.Show("Указанное значение выполнения больше максимального!");
-                            return false;
-                        }
+                        return true;
                     }
                     else
+                    {
+                        MessageBox.Show("Указанное значение выполнения больше максимального!");
                         return false;
+                    }
+                        
                 }
                 else
                     return false;
             }
-
-            return true;
+            else
+                return false;
+            
         }
         
         private void radioButtonAll_CheckedChanged(object sender, EventArgs e)
@@ -317,6 +323,11 @@ namespace NavisTimelinerPlugin
             }
         }
 
+        /// <summary>
+        /// Вызывает окошко ввода данных для конкретного элемента при клике.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void CurrentNavisSelection_Changed(object sender, EventArgs e)
         {
             if (nDoc.CurrentSelection.SelectedItems.Count == 1)
@@ -333,7 +344,7 @@ namespace NavisTimelinerPlugin
                 Core.Self.activeInputForm = input;
                 input.Show();
             }
-        } 
+        }
         
         #endregion
 
@@ -352,6 +363,6 @@ namespace NavisTimelinerPlugin
         {
             this.Visible = false;
             Core.Self.MSProjectExport();
-        }               
+        }          
     }
 }

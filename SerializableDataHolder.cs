@@ -89,7 +89,7 @@ namespace NavisTimelinerPlugin
             svfile.RestoreDirectory = true;
             svfile.Title = "Выберите путь для сохранения файла";
 
-            DialogResult res = svfile.ShowDialog(UIform.Instance);
+            DialogResult res = svfile.ShowDialog(Core.Self.activeUIForm);
             if (res == DialogResult.OK)
             {
                 filename = svfile.FileName;
@@ -111,7 +111,7 @@ namespace NavisTimelinerPlugin
             opfile.RestoreDirectory = true;
             opfile.Title = "Выберите файл...";
 
-            DialogResult res = opfile.ShowDialog(UIform.Instance);
+            DialogResult res = opfile.ShowDialog(Core.Self.activeUIForm);
             if (res == DialogResult.OK)
             {
                 filename = opfile.FileName;

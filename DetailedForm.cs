@@ -23,7 +23,6 @@ namespace NavisTimelinerPlugin
         public DetailedForm(DocumentTimeliner timeliner, Document nDoc)
         {
             FreezeTreeUpdate = false;
-
             InitializeComponent();
             this.timeliner = timeliner;
             this.nDoc = nDoc;
@@ -97,7 +96,7 @@ namespace NavisTimelinerPlugin
 
         private void DetailedForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            UIform.Instance.Visible = true;
+            Core.Self.activeUIForm.Visible = true;
         }
     }
 }
