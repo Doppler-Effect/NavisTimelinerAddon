@@ -183,6 +183,7 @@
             this.radioButtonAll.TabIndex = 20;
             this.radioButtonAll.Text = "Назначение для всего набора";
             this.radioButtonAll.UseVisualStyleBackColor = true;
+            this.radioButtonAll.Visible = false;
             this.radioButtonAll.CheckedChanged += new System.EventHandler(this.radioButtonAll_CheckedChanged);
             // 
             // radioButtonElem
@@ -195,6 +196,7 @@
             this.radioButtonElem.TabIndex = 19;
             this.radioButtonElem.Text = "Поэлементное назначение";
             this.radioButtonElem.UseVisualStyleBackColor = true;
+            this.radioButtonElem.Visible = false;
             // 
             // buttonDOWN
             // 

@@ -79,10 +79,10 @@ namespace NavisTimelinerPlugin
                 groupBoxElem.Enabled = true;
                 buttonDOWN.Enabled = true;
                 buttonUP.Enabled = buttonDOWN.Enabled;
-                radioButtonAll.Enabled = true;
-                radioButtonElem.Enabled = true;
-                radioButtonAll.Checked = false;
-                radioButtonAll.Checked = true;
+                //radioButtonAll.Enabled = true;
+                //radioButtonElem.Enabled = true;
+                //radioButtonAll.Checked = false;
+                //radioButtonAll.Checked = true;
             }
         }
         
@@ -113,7 +113,6 @@ namespace NavisTimelinerPlugin
             if (TasksView.Nodes.Count != 0)
             {
                 TasksView.SelectedNode = TasksView.Nodes[0];
-                //TasksView.SelectedNode = TasksView.Nodes[0];
             }
             TasksView.EndUpdate();
         }
@@ -249,17 +248,18 @@ namespace NavisTimelinerPlugin
                     percent = val * 100 / maxV;
                 }
 
-                DialogResult res = MessageBox.Show( "Удалить данные об отдельных элементах и внести данные для всего набора?", "Внимание!", MessageBoxButtons.OKCancel);
-                if (res == DialogResult.OK)
+                //DialogResult res = MessageBox.Show( "Удалить данные об отдельных элементах и внести данные для всего набора?", "Внимание!", MessageBoxButtons.OKCancel);
+                //if (res == DialogResult.OK)
                 {
-                    Collection<int> index = TasksView.SelectedNode.Tag as Collection<int>;
-                    Core.Self.ClearTaskItemsFromDB(timeliner.TaskResolveIndexPath(index));
+                    TreeNode node = TasksView.SelectedNode;                    
+                    Collection<int> index = node.Tag as Collection<int>;
+                    TimelinerTask task = timeliner.TaskResolveIndexPath(index);
+                    Core.Self.ClearTaskItemsFromDB(task);
                     if (Core.Self.WriteCompletionToTask(index, value, units, maxValue, percent))
                     {
-                        Font currFont = TasksView.SelectedNode.NodeFont;
-                        TasksView.SelectedNode.NodeFont = new System.Drawing.Font(currFont, FontStyle.Bold);
-                        TasksView.SelectedNode.NodeFont = new System.Drawing.Font(currFont, FontStyle.Italic);
-                        taskDown();
+                        Core.Self.setNodeFontAndColor(node, task); 
+                        TasksView.Refresh();
+                        taskDown();                        
                     }
                 }
             }            
@@ -290,7 +290,7 @@ namespace NavisTimelinerPlugin
             {
                 if (double.TryParse(value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, out val) && maxV != 0)
                 {
-                    if (val < maxV)
+                    if (val <= maxV)
                     {
                         return true;
                     }

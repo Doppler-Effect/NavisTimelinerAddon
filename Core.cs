@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Drawing;
 
 using Autodesk.Navisworks.Api;
 using Autodesk.Navisworks.Api.Timeliner;
@@ -378,7 +379,7 @@ namespace NavisTimelinerPlugin
                 }
             }
         }
-
+        
         /// <summary>
         /// Удаляет из базы все данные об элементах, присвоенных таску.
         /// </summary>
@@ -441,8 +442,7 @@ namespace NavisTimelinerPlugin
         /// Заполняет TreeView структорой тасков.
         /// </summary>
         /// <param name="treeView">Элемент TreeView, который будет наполнен данными</param>
-        /// <param name="highlight">Выделять ли зелёным цветом элементы, у которых есть назначенный SelectionSet</param>
-        /// <param name="hide">Скрывать ли элементы, у которых есть назначенный SelectionSet</param>
+        /// <param name="highlight">Выделять ли элементы, у которых есть назначенный SelectionSet, назначены данные итд</param>
         public void FillTreeViewWithTasks(TreeView treeView, bool highlight = true)
         {
             treeView.BeginUpdate();
@@ -451,11 +451,13 @@ namespace NavisTimelinerPlugin
                 if (tc.HierarchyLevel == TaskContainer.MinHierarchyDepth)
                 {
                     TreeNode node = new TreeNode(tc.TaskName);
-                    Core.Self.CalculateTaskSummaryProgress(tc.Task);
-                    if (!tc.Task.Selection.IsClear && highlight)
-                        node.BackColor = System.Drawing.Color.Green;                    
+                    Core.Self.CalculateTaskSummaryProgress(tc.Task);                               
                     node.Tag = tc.Index;
-                    FillTreeViewWithChildrenTasks(tc, node, highlight);                    
+                    if (highlight)
+                        setNodeFontAndColor(node, tc.Task);        
+
+                    FillTreeViewWithChildrenTasks(tc, node, highlight);     
+               
                     treeView.Nodes.Add(node);
                 }
             }
@@ -466,14 +468,42 @@ namespace NavisTimelinerPlugin
             foreach (TaskContainer childContainer in tc.Children)
             {
                 TreeNode childNode = new TreeNode(childContainer.TaskName);
-                Core.Self.CalculateTaskSummaryProgress(childContainer.Task);
-                if (!childContainer.Task.Selection.IsClear && highlight)
-                    childNode.BackColor = System.Drawing.Color.Green;
+                Core.Self.CalculateTaskSummaryProgress(childContainer.Task);                
                 childNode.Tag = childContainer.Index;
                 node.Nodes.Add(childNode);
                 node.ExpandAll();
+                if (highlight)
+                    setNodeFontAndColor(childNode, childContainer.Task);
+
                 FillTreeViewWithChildrenTasks(childContainer, childNode, highlight);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void setNodeFontAndColor(TreeNode node, TimelinerTask task)
+        {
+            if (!task.Selection.IsClear)
+            {
+                node.BackColor = System.Drawing.Color.Green;
+                if(hasDataAttached(task))
+                {
+                    node.NodeFont = new Font(TreeView.DefaultFont, FontStyle.Bold | FontStyle.Underline);
+                }
+            }
+            else if(hasDataAttached(task))
+            {
+                node.ForeColor = System.Drawing.Color.SkyBlue;
+                node.NodeFont = new Font(TreeView.DefaultFont, FontStyle.Bold | FontStyle.Underline);                                
+            }
+        }
+        bool hasDataAttached(TimelinerTask task)
+        {
+            if (string.IsNullOrEmpty(task.User1))
+                return false;
+            else
+                return true;
         }
 
         public void MSProjectExport()
