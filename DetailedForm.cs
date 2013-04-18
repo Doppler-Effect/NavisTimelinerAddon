@@ -38,23 +38,43 @@ namespace NavisTimelinerPlugin
         /// </summary>
         void FillSelectionSets()
         {
-            this.listBox1.Items.Add("NULL");
+            TreeNode nullNode = new TreeNode("БЕЗ НАБОРА");
+            nullNode.Tag = "NULL";
+            treeView2.Nodes.Add(nullNode);
+
             foreach (SavedItem item in nDoc.SelectionSets.Value)
             {
-                this.listBox1.Items.Add(item.DisplayName);
+                TreeNode node = new TreeNode(item.DisplayName);
+                node.Tag = item.DisplayName;
+                this.treeView2.Nodes.Add(node);
+                FillSelectionSetChildren(item, node);
+            }
+        }
+        private void FillSelectionSetChildren(SavedItem parentItem, TreeNode parentNode)
+        {
+            if (parentItem.IsGroup)
+            {
+                foreach (SavedItem item in ((GroupItem)parentItem).Children)
+                {
+                    TreeNode node = new TreeNode(item.DisplayName);
+                    node.Tag = item.DisplayName;
+                    parentNode.Nodes.Add(node);
+                    FillSelectionSetChildren(item, node);
+                }
             }
         }
         
         /// <summary>
         /// По клику вносит изменения в Timeliner.
         /// </summary>
-        private void listBox1_DoubleClick(object sender, EventArgs e)
+        private void treeView2_DoubleClick(object sender, EventArgs e)
         {
             TreeNode node = treeView1.SelectedNode;
             if (node != null)
             {
                 Collection<int> index = node.Tag as Collection<int>;
-                string selSet = listBox1.SelectedItem.ToString();
+                //string selSet = listBox1.SelectedItem.ToString();
+                string selSet = treeView2.SelectedNode.Tag.ToString();
                 if (selSet == "NULL")
                 {
                     selSet = null;
@@ -65,7 +85,11 @@ namespace NavisTimelinerPlugin
                 FreezeTreeUpdate = false;
 
                 node.BackColor = System.Drawing.Color.LawnGreen;
-                treeView1.SelectedNode = null;
+
+                if (treeView1.SelectedNode.NextVisibleNode != null)
+                    treeView1.SelectedNode = treeView1.SelectedNode.NextVisibleNode;
+                else
+                    treeView1.SelectedNode = null;
             }
         }
 
@@ -74,17 +98,39 @@ namespace NavisTimelinerPlugin
         /// </summary>
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            foreach (TreeNode n in Core.Self.getAllNodes(treeView2))
+            {
+                n.BackColor = System.Drawing.Color.White;
+            }
+
             TreeNode node = treeView1.SelectedNode;
             Collection<int> index = node.Tag as Collection<int>;
             TimelinerTask task = timeliner.TaskResolveIndexPath(index);
             if (task.Selection.IsClear)
             {
-                listBox1.SelectedItem = "NULL";
+                SelectTreeNode("NULL");
             }
             else
             {
                 string SetName = Core.Self.FindSelectionSetName(task);
-                listBox1.SelectedItem = SetName;
+                SelectTreeNode(SetName);
+            }
+
+            treeView2.SelectedNode.BackColor = System.Drawing.Color.Orange;
+        }
+
+        /// <summary>
+        /// Подсвечивает нужную ноду в дереве по тэгу ноды
+        /// </summary>
+        private void SelectTreeNode(string tag)
+        {
+            foreach (TreeNode node in Core.Self.getAllNodes(treeView2))
+            {
+                if (node.Tag.ToString() == tag)
+                {
+                    treeView2.SelectedNode = node;
+                    break;
+                }
             }
         }
 

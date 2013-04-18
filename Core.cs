@@ -92,6 +92,17 @@ namespace NavisTimelinerPlugin
                 getChildren(childContainer);
             }
         }
+        void getChildren(SavedItem item, List<SavedItem> list)
+        {
+            if (item.IsGroup)
+            {
+                foreach (SavedItem childItem in ((GroupItem)item).Children)
+                {
+                    list.Add(childItem);
+                    getChildren(childItem, list);
+                }
+            }
+        }
 
         public List<TaskContainer> Tasks
         {
@@ -104,7 +115,20 @@ namespace NavisTimelinerPlugin
                 value = tasks;
             }
         }
-        List<TaskContainer> tasks = new List<TaskContainer>(); //массив тасков проекта.      
+        private List<TaskContainer> tasks = new List<TaskContainer>(); //массив тасков проекта.   
+        public List<SavedItem> AllSelectionSets
+        {
+            get
+            {
+                List<SavedItem> list = new List<SavedItem>();
+                foreach (SavedItem item in nDoc.SelectionSets.Value)
+                {
+                    list.Add(item);
+                    getChildren(item, list);
+                }
+                return list;
+            }
+        }
 
         /// <summary>
         /// Записывает значение в Timeliner. В случае пустого селекшн сета - очищает таск от прикреплённого набора.
@@ -221,7 +245,7 @@ namespace NavisTimelinerPlugin
         public SelectionSourceCollection GetSelectionSetByName(string Name)
         {
             SelectionSourceCollection result = new SelectionSourceCollection();
-            foreach (SavedItem item in nDoc.SelectionSets.Value)
+            foreach (SavedItem item in this.AllSelectionSets)
             {
                 if (item.DisplayName == Name)
                 {
@@ -480,7 +504,29 @@ namespace NavisTimelinerPlugin
         }
 
         /// <summary>
-        /// 
+        ////Собирает в плоский массив все ноды дерева. Нужно для подсвечивания нужной.
+        /// </summary>
+        public List<TreeNode> getAllNodes(TreeView tree)
+        {
+            List<TreeNode> result = new List<TreeNode>();
+            foreach (TreeNode node in tree.Nodes)
+            {
+                result.Add(node);
+                getChildren(result, node);
+            }
+            return result;
+        }
+        private void getChildren(List<TreeNode> list, TreeNode node)
+        {
+            foreach (TreeNode child in node.Nodes)
+            {
+                list.Add(child);
+                getChildren(list, child);
+            }
+        }
+
+        /// <summary>
+        /// Подсвечивает ноду дерева в зависимости от того, назначен ли таску набор и введены ли данные.
         /// </summary>
         public void setNodeFontAndColor(TreeNode node, TimelinerTask task)
         {
@@ -498,6 +544,7 @@ namespace NavisTimelinerPlugin
                 node.NodeFont = new Font(TreeView.DefaultFont, FontStyle.Bold | FontStyle.Underline);                                
             }
         }
+
         bool hasDataAttached(TimelinerTask task)
         {
             if (string.IsNullOrEmpty(task.User1))

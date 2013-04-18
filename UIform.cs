@@ -254,7 +254,7 @@ namespace NavisTimelinerPlugin
                     TreeNode node = TasksView.SelectedNode;                    
                     Collection<int> index = node.Tag as Collection<int>;
                     TimelinerTask task = timeliner.TaskResolveIndexPath(index);
-                    Core.Self.ClearTaskItemsFromDB(task);
+                    //Core.Self.ClearTaskItemsFromDB(task);
                     if (Core.Self.WriteCompletionToTask(index, value, units, maxValue, percent))
                     {
                         Core.Self.setNodeFontAndColor(node, task); 
