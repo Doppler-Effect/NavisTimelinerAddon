@@ -12,6 +12,7 @@ namespace NavisTimelinerPlugin
     {
         MSProject.Application application;
         MSProject.Project project;
+
         private bool launched = false;
         private ProgressForm pForm;
         private short taskDepth;
@@ -35,6 +36,9 @@ namespace NavisTimelinerPlugin
                 System.Threading.Thread.Sleep(5000);
                 application.Projects.Add(System.Type.Missing, System.Type.Missing, System.Type.Missing);
                 this.project = this.application.ActiveProject;
+
+                this.SetCalendarNoHolidays();
+
                 this.launched = true;
                 #region Example code from http://social.technet.microsoft.com/Forums/ru-RU/project2010custprog/thread/0d4b2b34-3051-4b27-bb51-e3cae64ac9f9
                 //bool launched = false;
@@ -66,7 +70,23 @@ namespace NavisTimelinerPlugin
                 MessageBox.Show(Ex.Message);
             }
         }
-        
+
+        private void SetCalendarNoHolidays()
+        {
+            MSProject.Calendar calendar = this.project.Calendar;
+
+            //для каждого дня недели выставляем свойство "рабочий"
+            foreach (MSProject.WeekDay day in calendar.WeekDays)
+            {
+                dynamic dayWrapped = ((dynamic)day);
+                dayWrapped.Working = true;
+                day.Shift1.Start = new DateTime(2011, 1, 1, 9, 0, 0);
+                day.Shift1.Finish = new DateTime(2011, 1, 1, 18, 0, 0);
+                day.Shift2.Clear();
+                day.Shift3.Clear();
+            }
+        }
+
         public void AddTasks(List<TaskContainer> tasks)
         {
             this.taskDepth += 1;
